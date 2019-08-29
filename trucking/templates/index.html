@@ -1,0 +1,157 @@
+{% extends "headerFooter.html" %}
+{% load staticfiles%}
+
+{% block content %}
+    <title>Home</title>
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+    <style>
+        div.dataTables_wrapper {
+            margin: 0 auto;
+        }
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/b-1.5.4/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/b-1.5.4/datatables.min.js"></script>
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.colVis.min.js"></script>
+
+
+
+
+    <section id="main-content">
+      <section class="wrapper site-min-height">
+
+      </section>
+      <!-- /wrapper -->
+    </section>
+    <script>
+        let today = new Date();
+        let time = '';
+        let dd = today.getDate();
+        let mm = today.getMonth() + 1; //January is 0!
+        let yyyy = today.getFullYear();
+        let hour    = today.getHours();
+        let minute  = today.getMinutes();
+        let second  = today.getSeconds();
+
+        if (dd < 10) {
+          dd = '0' + dd;
+        }
+
+        if (mm < 10) {
+          mm = '0' + mm;
+        }
+
+        if(hour.toString().length == 1) {
+         hour = '0'+hour;
+        }
+        if(minute.toString().length == 1) {
+             minute = '0'+minute;
+        }
+        if(second.toString().length == 1) {
+             second = '0'+second;
+        }
+
+        today = mm + '/' + dd + '/' + yyyy;
+        time = hour+':'+minute+':'+second;
+        $(document).ready(function() {
+            $('#listTable').DataTable({
+                responsive: true,
+                retrieve: true,
+                paging: false,
+                dom: 'Bfrtip',
+                "scrollX": true,
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    'colvis'
+                ]
+            });
+        });
+
+        var table;
+
+        if ( $.fn.dataTable.isDataTable( '#listTable' ) ) {
+            table = $('#listTable').DataTable();
+        }
+        else {
+            table = $('#listTable').DataTable({
+                responsive: true,
+                retrieve: true,
+                paging: false,
+                dom: 'Bfrtip',
+                "scrollX": true,
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    'colvis'
+                ]
+            });
+        }
+
+        $('#listTable tbody').on( 'click', 'tr', function () {
+            // alert( table.row( this ).data() );
+            var modalBody = "<table class=\"table table-bordered\">";
+            for(var i = 2; i <= 27 ; i++){
+                modalBody += "<tr>";
+                modalBody += "<td><b>"+ table.columns(i).header()[0].textContent +"</b></td>";
+                modalBody += "<td>" + table.row(this).data()[i] + "</td>";
+                modalBody += "</tr>";
+            }
+            modalBody += "</table>";
+            $('#modalBody').html(modalBody);
+            $('#modalLabel').html("DATABASE OPERATION  " + table.row(this).data()[1]);
+            $('#modalEditButton').attr('href', '/database_operations/editDBO/' + table.row(this).data()[1]);
+            $('#modalDeleteButton').attr('href', '/database_operations/deleteDBO/' + table.row(this).data()[1]);
+            $('#exampleModal').modal();
+        } );
+    </script>
+{% endblock %}

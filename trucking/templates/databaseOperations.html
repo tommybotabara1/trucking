@@ -1,0 +1,302 @@
+{% extends "headerFooter.html" %}
+{% load staticfiles%}
+
+{% block content %}
+    <title>Database Operations</title>
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+    <style>
+        div.dataTables_wrapper {
+            margin: 0 auto;
+        }
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/b-1.5.4/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/b-1.5.4/datatables.min.js"></script>
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.colVis.min.js"></script>
+
+
+
+
+    <section id="main-content">
+      <section class="wrapper site-min-height">
+        <div class="row">
+
+          <!-- /col-lg-12 -->
+          <div class="col-lg-12">
+          <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">Database Operations</li>
+              </ol>
+          </nav>
+            <div class="row content-panel">
+              <!-- /panel-heading -->
+              <div class="panel-body">
+                <div class="tab-content">
+                {% if extra != none %}
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <strong>{{ extra }}</strong>
+                </div>
+                {% endif %}
+                  <div id="overview" class="tab-pane active">
+                  <h2 class="centered">Database Operations</h2>
+                  <hr>
+                  <a class="btn btn-primary btn-lg btn-block" href="{% url 'new_database_operation' %}" role="button">Create New Database Operations</a>
+                  <a class="btn btn-primary btn-lg btn-block" href="" role="button">Generate Statement Billing</a>
+                  <hr>
+                      <table id="listTable" class="display nowrap" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Action</th>
+                                    <th>ID</th>
+                                    <th>DATE</th>
+                                    <th>CALL TIME</th>
+                                    <th>ORIGIN</th>
+                                    <th>DESTINATION</th>
+                                    <th>CLIENT</th>
+                                    <th>CUSTOMER</th>
+                                    <th>REMARKS</th>
+                                    <th>PLATE NO.</th>
+                                    <th>WB NO.</th>
+                                    <th>DRIVER</th>
+                                    <th>HELPER</th>
+                                    <th>TRUCK TYPE</th>
+                                    <th>QTY</th>
+                                    <th>DRIVER-SAL</th>
+                                    <th>HELPER-SAL</th>
+                                    <th>BILLING</th>
+                                    <th>RECEIVED BY</th>
+                                    <th>RECEIVED TIME</th>
+                                    <th>ENTRY FEE</th>
+                                    <th>PARKING</th>
+                                    <th>C/TOLL FEE</th>
+                                    <th>OTHERS</th>
+                                    <th>TOTAL LIQUIDATION</th>
+                                    <th>TRUCK BUDGET</th>
+                                    <th>TOTAL UNLIQUIDATED</th>
+                                    <th>ADDITIONAL DRIVER SALARY</th>
+                                    <th>ADDITIONAL HELPER SALARY</th>
+                                    <th>BILLING ADDITIONAL</th>
+                                    <th>DIESEL</th>
+                                    <th>REVENUE</th>
+                                    <th>BILLED DATE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in list %}
+                             <tr>
+                                <td>
+                                    <div class="btn-group-vertical btn-group-sm" role="group" aria-label="...">
+                                        <a class="btn btn-round btn-success" href="{% url 'edit_database_operation' item.id %}" role="button">Edit</a>
+                                        <a class="btn btn-round btn-danger" href="{% url 'delete_database_operation' item.id %}" role="button">Delete</a>
+                                    </div>
+                                </td>
+                                <td>{{ item.id }}</td>
+                                <td>{{ item.date }}</td>
+                                <td>{{ item.calltime }}</td>
+                                <td>{{ item.origin }}</td>
+                                <td>{{ item.destination }}</td>
+                                <td>{{ item.client.clientname }}</td>
+                                <td>{{ item.customer.customername }}</td>
+                                <td>{{ item.remarks }}</td>
+                                <td>{{ item.plateno }}</td>
+                                <td>{{ item.wbno }}</td>
+                                <td>{{ item.driver.drivername }}</td>
+                                <td>{{ item.helper }}</td>
+                                <td>{{ item.trucktype }}</td>
+                                <td>{{ item.qty }}</td>
+                                <td>{{ item.driversal }}</td>
+                                <td>{{ item.helpersal }}</td>
+                                <td>{{ item.billing }}</td>
+                                <td>{{ item.receivedby }}</td>
+                                <td>{{ item.receiveddatetime }}</td>
+                                <td>{{ item.entryfee }}</td>
+                                <td>{{ item.parking }}</td>
+                                <td>{{ item.tollfee }}</td>
+                                <td>{{ item.others }}</td>
+                                <td>{{ item.totalliq }}</td>
+                                <td>{{ item.truckbudget }}</td>
+                                <td>{{ item.unliq }}</td>
+                                <td>{{ item.addldriversal }}</td>
+                                <td>{{ item.cahelper }}</td>
+                                <td>{{ item.addl }}</td>
+                                <td>{{ item.diesel }}</td>
+                                <td>{{ item.revenue }}</td>
+                                <td>{{ item.billeddate }}</td>
+                             </tr>
+                            {% endfor %}
+                            </tbody>
+                      </table>
+                  </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="modalLabel">Modal title</h5>
+                          </div>
+                          <div id="modalBody" class="modal-body">
+                            ...
+                          </div>
+                          <div class="modal-footer">
+                            <a class="btn btn-round btn-success" id="modalEditButton" role="button">Edit</a>
+                            <a class="btn btn-round btn-danger" id="modalDeleteButton" role="button">Delete</a>
+                            <button type="button" class="btn btn-round" data-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  <!-- /tab-pane -->
+                </div>
+                <!-- /tab-content -->
+              </div>
+              <!-- /panel-body -->
+            </div>
+            <!-- /col-lg-12 -->
+          </div>
+          <!-- /row -->
+        </div>
+
+          <!-- col-lg-12-->
+        </div>
+          </div>
+          <!-- /col-lg-12 -->
+          <!-- CUSTOM TOGGLES -->
+        </div>
+        <!-- /row -->
+      </section>
+      <!-- /wrapper -->
+    </section>
+    <script>
+        let today = new Date();
+        let time = '';
+        let dd = today.getDate();
+        let mm = today.getMonth() + 1; //January is 0!
+        let yyyy = today.getFullYear();
+        let hour    = today.getHours();
+        let minute  = today.getMinutes();
+        let second  = today.getSeconds();
+
+        if (dd < 10) {
+          dd = '0' + dd;
+        }
+
+        if (mm < 10) {
+          mm = '0' + mm;
+        }
+
+        if(hour.toString().length == 1) {
+         hour = '0'+hour;
+        }
+        if(minute.toString().length == 1) {
+             minute = '0'+minute;
+        }
+        if(second.toString().length == 1) {
+             second = '0'+second;
+        }
+
+        today = mm + '/' + dd + '/' + yyyy;
+        time = hour+':'+minute+':'+second;
+        $(document).ready(function() {
+            $('#listTable').DataTable({
+                responsive: true,
+                retrieve: true,
+                paging: false,
+                dom: 'Bfrtip',
+                "scrollX": true,
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    'colvis'
+                ]
+            });
+        });
+
+        var table;
+
+        if ( $.fn.dataTable.isDataTable( '#listTable' ) ) {
+            table = $('#listTable').DataTable();
+        }
+        else {
+            table = $('#listTable').DataTable({
+                responsive: true,
+                retrieve: true,
+                paging: false,
+                dom: 'Bfrtip',
+                "scrollX": true,
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    'colvis'
+                ]
+            });
+        }
+
+        $('#listTable tbody').on( 'click', 'tr', function () {
+            // alert( table.row( this ).data() );
+            var modalBody = "<table class=\"table table-bordered\">";
+            for(var i = 2; i <= 27 ; i++){
+                modalBody += "<tr>";
+                modalBody += "<td><b>"+ table.columns(i).header()[0].textContent +"</b></td>";
+                modalBody += "<td>" + table.row(this).data()[i] + "</td>";
+                modalBody += "</tr>";
+            }
+            modalBody += "</table>";
+            $('#modalBody').html(modalBody);
+            $('#modalLabel').html("DATABASE OPERATION  " + table.row(this).data()[1]);
+            $('#modalEditButton').attr('href', '/database_operations/editDBO/' + table.row(this).data()[1]);
+            $('#modalDeleteButton').attr('href', '/database_operations/deleteDBO/' + table.row(this).data()[1]);
+            $('#exampleModal').modal();
+        } );
+    </script>
+{% endblock %}
