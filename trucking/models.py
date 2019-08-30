@@ -40,10 +40,10 @@ class Driver(models.Model):
 
 
 TRUCK_TYPE_CHOICES = (
-    ('1', '4W'),
-    ('2', '10W'),
-    ('3', 'FWD'),
-    ('4', '6W'),
+    ('4W', '4W'),
+    ('10W', '10W'),
+    ('FWD', 'FWD'),
+    ('6W', '6W'),
 )
 
 
@@ -86,6 +86,18 @@ class Table1(models.Model):
     class Meta:
         managed = False
         db_table = 'table1'
+
+
+class SplitAmounts(models.Model):
+    splitamountid = models.AutoField(db_column='splitAmountID', primary_key=True)  # Field name made lowercase.
+    dboid = models.ForeignKey('Table1', models.DO_NOTHING, db_column='dboID')  # Field name made lowercase.
+    type = models.CharField(max_length=45)
+    amount = models.FloatField(blank=True, null=True)
+    remarks = models.CharField(max_length=45, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'split_amounts'
 
 
 class Userinformation(models.Model):

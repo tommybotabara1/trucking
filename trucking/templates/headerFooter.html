@@ -55,39 +55,9 @@
             <ul class="dropdown-menu extended notification">
               <div class="notify-arrow notify-arrow-yellow"></div>
               <li>
-                <p class="yellow">You have 7 new notifications</p>
+                <p class="yellow">You have 0 notifications</p>
               </li>
-              <li>
-                <a href="index.html#">
-                  <span class="label label-danger"><i class="fa fa-bolt"></i></span>
-                  Server Overloaded.
-                  <span class="small italic">4 mins.</span>
-                  </a>
-              </li>
-              <li>
-                <a href="index.html#">
-                  <span class="label label-warning"><i class="fa fa-bell"></i></span>
-                  Memory #2 Not Responding.
-                  <span class="small italic">30 mins.</span>
-                  </a>
-              </li>
-              <li>
-                <a href="index.html#">
-                  <span class="label label-danger"><i class="fa fa-bolt"></i></span>
-                  Disk Space Reached 85%.
-                  <span class="small italic">2 hrs.</span>
-                  </a>
-              </li>
-              <li>
-                <a href="index.html#">
-                  <span class="label label-success"><i class="fa fa-plus"></i></span>
-                  New User Registered.
-                  <span class="small italic">3 hrs.</span>
-                  </a>
-              </li>
-              <li>
-                <a href="index.html#">See all notifications</a>
-              </li>
+
             </ul>
           </li>
           <!-- notification dropdown end -->
@@ -111,24 +81,24 @@
         <ul class="sidebar-menu" id="nav-accordion">
           <h5 class="centered">System Admin</h5>
           <li class="mt">
-            <a href="{% url 'index' %}">
+            <a class="{% if request.resolver_match.view_name ==  'index'%}active{% endif %}" href="{% url 'index' %}">
               <i class="fa fa-home"></i>
               <span>Home</span>
               </a>
           </li>
           <li class="mt">
-            <a href="{% url 'users' %}">
+            <a class="{% if request.resolver_match.view_name ==  'users'%}active{% endif %}" href="{% url 'users' %}">
               <i class="fa fa-dashboard"></i>
               <span>Users</span>
               </a>
           </li>
           <li class="sub-menu">
-            <a href="">
+            <a href="" class="{% if request.resolver_match.view_name ==  'database_operations' or  request.resolver_match.view_name == 'new_database_operation'%}active{% endif %}">
               <i class="fa fa-tasks"></i>
               <span>Forms</span>
               </a>
             <ul class="sub">
-              <li><a href="{% url 'database_operations' %}">Database operations</a></li>
+              <li class="{% if request.resolver_match.view_name ==  'database_operations' or  request.resolver_match.view_name == 'new_database_operation'%}active{% endif %}"><a href="{% url 'database_operations' %}">Database operations</a></li>
 
             </ul>
           </li>

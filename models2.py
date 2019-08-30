@@ -148,6 +148,18 @@ class Driver(models.Model):
         db_table = 'driver'
 
 
+class SplitAmounts(models.Model):
+    splitamountid = models.AutoField(db_column='splitAmountID', primary_key=True)  # Field name made lowercase.
+    dboid = models.ForeignKey('Table1', models.DO_NOTHING, db_column='dboID')  # Field name made lowercase.
+    type = models.CharField(max_length=45)
+    amount = models.FloatField(blank=True, null=True)
+    remarks = models.CharField(max_length=45, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'split_amounts'
+
+
 class Table1(models.Model):
     calltime = models.TimeField(db_column='callTime', blank=True, null=True)  # Field name made lowercase.
     date = models.DateField(blank=True, null=True)

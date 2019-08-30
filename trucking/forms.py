@@ -113,15 +113,16 @@ class DatabaseOperationForm(ModelForm):
             'diesel': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
             'truckbudget': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
             'cahelper': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
-            'tollfee': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
-            'parking': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
-            'entryfee': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
-            'others': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'tollfee': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0", "readonly": "true"}),
+            'parking': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0", "readonly": "true"}),
+            'entryfee': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0", "readonly": "true"}),
+            'others': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0", "readonly": "true"}),
             'unliq': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0", "readonly": "true"}),
             'revenue': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0", "readonly": "true"}),
             'billeddate': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
         }
         labels = {
+
             'plateno': "Plate number",
             'calltime': "Call Time",
             'wbno': "WayBill number",

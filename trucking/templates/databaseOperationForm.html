@@ -50,7 +50,7 @@
                     <div class="row">
                       <div class="col-lg-8 col-lg-offset-2 detailed">
                       {% if extra != -1 %}
-                        <h4 class="mb">Edit Database Operation {{ extra  }}</h4>
+                        <h4 class="mb">Edit Database Operation {{ extra }}</h4>
                         <select name="phase" class="form-control" id="phase">
                           <option value="A">PHASE A</option>
                           <option value="B">PHASE B</option>
@@ -1688,6 +1688,12 @@
                                           {% elif field.label == "Client" %}
                                               <br>
                                               <button class="btn btn-info" type="button" data-toggle="modal" data-target="#clientFormModal">Add Client</button>
+                                          {% elif field.label == "Entry Fee" or field.label == "Parking" or field.label == "Toll Fee" or field.label == "Others" %}
+                                              <br>
+                                              <button class="btn btn-info" type="button" data-toggle="modal" data-target="#splitAmountsForm" onclick="updateSplitAmountModalValues('{{ field.label }}')">Split Amounts</button>
+                                          {% elif field.label == "Billed Date" %}
+                                              <br>
+                                              <button id="billingInfoButton" class="btn btn-info" type="button" data-toggle="modal" data-target="#billingInfoModal" disabled>BILLING INFORMATION</button>
                                           {% endif %}
                                       </div>
                                   </div>
@@ -1850,191 +1856,419 @@
       </div>
     </div>
 
+    <div class="modal fade" id="billingInfoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">BILLING INFORMATION</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <h3>Driver Salary Details for the week</h3>
+              <hr>
+              <h3>Billing information for the client</h3>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="splitAmountsForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 id="splitAccountModalTitle" class="modal-title">Split Amounts</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <input type="hidden" id="splitAmountType">
+              <table id="splitAmountTable" class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Amount</th>
+                    <th>Remarks</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="tableData">
+                </tbody>
+              </table>
+              <button class="form-control" type="button" onclick="appendRow()">+</button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="saveSplitAmount()">Save Changes</button>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <script>
-    $("#mainForm").submit(function(e) {
-        alert("New DBO Created");
-    });
-
-    $("#driverForm").submit(function(e) {
-
-        e.preventDefault(); // avoid to execute the actual submit of the form.
-
-        var values = {};
-        $.each($('#driverForm').serializeArray(), function(i, field) {
-            values[field.name] = field.value;
-        });
-
-        $.ajax({
-            type: "POST",
-            url: '{% url 'add_new_driver' %}',
-            data: values, // serializes the form's elements.
-            success: function (data) {
-                alert(data[0].response); // show response from the php script.
-                $( "#id_driver" ).append( "<option value='"+ data[0].driverID +"'>"+ data[0].driverName +"</option>");
-
-                var nextID = data[0].driverID + 1;
-
-                $("#id_driverid").val(nextID);
-
-                $('#driverForm').trigger("reset");
-
-                $('#driverFormModal').modal('toggle');
-
-                var x = data[0].driverID;
-
-                $("#id_driver").val(x);
-
-            }
-        });
-    });
-
-    $("#customerForm").submit(function(e) {
-
-        e.preventDefault(); // avoid to execute the actual submit of the form.
-
-        var values = {};
-        $.each($('#customerForm').serializeArray(), function(i, field) {
-            values[field.name] = field.value;
-        });
-
-        $.ajax({
-            type: "POST",
-            url: '{% url 'add_new_customer' %}',
-            data: values, // serializes the form's elements.
-            success: function (data) {
-                alert(data[0].response); // show response from the php script.
-                $( "#id_customer" ).append( "<option value='"+ data[0].customerID +"'>"+ data[0].customerName +"</option>");
-
-                var nextID = data[0].customerID + 1;
-
-                $("#id_customerid").val(nextID);
-
-                $('#customerForm').trigger("reset");
-
-                $('#customerFormModal').modal('toggle');
-
-                var x = data[0].customerID;
-
-                $("#id_customer").val(x);
-
-            }
-        });
-    });
-
-    $("#clientForm").submit(function(e) {
-
-        e.preventDefault(); // avoid to execute the actual submit of the form.
-
-        var values = {};
-        $.each($('#clientForm').serializeArray(), function(i, field) {
-            values[field.name] = field.value;
-        });
-
-        $.ajax({
-            type: "POST",
-            url: '{% url 'add_new_client' %}',
-            data: values, // serializes the form's elements.
-            success: function (data) {
-                alert(data[0].response); // show response from the php script.
-                $( "#id_client" ).append( "<option value='"+ data[0].clientID +"'>"+ data[0].clientName +"</option>");
-
-                var nextID = data[0].clientID + 1;
-
-                $("#id_clientid").val(nextID);
-
-                $('#clientForm').trigger("reset");
-
-                $('#clientFormModal').modal('toggle');
-
-                var x = data[0].clientID;
-
-                $("#id_client").val(x);
-            }
-        });
-    });
-
-    $(document).ready(function(){
-
-        $("#phaseB").hide();
-        $("#phaseC").hide();
-        $("#phaseD").hide();
-
-        var date = $("#id_receiveddatetime").attr("value");
-        var replaced = date.split(' ').join('T');
-        replaced = replaced.substring(0, replaced.length - 3);
-        $("#id_receiveddatetime").val(replaced);
-
-    });
-
-    $( "#phase" ).change(function() {
-
-        var phase = $(this).val();
-
-        var previousPhase = "";
-        if(phase == "B")
-            previousPhase = "A";
-        else if(phase == "C")
-            previousPhase = "B";
-        else if(phase == "D")
-            previousPhase = "C";
-
-        //console.log(previousPhase);
-
-        var tag = "#phase" + previousPhase + " input";
-
-        //var emptyInputs = $(tag).filter(function() { return $(this).val() == ""; });
-
-        //console.log(emptyInputs);
-        var isValid = true;
-        $(tag).each(function() {
-           var element = $(this);
-           if (element.val() == "") {
-               isValid = false;
-           }
-        });
-        //console.log(isValid);
-
-        if(isValid){
-            $('.fields').hide();
-            $("#phase" + $(this).val()).show();
+        function appendRow(){
+            var tbl = document.getElementById("tableData");
+            var rCount = tbl.rows.length + 1;
+            wew = '<tr>'+
+              '<td><input type="number" class="form-control"></td>'+
+              '<td><input type="text" class="form-control"></td>'+
+              '<td><button type="button" class="split btn btn-danger">Remove</button></td>'+
+            '</tr>';
+            $("#tableData").append(wew);
         }
-        else{
-            alert("Phase " + previousPhase + " not yet completed");
-            $("#phase").val(previousPhase);
+
+        function saveSplitAmount(){
+            var tbl = document.getElementById("tableData");
+            var rCount = tbl.rows.length;
+            var amounts = new Array();
+            var remarks = new Array();
+
+            for(var i = 0; i < rCount; i++){
+              amounts.push(parseInt(tbl.rows[i].cells[0].children[0].value));
+              remarks.push(tbl.rows[i].cells[1].children[0].value);
+              // alert(tbl.rows[i].cells[0].children[0].value);
+            }
+
+            var total = amounts.reduce((a, b) => a + b, 0);
+
+            var idTag = $("#splitAmountType").val().toLowerCase();
+
+            idTag = idTag.replace(/ /g, '');
+            idTag = "id_"+idTag;
+
+            $("#" + idTag).val(total);
+
+            $.ajax({
+              url: '{% url "add_new_split_amount" %}',
+              data: {
+                "dboID":{{ extra }},
+                "type": $("#splitAmountType").val(),
+                "amounts[]":amounts,
+                "remarks[]":remarks,
+              },
+              dataType: 'json',
+              success: function(data){
+                updatePhaseC();
+              },
+              error: function () {
+                alert("error");
+              },
+
+            });
+
         }
-    });
 
-    $("#phaseC input").change(function(){
+        function updateSplitAmountModalValues(type){
+            console.log(type);
+            $("#tableData").html("");
 
-        var driverSal = parseFloat($("#id_driversal").val()) || 0;
-        var helperSal = parseFloat($("#id_helpersal").val()) || 0;
-        var billing = parseFloat($("#id_billing").val()) || 0;
+            $("#splitAccountModalTitle").html("Split Amounts (" + type + ")");
+            $("#splitAmountType").val(type);
 
-        var entryFee = parseFloat($("#id_entryfee").val()) || 0;
-        var parking = parseFloat($("#id_parking").val()) || 0;
-        var tollFee = parseFloat($("#id_tollfee").val()) || 0;
-        var others = parseFloat($("#id_others").val()) || 0;
+            $.ajax({
+              url: '{% url "get_split_amount" %}',
+              data: {
+                "dboID":{{ extra }},
+                "type": $("#splitAmountType").val(),
+              },
+              dataType: 'json',
+              success: function(data){
+                  var rows = "";
+                  for(var i = 0; i < data.length; i++){
+                      rows = '<tr>'+
+                                  '<td><input type="number" class="form-control" value="'+ data[i].amount +'"></td>'+
+                                  '<td><input type="text" class="form-control" value="'+ data[i].remarks +'"></td>'+
+                                  '<td><button type="button" class="split btn btn-danger" splitAmountID="' + data[i].splitAmountID + '">Remove</button></td>'+
+                                '</tr>';
+                      $("#tableData").append(rows);
+                  }
+              },
+              error: function () {
+                alert("error");
+              },
+            });
 
-        var truckBudget = parseFloat($("#id_truckbudget").val()) || 0;
+        }
 
-        var addLDriverSal = parseFloat($("#id_addldriversal").val()) || 0;
-        var addLHelperSal = parseFloat($("#id_cahelper").val()) || 0;
-        var addLBilling = parseFloat($("#id_addl").val()) || 0;
+        $('#splitAmountTable').on('click', '.split', function(){
+            console.log($(this).attr('splitamountid'));
 
-        var diesel = parseFloat($("#id_diesel").val()) || 0;
+            $.ajax({
+              url: '{% url "delete_split_amount" %}',
+              data: {
+                "splitAmountID": $(this).attr('splitamountid'),
+              },
+              dataType: 'json',
+              success: function(data){
+              },
+              error: function () {
+                alert("error");
+              },
+            });
 
-        var totalLiq =  entryFee + parking + tollFee + others;
-        var totalUnliq =  truckBudget - totalLiq;
-        var revenue =  (billing + addLBilling) - totalLiq - diesel - driverSal - addLDriverSal - helperSal - addLHelperSal ;
+            $(this).closest ('tr').remove ();
+        });
 
-        $("#id_totalliq").val(totalLiq);
+        $("#mainForm").submit(function(e) {
+            alert("New DBO Created");
+        });
 
-        $("#id_unliq").val(totalUnliq);
+        $("#driverForm").submit(function(e) {
 
-        $("#id_revenue").val(revenue);
+            e.preventDefault(); // avoid to execute the actual submit of the form.
 
-        console.log(($("#id_receiveddatetime").val()));
+            var values = {};
+            $.each($('#driverForm').serializeArray(), function(i, field) {
+                values[field.name] = field.value;
+            });
 
-    });
+            $.ajax({
+                type: "POST",
+                url: '{% url 'add_new_driver' %}',
+                data: values, // serializes the form's elements.
+                success: function (data) {
+                    alert(data[0].response); // show response from the php script.
+                    $( "#id_driver" ).append( "<option value='"+ data[0].driverID +"'>"+ data[0].driverName +"</option>");
+
+                    var nextID = data[0].driverID + 1;
+
+                    $("#id_driverid").val(nextID);
+
+                    $('#driverForm').trigger("reset");
+
+                    $('#driverFormModal').modal('toggle');
+
+                    var x = data[0].driverID;
+
+                    $("#id_driver").val(x);
+
+                }
+            });
+        });
+
+        $("#customerForm").submit(function(e) {
+
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+
+            var values = {};
+            $.each($('#customerForm').serializeArray(), function(i, field) {
+                values[field.name] = field.value;
+            });
+
+            $.ajax({
+                type: "POST",
+                url: '{% url 'add_new_customer' %}',
+                data: values, // serializes the form's elements.
+                success: function (data) {
+                    alert(data[0].response); // show response from the php script.
+                    $( "#id_customer" ).append( "<option value='"+ data[0].customerID +"'>"+ data[0].customerName +"</option>");
+
+                    var nextID = data[0].customerID + 1;
+
+                    $("#id_customerid").val(nextID);
+
+                    $('#customerForm').trigger("reset");
+
+                    $('#customerFormModal').modal('toggle');
+
+                    var x = data[0].customerID;
+
+                    $("#id_customer").val(x);
+
+                }
+            });
+        });
+
+        $("#clientForm").submit(function(e) {
+
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+
+            var values = {};
+            $.each($('#clientForm').serializeArray(), function(i, field) {
+                values[field.name] = field.value;
+            });
+
+            $.ajax({
+                type: "POST",
+                url: '{% url 'add_new_client' %}',
+                data: values, // serializes the form's elements.
+                success: function (data) {
+                    alert(data[0].response); // show response from the php script.
+                    $( "#id_client" ).append( "<option value='"+ data[0].clientID +"'>"+ data[0].clientName +"</option>");
+
+                    var nextID = data[0].clientID + 1;
+
+                    $("#id_clientid").val(nextID);
+
+                    $('#clientForm').trigger("reset");
+
+                    $('#clientFormModal').modal('toggle');
+
+                    var x = data[0].clientID;
+
+                    $("#id_client").val(x);
+                }
+            });
+        });
+
+        $(document).ready(function(){
+            $.ajax({
+              url: '{% url "get_split_amount_total" %}',
+              data: {
+                "dboID":{{ extra }},
+                "type": "Entry Fee",
+              },
+              dataType: 'json',
+              success: function(data){
+                  $("#id_entryfee").val(data);
+                  updatePhaseC();
+              },
+              error: function () {
+                alert("error");
+              },
+            });
+            $.ajax({
+              url: '{% url "get_split_amount_total" %}',
+              data: {
+                "dboID":{{ extra }},
+                "type": "Parking",
+              },
+              dataType: 'json',
+              success: function(data){
+                  $("#id_parking").val(data);
+                  updatePhaseC();
+              },
+              error: function () {
+                alert("error");
+              },
+            });
+            $.ajax({
+              url: '{% url "get_split_amount_total" %}',
+              data: {
+                "dboID":{{ extra }},
+                "type": "Toll Fee",
+              },
+              dataType: 'json',
+              success: function(data){
+                  $("#id_tollfee").val(data);
+                  updatePhaseC();
+              },
+              error: function () {
+                alert("error");
+              },
+            });
+            $.ajax({
+              url: '{% url "get_split_amount_total" %}',
+              data: {
+                "dboID":{{ extra }},
+                "type": "Others",
+              },
+              dataType: 'json',
+              success: function(data){
+                  $("#id_others").val(data);
+                  updatePhaseC();
+              },
+              error: function () {
+                alert("error");
+              },
+            });
+
+            $("#phaseB").hide();
+            $("#phaseC").hide();
+            $("#phaseD").hide();
+
+            var date = $("#id_receiveddatetime").attr("value");
+            var replaced = date.split(' ').join('T');
+            replaced = replaced.substring(0, replaced.length - 3);
+            $("#id_receiveddatetime").val(replaced);
+        });
+
+        $( "#phase" ).change(function() {
+
+            var phase = $(this).val();
+
+            var previousPhase = "";
+            if(phase == "B")
+                previousPhase = "A";
+            else if(phase == "C")
+                previousPhase = "B";
+            else if(phase == "D")
+                previousPhase = "C";
+
+            //console.log(previousPhase);
+
+            var tag = "#phase" + previousPhase + " input";
+
+            //var emptyInputs = $(tag).filter(function() { return $(this).val() == ""; });
+
+            //console.log(emptyInputs);
+            var isValid = true;
+            $(tag).each(function() {
+               var element = $(this);
+               if (element.val() == "") {
+                   isValid = false;
+               }
+            });
+            //console.log(isValid);
+
+            if(isValid){
+                $('.fields').hide();
+                $("#phase" + $(this).val()).show();
+            }
+            else{
+                alert("Phase " + previousPhase + " not yet completed");
+                $("#phase").val(previousPhase);
+            }
+        });
+
+        $("#phaseC input").change(function(){
+            updatePhaseC();
+        });
+
+        function updatePhaseC(){
+            var driverSal = parseFloat($("#id_driversal").val()) || 0;
+            var helperSal = parseFloat($("#id_helpersal").val()) || 0;
+            var billing = parseFloat($("#id_billing").val()) || 0;
+
+            var entryFee = parseFloat($("#id_entryfee").val()) || 0;
+            var parking = parseFloat($("#id_parking").val()) || 0;
+            var tollFee = parseFloat($("#id_tollfee").val()) || 0;
+            var others = parseFloat($("#id_others").val()) || 0;
+
+            var truckBudget = parseFloat($("#id_truckbudget").val()) || 0;
+
+            var addLDriverSal = parseFloat($("#id_addldriversal").val()) || 0;
+            var addLHelperSal = parseFloat($("#id_cahelper").val()) || 0;
+            var addLBilling = parseFloat($("#id_addl").val()) || 0;
+
+            var diesel = parseFloat($("#id_diesel").val()) || 0;
+
+            var totalLiq =  entryFee + parking + tollFee + others;
+            var totalUnliq =  truckBudget - totalLiq;
+            var revenue =  (billing + addLBilling) - totalLiq - diesel - driverSal - addLDriverSal - helperSal - addLHelperSal ;
+
+            $("#id_totalliq").val(totalLiq);
+
+            $("#id_unliq").val(totalUnliq);
+
+            $("#id_revenue").val(revenue);
+
+            console.log(($("#id_receiveddatetime").val()));
+        }
+
+        $("#id_billeddate").change(function(){
+            if($(this).val() == ""){
+                $("#billingInfoButton").attr("disabled", true);
+            }
+            else{
+                $("#billingInfoButton").attr("disabled", false);
+            }
+        });
+
     </script>
 {% endblock %}

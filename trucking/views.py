@@ -6,7 +6,6 @@ from datetime import datetime
 def index(request):
     return render(request, 'index.html',)
 
-
 def testing(request):
     users_list = Userinformation.objects.all()
 
@@ -50,12 +49,10 @@ def edit_database_operation(request, id):
         # create a form instance and populate it with data from the request:
         a = Table1.objects.get(id=id)
         form = DatabaseOperationForm(request.POST, instance=a)
-        print(form.data)
         form.data = form.data.copy()
         date = form.data['receiveddatetime']
-        form.data['receiveddatetime'] = datetime.strptime(date, "%Y-%m-%dT%H:%M")
-
-        print(datetime.strptime(date, "%Y-%m-%dT%H:%M"))
+        if date != '':
+            form.data['receiveddatetime'] = datetime.strptime(date, "%Y-%m-%dT%H:%M")
 
         # check whether it's valid:
         if form.is_valid():
@@ -186,3 +183,57 @@ def add_new_client(request):
         client_form = ClientForm()
 
     return JsonResponse(['not'], safe=False)
+
+
+def add_new_split_amount(request):
+    amounts = request.GET.getlist('amounts[]')
+    remarks = request.GET.getlist('remarks[]')
+    dboID = Table1.objects.get(id=request.GET.get('dboID'))
+    type = request.GET.get('type')
+
+    SplitAmounts.objects.filter(dboid=dboID, type=type).delete()
+
+    for x in range(0, len(amounts)):
+        splitAmount = SplitAmounts(dboid=dboID, type=type, amount=amounts[x], remarks=remarks[0])
+        splitAmount.save()
+
+    return JsonResponse([], safe=False)
+
+
+def get_split_amount(request):
+    dboID = request.GET.get('dboID')
+    type = request.GET.get('type')
+
+    amounts = []
+
+    splitAmounts = SplitAmounts.objects.filter(dboid=dboID, type=type)
+
+    for splitAmount in splitAmounts:
+        amounts.append({
+            'splitAmountID': splitAmount.splitamountid,
+            'amount': splitAmount.amount,
+            'remarks': splitAmount.remarks,
+        })
+
+    return JsonResponse(amounts, safe=False)
+
+
+def get_split_amount_total(request):
+    dboID = request.GET.get('dboID')
+    type = request.GET.get('type')
+
+    splitAmounts = SplitAmounts.objects.filter(dboid=dboID, type=type)
+
+    total = 0
+    for splitAmount in splitAmounts:
+        total += splitAmount.amount
+
+    return JsonResponse(total, safe=False)
+
+
+def delete_split_amount(request):
+    splitAmountID = request.GET.get('splitAmountID')
+
+    SplitAmounts.objects.filter(splitamountid=splitAmountID).delete()
+
+    return JsonResponse([], safe=False)

@@ -285,7 +285,7 @@
         $('#listTable tbody').on( 'click', 'tr', function () {
             // alert( table.row( this ).data() );
             var modalBody = "<table class=\"table table-bordered\">";
-            for(var i = 2; i <= 27 ; i++){
+            for(var i = 2; i <= 32 ; i++){
                 modalBody += "<tr>";
                 modalBody += "<td><b>"+ table.columns(i).header()[0].textContent +"</b></td>";
                 modalBody += "<td>" + table.row(this).data()[i] + "</td>";
