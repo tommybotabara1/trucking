@@ -93,12 +93,12 @@
               </a>
           </li>
           <li class="sub-menu">
-            <a href="" class="{% if request.resolver_match.view_name ==  'database_operations' or  request.resolver_match.view_name == 'new_database_operation'%}active{% endif %}">
+            <a href="" class="{% if request.resolver_match.view_name ==  'database_operations' or  request.resolver_match.view_name == 'new_database_operation' or  request.resolver_match.view_name == 'edit_database_operation'%}active{% endif %}">
               <i class="fa fa-tasks"></i>
               <span>Forms</span>
               </a>
             <ul class="sub">
-              <li class="{% if request.resolver_match.view_name ==  'database_operations' or  request.resolver_match.view_name == 'new_database_operation'%}active{% endif %}"><a href="{% url 'database_operations' %}">Database operations</a></li>
+              <li class="{% if request.resolver_match.view_name ==  'database_operations' or  request.resolver_match.view_name == 'new_database_operation' or  request.resolver_match.view_name == 'edit_database_operation'%}active{% endif %}"><a href="{% url 'database_operations' %}">Database operations</a></li>
 
             </ul>
           </li>

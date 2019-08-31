@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, HttpResponse, HttpResponseRedirect, redirect
 from django.http import JsonResponse
 from .forms import *
 from datetime import datetime
@@ -18,7 +18,6 @@ def database_operations(request):
 
 
 def new_database_operation(request):
-    extra = -1
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = DatabaseOperationForm(request.POST)
@@ -27,8 +26,7 @@ def new_database_operation(request):
             # process the data in form.cleaned_data as required
             newDatabaseOperation = form.save()
             # redirect to a new URL:
-            list = Table1.objects.all()
-            return render(request, 'databaseOperations.html', {'list': list})
+            return redirect('edit_database_operation', id=Table1.objects.last().id, phase="B")
         else:
             return HttpResponse(form.errors)
     else:
@@ -36,15 +34,16 @@ def new_database_operation(request):
         driver_form = DriverForm()
         customer_form = CustomerForm()
         client_form = ClientForm()
-    return render(request, 'databaseOperationForm.html', {'form': form,
-                                                          'extra': extra,
-                                                          'driver_form': driver_form,
-                                                          'customer_form': customer_form,
-                                                          'client_form': client_form,
-                                                          })
+        extra = -1
+        return render(request, 'databaseOperationForm.html', {'form': form,
+                                                              'extra': extra,
+                                                              'driver_form': driver_form,
+                                                              'customer_form': customer_form,
+                                                              'client_form': client_form,
+                                                              })
 
 
-def edit_database_operation(request, id):
+def edit_database_operation(request, id, phase):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         a = Table1.objects.get(id=id)
@@ -68,6 +67,7 @@ def edit_database_operation(request, id):
         a = Table1.objects.get(id=id)
         form = DatabaseOperationForm(instance=a)
         extra = id
+        phase = phase
 
         driver_form = DriverForm()
         customer_form = CustomerForm()
@@ -77,7 +77,8 @@ def edit_database_operation(request, id):
                                                           'extra': extra,
                                                           'driver_form': driver_form,
                                                           'customer_form': customer_form,
-                                                          'client_form': client_form,})
+                                                          'client_form': client_form,
+                                                          'phase': phase})
 
 
 def delete_database_operation(request, id):
