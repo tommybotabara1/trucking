@@ -48,7 +48,7 @@
         <ul class="nav top-menu">
           <!-- notification dropdown start-->
           <li id="header_notification_bar" class="dropdown">
-            <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+            <a data-toggle="dropdown" class="dropdown-toggle" href="../index.html#">
               <i class="fa fa-bell-o"></i>
               <span class="badge bg-warning"></span>
               </a>
@@ -93,13 +93,33 @@
               </a>
           </li>
           <li class="sub-menu">
-            <a href="" class="{% if request.resolver_match.view_name ==  'database_operations' or  request.resolver_match.view_name == 'new_database_operation' or  request.resolver_match.view_name == 'edit_database_operation'%}active{% endif %}">
+            <a href="" class="{% if request.resolver_match.view_name ==  'database_operations' or  request.resolver_match.view_name == 'new_database_operation' or  request.resolver_match.view_name == 'edit_database_operation' or request.resolver_match.view_name == 'delete_database_operation' or request.resolver_match.view_name ==  'tariff' or  request.resolver_match.view_name == 'new_tariff' or  request.resolver_match.view_name == 'edit_tariff' or request.resolver_match.view_name == 'delete_tariff' or request.resolver_match.view_name ==  'truck_budget' or  request.resolver_match.view_name == 'new_truck_budget' or  request.resolver_match.view_name == 'edit_truck_budget' or request.resolver_match.view_name == 'delete_truck_budget' or request.resolver_match.view_name ==  'statement_of_account' or  request.resolver_match.view_name == 'new_statement_of_account' or  request.resolver_match.view_name == 'edit_statement_of_account' or request.resolver_match.view_name == 'delete_statement_of_account' or request.resolver_match.view_name ==  'direct_payroll' or  request.resolver_match.view_name == 'new_direct_payroll' or  request.resolver_match.view_name == 'edit_direct_payroll' or request.resolver_match.view_name == 'delete_direct_payroll' or request.resolver_match.view_name ==  'breakdown' or  request.resolver_match.view_name == 'new_breakdown' or  request.resolver_match.view_name == 'edit_breakdown' or request.resolver_match.view_name == 'delete_breakdown' or request.resolver_match.view_name ==  'canteen' or  request.resolver_match.view_name == 'new_canteen' or  request.resolver_match.view_name == 'edit_canteen' or request.resolver_match.view_name == 'delete_canteen' or request.resolver_match.view_name ==  'damages' or  request.resolver_match.view_name == 'new_damages' or  request.resolver_match.view_name == 'edit_damages' or request.resolver_match.view_name == 'delete_damages'%}active{% endif %}">
               <i class="fa fa-tasks"></i>
               <span>Forms</span>
               </a>
             <ul class="sub">
-              <li class="{% if request.resolver_match.view_name ==  'database_operations' or  request.resolver_match.view_name == 'new_database_operation' or  request.resolver_match.view_name == 'edit_database_operation'%}active{% endif %}"><a href="{% url 'database_operations' %}">Database operations</a></li>
-
+              <li class="{% if request.resolver_match.view_name ==  'database_operations' or  request.resolver_match.view_name == 'new_database_operation' or  request.resolver_match.view_name == 'edit_database_operation' or request.resolver_match.view_name == 'delete_database_operation'%}active{% endif %}"><a href="{% url 'database_operations' %}">Database operations</a></li>
+            </ul>
+            <ul class="sub">
+              <li class="{% if request.resolver_match.view_name ==  'tariff' or  request.resolver_match.view_name == 'new_tariff' or  request.resolver_match.view_name == 'edit_tariff' or request.resolver_match.view_name == 'delete_tariff'%}active{% endif %}"><a href="{% url 'tariff' %}">Tariff</a></li>
+            </ul>
+            <ul class="sub">
+              <li class="{% if request.resolver_match.view_name ==  'truck_budget' or  request.resolver_match.view_name == 'new_truck_budget' or  request.resolver_match.view_name == 'edit_truck_budget' or request.resolver_match.view_name == 'delete_truck_budget'%}active{% endif %}"><a href="{% url 'truck_budget' %}">Truck Budget</a></li>
+            </ul>
+            <ul class="sub">
+              <li class="{% if request.resolver_match.view_name ==  'statement_of_account' or  request.resolver_match.view_name == 'new_statement_of_account' or  request.resolver_match.view_name == 'edit_statement_of_account' or request.resolver_match.view_name == 'delete_statement_of_account'%}active{% endif %}"><a href="{% url 'statement_of_account' %}">Statement of Account</a></li>
+            </ul>
+            <ul class="sub">
+              <li class="{% if request.resolver_match.view_name ==  'direct_payroll' or  request.resolver_match.view_name == 'new_direct_payroll' or  request.resolver_match.view_name == 'edit_direct_payroll' or request.resolver_match.view_name == 'delete_direct_payroll'%}active{% endif %}"><a href="{% url 'direct_payroll' %}">Direct Payroll</a></li>
+            </ul>
+            <ul class="sub">
+              <li class="{% if request.resolver_match.view_name ==  'breakdown' or  request.resolver_match.view_name == 'new_breakdown' or  request.resolver_match.view_name == 'edit_breakdown' or request.resolver_match.view_name == 'delete_breakdown'%}active{% endif %}"><a href="{% url 'breakdown' %}">Breakdown</a></li>
+            </ul>
+            <ul class="sub">
+              <li class="{% if request.resolver_match.view_name ==  'canteen' or  request.resolver_match.view_name == 'new_canteen' or  request.resolver_match.view_name == 'edit_canteen' or request.resolver_match.view_name == 'delete_canteen'%}active{% endif %}"><a href="{% url 'canteen' %}">Canteen</a></li>
+            </ul>
+            <ul class="sub">
+              <li class="{% if request.resolver_match.view_name ==  'damages' or  request.resolver_match.view_name == 'new_damages' or  request.resolver_match.view_name == 'edit_damages' or request.resolver_match.view_name == 'delete_damages'%}active{% endif %}"><a href="{% url 'damages' %}">Damages</a></li>
             </ul>
           </li>
         </ul>

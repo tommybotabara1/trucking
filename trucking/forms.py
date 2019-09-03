@@ -172,6 +172,207 @@ class DatabaseOperationForm(ModelForm):
         self.fields['client'].choices = client_choices
 
 
+class TariffForm(ModelForm):
+    class Meta:
+        model = Tariff
+        fields = '__all__'
+        widgets = {
+            'tariffid': NumberInput(attrs={'type': 'hidden', 'value': Tariff.objects.count() + 1}),
+            'airdestination': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'airdriver46wheeler': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'airhelper46wheeler': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'airdriver6forwarder': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'airhelper6forwarder': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'airdriver10wheeler': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'airhelper10wheeler': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'seadestination': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'seadriver46wheeler': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'seahelper46wheeler': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'seadriver6forwarder': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'seahelper6forwarder': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'seadriver10wheeler': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'seahelper10wheeler': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+        }
+        labels = {
+            'airdestination': "Air Destination",
+            'airdriver46wheeler': "Air Driver 46 Wheeler",
+            'airhelper46wheeler': "Air Helper 46 Wheeler",
+            'airdriver6forwarder': "Air Driver 6 Forwarder",
+            'airhelper6forwarder': "Air Helper 6 Forwarder",
+            'airdriver10wheeler': "Air Driver 10 Wheeler",
+            'airhelper10wheeler': "Air Helper 10 Wheeler",
+            'seadestination': "Sea Destination",
+            'seadriver46wheeler': "Sea Driver 46 Wheeler",
+            'seahelper46wheeler': "Sea Helper 46 Wheeler",
+            'seadriver6forwarder': "Sea Driver 6 Forwarder",
+            'seahelper6forwarder': "Sea Helper 6 Forwarder",
+            'seadriver10wheeler': "Sea Driver 10 Wheeler",
+            'seahelper10wheeler': "Sea Helper 10 Wheeler",
+        }
+
+
+class TruckBudgetForm(ModelForm):
+    class Meta:
+        model = TruckBudget
+        fields = '__all__'
+        widgets = {
+            'truckbudgetid': NumberInput(attrs={'type': 'hidden', 'value': TruckBudget.objects.count() + 1}),
+            'traveldate': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'name': TextInput(attrs={'class': 'form-control', 'maxlength': "30"}),
+            'amount': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'particulars': Textarea(attrs={'class': 'form-control A', 'maxlength': "50"}),
+            'for_field': TextInput(attrs={'class': 'form-control', 'maxlength': "30"}),
+            'client': TextInput(attrs={'class': 'form-control', 'maxlength': "30"}),
+            'purchaseorderor': TextInput(attrs={'class': 'form-control', 'maxlength': "30"}),
+            'liquidated': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'unliquidated': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+        }
+        labels = {
+            'traveldate': "Travel Date",
+            'for_field': "For",
+            'purchaseorderor': "Purchase Order OR",
+        }
+
+
+class StatementOfAccountForm(ModelForm):
+    class Meta:
+        model = StatementOfAccount
+        fields = '__all__'
+        widgets = {
+            'statementofaccountid': NumberInput(attrs={'type': 'hidden', 'value': StatementOfAccount.objects.count() + 1}),
+            'month': TextInput(attrs={'class': 'form-control', 'maxlength': "15"}),
+            'soano': TextInput(attrs={'class': 'form-control', 'maxlength': "15"}),
+            'customer': TextInput(attrs={'class': 'form-control', 'maxlength': "30"}),
+            'particulars': Textarea(attrs={'class': 'form-control A', 'maxlength': "50"}),
+            'invoicedate': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'invoicereceivedate': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'receivedby': TextInput(attrs={'class': 'form-control', 'maxlength': "30"}),
+            'totalsales': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'arno': TextInput(attrs={'class': 'form-control', 'maxlength': "15"}),
+            'paidamount': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'datepaid': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'variancediff': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'accountstitle': TextInput(attrs={'class': 'form-control', 'maxlength': "50"}),
+            'remarks': Textarea(attrs={'class': 'form-control A', 'maxlength': "50"}),
+        }
+        labels = {
+            'soano': "SOA No",
+            'invoicedate': "Invoice Date",
+            'invoicereceivedate': "Invoice Received Date",
+            'receivedby': "Received by",
+            'totalsales': "Total Sales",
+            'arno': "AR No",
+            'paidamount': "Paid Amount",
+            'datepaid': "Date Paid",
+            'variancediff': "Variance Diff",
+            'accountstitle': "Accounts Title",
+        }
+
+
+class DirectPayrollForm(ModelForm):
+    class Meta:
+        model = DirectPayroll
+        fields = '__all__'
+        widgets = {
+            'directpayrollid': NumberInput(attrs={'type': 'hidden', 'value': DirectPayroll.objects.count() + 1}),
+            'employeeno': NumberInput(attrs={'class': 'form-control', 'step': "1", "max": "999999999999999", "min": "0"}),
+            'name': TextInput(attrs={'class': 'form-control', 'maxlength': "30"}),
+            'commission': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'othercommadditional': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'othercommadjustment': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'grosspay': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'netpay': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'rate': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999", "min": "0"}),
+            'incentives': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'takehomepay': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+        }
+        labels = {
+            'employeeno': "Employee No",
+            'othercommadditional': "Other Commission Additional",
+            'othercommadjustment': "Other Commission Adjustment",
+            'grosspay': "Gross Pay",
+            'netpay': "Net Pay",
+            'takehomepay': "Take Home Pay",
+        }
+
+
+class BreakdownForm(ModelForm):
+    class Meta:
+        model = Breakdown
+        fields = '__all__'
+        widgets = {
+            'breakdownid': NumberInput(attrs={'type': 'hidden', 'value': Breakdown.objects.count() + 1}),
+            'breakdowndate': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'platenumber': TextInput(attrs={'class': 'form-control', 'maxlength': "10"}),
+            'waybillno': TextInput(attrs={'class': 'form-control', 'maxlength': "10"}),
+            'customer': TextInput(attrs={'class': 'form-control', 'maxlength': "30"}),
+            'client': TextInput(attrs={'class': 'form-control', 'maxlength': "30"}),
+            'cashadvance': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'totalliq': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'unliquidated': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'salary': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+        }
+        labels = {
+            'breakdowndate': "Breakdown Date",
+            'platenumber': "Plate Number",
+            'waybillno': "Way Bill No",
+            'cashadvance': "Cash Advance",
+            'totalliq': "Total Liquidation",
+            'unliquidated': "Total Unliquidated"
+        }
+
+
+class CanteenForm(ModelForm):
+    class Meta:
+        model = Canteen
+        fields = '__all__'
+        widgets = {
+            'canteenid': NumberInput(attrs={'type': 'hidden', 'value': Canteen.objects.count() + 1}),
+            'payrollperiodform': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'payrollperiodto': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'employeename': TextInput(attrs={'class': 'form-control', 'maxlength': "30"}),
+            'takehomepay': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'canteenname': TextInput(attrs={'class': 'form-control', 'maxlength': "30"}),
+            'baraks': TextInput(attrs={'class': 'form-control', 'maxlength': "30"}),
+            'others': TextInput(attrs={'class': 'form-control', 'maxlength': "30"}),
+            'coopsavings': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'cooploan': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'coopcp': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'cooprice': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'actualsalary': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+        }
+        labels = {
+            'payrollperiodform': "Payroll Period From",
+            'payrollperiodto': "Payroll Period To",
+            'employeename': "Employee Name",
+            'takehomepay': "Take Home Pay",
+            'canteenname': "Canteen Name",
+            'coopsavings': "Coop Savings",
+            'cooploan': "Coop Loan",
+            'coopcp': "Coop CP",
+            'cooprice': "Coop Price",
+            'actualsalary': "Actual Salary"
+        }
+
+
+class DamagesForm(ModelForm):
+    class Meta:
+        model = Damages
+        fields = '__all__'
+        widgets = {
+            'damagesid': NumberInput(attrs={'type': 'hidden', 'value': Damages.objects.count() + 1}),
+            'employeename': TextInput(attrs={'class': 'form-control', 'maxlength': "30"}),
+            'typeofdamage': TextInput(attrs={'class': 'form-control', 'maxlength': "30"}),
+            'personalcashadv': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'cadate': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+        }
+        labels = {
+            'employeename': "Employee Name",
+            'typeofdamage': "Type of Damage",
+            'personalcashadv': "Personal Cash Adv",
+            'cadate': "CA Date",
+        }
+
 def bound_form(request, id):
     item = get_object_or_404(Table1, id=id)
     form = DatabaseOperationForm(instance=item)
