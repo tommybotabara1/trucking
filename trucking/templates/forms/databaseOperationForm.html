@@ -1929,7 +1929,7 @@
             var remarks = new Array();
 
             for(var i = 0; i < rCount; i++){
-              amounts.push(parseInt(tbl.rows[i].cells[0].children[0].value));
+              amounts.push(parseFloat(tbl.rows[i].cells[0].children[0].value));
               remarks.push(tbl.rows[i].cells[1].children[0].value);
               // alert(tbl.rows[i].cells[0].children[0].value);
             }
@@ -2186,6 +2186,11 @@
             var replaced = date.split(' ').join('T');
             replaced = replaced.substring(0, replaced.length - 3);
             $("#id_receiveddatetime").val(replaced);
+
+            if($("#id_billeddate").val() != null){
+                $("#billingInfoButton").removeAttr("disabled");
+                console.log("not null");
+            }
         });
 
         $( "#phase" ).change(function() {
