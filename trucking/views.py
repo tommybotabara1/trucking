@@ -49,10 +49,6 @@ def edit_database_operation(request, id, phase):
         # create a form instance and populate it with data from the request:
         a = Table1.objects.get(id=id)
         form = DatabaseOperationForm(request.POST, instance=a)
-        form.data = form.data.copy()
-        date = form.data['receiveddatetime']
-        if date != '':
-            form.data['receiveddatetime'] = datetime.strptime(date, "%Y-%m-%dT%H:%M")
 
         # check whether it's valid:
         if form.is_valid():

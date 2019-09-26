@@ -156,8 +156,7 @@ class Table1(models.Model):
     billing = models.FloatField(blank=True, null=True)
     receivedby = models.CharField(db_column='receivedBy', max_length=45, blank=True,
                                   null=True)  # Field name made lowercase.
-    receiveddatetime = models.DateTimeField(db_column='receivedDateTime', blank=True,
-                                            null=True)  # Field name made lowercase.
+    receivedtime = models.TimeField(db_column='receivedTime', blank=True, null=True)  # Field name made lowercase.
     entryfee = models.FloatField(db_column='entryFee', blank=True, null=True)  # Field name made lowercase.
     parking = models.FloatField(blank=True, null=True)
     tollfee = models.FloatField(db_column='tollFee', blank=True, null=True)  # Field name made lowercase.
