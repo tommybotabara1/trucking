@@ -2275,5 +2275,15 @@
             }
         });
 
+        $('#id_calltime').on('keydown', function(e) {
+            //your code
+            if(e.keyCode != 8 && (this.value.length === 2 || this.value.length === 5)) {
+                this.value += ":";
+            }
+            //collapse double colons
+            this.value=this.value.replace(/:+/g,":");
+        });
+
+
     </script>
 {% endblock %}

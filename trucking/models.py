@@ -150,7 +150,7 @@ class Table1(models.Model):
     helper = models.CharField(max_length=30, blank=True, null=True)
     trucktype = models.CharField(db_column='truckType', max_length=20, blank=True,
                                  null=True, choices=TRUCK_TYPE_CHOICES)  # Field name made lowercase.
-    qty = models.FloatField(blank=True, null=True)
+    qty = models.CharField(blank=True, null=True, max_length=20)
     driversal = models.FloatField(db_column='driverSal', blank=True, null=True)  # Field name made lowercase.
     helpersal = models.FloatField(db_column='helperSal', blank=True, null=True)  # Field name made lowercase.
     billing = models.FloatField(blank=True, null=True)

@@ -89,7 +89,7 @@ class DatabaseOperationForm(ModelForm):
         fields = '__all__'
         widgets = {
             'id': NumberInput(attrs={'type': 'hidden', 'value': Table1.objects.count() + 1}),
-            'calltime': TimeInput(attrs={'type': 'text', 'class': 'form-control A', "placeholder": "HH:MM:SS",}),
+            'calltime': TimeInput(attrs={'type': 'text', 'class': 'form-control A', "placeholder": "HH:MM:SS", "maxlength": "8"}),
             'date': DateInput(attrs={'type': 'date', 'class': 'form-control A'}),
             'origin': TextInput(attrs={'class': 'form-control A', 'maxlength': "30", 'list': 'destinations'}),
             'destination': TextInput(attrs={'class': 'form-control A', 'maxlength': "30", 'list': 'destinations'}),
