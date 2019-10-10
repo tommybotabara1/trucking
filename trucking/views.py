@@ -57,7 +57,7 @@ def edit_database_operation(request, id, phase):
             newDatabaseOperation = form.save()
             # redirect to a new URL:
             list = Table1.objects.all()
-            return render(request, 'databaseOperations.html', {'list': list})
+            return redirect('database_operations')
         else:
             return HttpResponse(form.errors)
     else:

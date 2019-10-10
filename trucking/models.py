@@ -137,39 +137,40 @@ class StatementOfAccount(models.Model):
 
 
 class Table1(models.Model):
-    calltime = models.TimeField(db_column='callTime', blank=True, null=True)  # Field name made lowercase.
     date = models.DateField(blank=True, null=True)
-    origin = models.CharField(max_length=30, blank=True, null=True)
-    destination = models.CharField(max_length=30, blank=True, null=True)
-    client = models.ForeignKey(Client, models.DO_NOTHING, db_column='client', blank=True, null=True)
-    customer = models.ForeignKey(Customer, models.DO_NOTHING, db_column='customer', blank=True, null=True)
-    remarks = models.CharField(max_length=45, blank=True, null=True)
+    calltime = models.TimeField(db_column='callTime', blank=True, null=True)  # Field name made lowercase.
     plateno = models.CharField(db_column='plateNo', max_length=10, blank=True, null=True)  # Field name made lowercase.
     wbno = models.CharField(db_column='WBNo', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    origin = models.CharField(max_length=30, blank=True, null=True)
+    destination = models.CharField(max_length=30, blank=True, null=True)
     driver = models.ForeignKey(Driver, models.DO_NOTHING, db_column='driver', blank=True, null=True)
     helper = models.CharField(max_length=30, blank=True, null=True)
+    customer = models.ForeignKey(Customer, models.DO_NOTHING, db_column='customer', blank=True, null=True)
+    client = models.ForeignKey(Client, models.DO_NOTHING, db_column='client', blank=True, null=True)
     trucktype = models.CharField(db_column='truckType', max_length=20, blank=True,
                                  null=True, choices=TRUCK_TYPE_CHOICES)  # Field name made lowercase.
     qty = models.CharField(blank=True, null=True, max_length=20)
+    remarks = models.CharField(max_length=45, blank=True, null=True)
+    diesel = models.FloatField(blank=True, null=True)
+    truckbudget = models.FloatField(db_column='truckBudget', blank=True, null=True)  # Field name made lowe
+    cahelper = models.FloatField(db_column='caHelper', blank=True, null=True)  # Field name made lowercase.
+    tollfee = models.FloatField(db_column='tollFee', blank=True, null=True)  # Field name made lowercase.
+    parking = models.FloatField(blank=True, null=True)
+    entryfee = models.FloatField(db_column='entryFee', blank=True, null=True)  # Field name made lowercase.
+    others = models.FloatField(blank=True, null=True)
+    totalliq = models.FloatField(db_column='totalLiq', blank=True, null=True)  # Field name made lowercase.
+    unliq = models.FloatField(blank=True, null=True)
     driversal = models.FloatField(db_column='driverSal', blank=True, null=True)  # Field name made lowercase.
+    addldriversal = models.FloatField(db_column='addLDriverSal', blank=True, null=True)  # Field name made lowercase.# rcase.
     helpersal = models.FloatField(db_column='helperSal', blank=True, null=True)  # Field name made lowercase.
+    addlhelpersal = models.FloatField(db_column='addLHelperSal', blank=True, null=True)  # Field name made lowercase.
     billing = models.FloatField(blank=True, null=True)
+    addl = models.FloatField(db_column='addL', blank=True, null=True)  # Field name made lowercase.
+    revenue = models.FloatField(blank=True, null=True)
+    billeddate = models.DateField(db_column='billedDate', blank=True, null=True)  # Field name made lowercase.
     receivedby = models.CharField(db_column='receivedBy', max_length=45, blank=True,
                                   null=True)  # Field name made lowercase.
     receivedtime = models.TimeField(db_column='receivedTime', blank=True, null=True)  # Field name made lowercase.
-    entryfee = models.FloatField(db_column='entryFee', blank=True, null=True)  # Field name made lowercase.
-    parking = models.FloatField(blank=True, null=True)
-    tollfee = models.FloatField(db_column='tollFee', blank=True, null=True)  # Field name made lowercase.
-    others = models.FloatField(blank=True, null=True)
-    totalliq = models.FloatField(db_column='totalLiq', blank=True, null=True)  # Field name made lowercase.
-    truckbudget = models.FloatField(db_column='truckBudget', blank=True, null=True)  # Field name made lowe
-    unliq = models.FloatField(blank=True, null=True)
-    addldriversal = models.FloatField(db_column='addLDriverSal', blank=True, null=True)  # Field name made lowercase.# rcase.
-    cahelper = models.FloatField(db_column='caHelper', blank=True, null=True)  # Field name made lowercase.
-    addl = models.FloatField(db_column='addL', blank=True, null=True)  # Field name made lowercase.
-    diesel = models.FloatField(blank=True, null=True)
-    revenue = models.FloatField(blank=True, null=True)
-    billeddate = models.DateField(db_column='billedDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False

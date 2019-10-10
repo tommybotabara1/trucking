@@ -60,35 +60,36 @@
                                     <th>ID</th>
                                     <th>DATE</th>
                                     <th>CALL TIME</th>
-                                    <th>ORIGIN</th>
-                                    <th>DESTINATION</th>
-                                    <th>CLIENT</th>
-                                    <th>CUSTOMER</th>
-                                    <th>REMARKS</th>
                                     <th>PLATE NO.</th>
                                     <th>WB NO.</th>
+                                    <th>ORIGIN</th>
+                                    <th>DESTINATION</th>
                                     <th>DRIVER</th>
                                     <th>HELPER</th>
+                                    <th>CUSTOMER</th>
+                                    <th>CLIENT</th>
                                     <th>TRUCK TYPE</th>
                                     <th>QTY</th>
-                                    <th>DRIVER-SAL</th>
-                                    <th>HELPER-SAL</th>
-                                    <th>BILLING</th>
-                                    <th>RECEIVED BY</th>
-                                    <th>RECEIVED TIME</th>
-                                    <th>ENTRY FEE</th>
-                                    <th>PARKING</th>
-                                    <th>C/TOLL FEE</th>
-                                    <th>OTHERS</th>
-                                    <th>TOTAL LIQUIDATION</th>
-                                    <th>TRUCK BUDGET</th>
-                                    <th>TOTAL UNLIQUIDATED</th>
-                                    <th>ADDITIONAL DRIVER SALARY</th>
-                                    <th>ADDITIONAL HELPER SALARY</th>
-                                    <th>BILLING ADDITIONAL</th>
+                                    <th>REMARKS</th>
                                     <th>DIESEL</th>
+                                    <th>TRUCK BUDGET</th>
+                                    <th>C/A HELPER</th>
+                                    <th>TOLL FEE</th>
+                                    <th>PARKING</th>
+                                    <th>ENTRY FEE</th>
+                                    <th>OTHERS</th>
+                                    <th>TOTAL LIQ</th>
+                                    <th>UNLIQ.</th>
+                                    <th>DRIVER-SAL</th>
+                                    <th>ADDITIONAL DRIVER SALARY</th>
+                                    <th>HELPER-SAL</th>
+                                    <th>ADDITIONAL HELPER SALARY</th>
+                                    <th>BILLING</th>
+                                    <th>ADD'L</th>
                                     <th>REVENUE</th>
                                     <th>BILLED DATE</th>
+                                    <th>RECEIVED BY</th>
+                                    <th>RECEIVED TIME</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -101,37 +102,38 @@
                                     </div>
                                 </td>
                                 <td>{{ item.id }}</td>
-                                <td>{{ item.date }}</td>
+                                <td>{{ item.date|date:'m/d/Y' }}</td>
                                 <td>{{ item.calltime|time:'H:i' }}</td>
-                                <td>{{ item.origin }}</td>
-                                <td>{{ item.destination }}</td>
-                                <td>{{ item.client.clientname }}</td>
-                                <td>{{ item.customer.customername }}</td>
-                                <td>{{ item.remarks }}</td>
                                 <td>{{ item.plateno }}</td>
                                 <td>{{ item.wbno }}</td>
+                                <td>{{ item.origin }}</td>
+                                <td>{{ item.destination }}</td>
                                 <td>{{ item.driver.drivername }}</td>
                                 <td>{{ item.helper }}</td>
+                                <td>{{ item.customer.customername }}</td>
+                                <td>{{ item.client.clientname }}</td>
                                 <td>{{ item.trucktype }}</td>
                                 <td>{{ item.qty }}</td>
-                                <td>{{ item.driversal }}</td>
-                                <td>{{ item.helpersal }}</td>
-                                <td>{{ item.billing }}</td>
-                                <td>{{ item.receivedby }}</td>
-                                <td>{{ item.receivedtime|time:'H:i' }}</td>
-                                <td>{{ item.entryfee }}</td>
-                                <td>{{ item.parking }}</td>
+                                <td>{{ item.remarks }}</td>
+                                <td>{{ item.diesel }}</td>
+                                <td>{{ item.truckbudget }}</td>
+                                <td>{{ item.cahelper }}</td>
                                 <td>{{ item.tollfee }}</td>
+                                <td>{{ item.parking }}</td>
+                                <td>{{ item.entryfee }}</td>
                                 <td>{{ item.others }}</td>
                                 <td>{{ item.totalliq }}</td>
-                                <td>{{ item.truckbudget }}</td>
                                 <td>{{ item.unliq }}</td>
+                                <td>{{ item.driversal }}</td>
                                 <td>{{ item.addldriversal }}</td>
-                                <td>{{ item.cahelper }}</td>
+                                <td>{{ item.helpersal }}</td>
+                                <td>{{ item.addlhelpersal }}</td>
+                                <td>{{ item.billing }}</td>
                                 <td>{{ item.addl }}</td>
-                                <td>{{ item.diesel }}</td>
                                 <td>{{ item.revenue }}</td>
-                                <td>{{ item.billeddate }}</td>
+                                <td>{{ item.billeddate|date:'m/d/Y' }}</td>
+                                <td>{{ item.receivedby }}</td>
+                                <td>{{ item.receivedtime|time:'H:i' }}</td>
                              </tr>
                             {% endfor %}
                             </tbody>

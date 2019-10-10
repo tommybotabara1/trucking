@@ -51,20 +51,20 @@
                       <div class="col-lg-8 col-lg-offset-2 detailed">
                       {% if extra != -1 %}
                         <h4 class="mb">Edit Database Operation {{ extra }}</h4>
-                        <select name="phase" class="form-control" id="phase">
-                          <option value="A">PHASE A</option>
-                          <option value="B">PHASE B</option>
-                          <option value="C">PHASE C</option>
-                          <option value="D">PHASE D</option>
-                        </select>
+{#                        <select name="phase" class="form-control" id="phase">#}
+{#                          <option value="A">PHASE A</option>#}
+{#                          <option value="B">PHASE B</option>#}
+{#                          <option value="C">PHASE C</option>#}
+{#                          <option value="D">PHASE D</option>#}
+{#                        </select>#}
                       {% else %}
                         <h4 class="mb">New Database Operation</h4>
-                        <select name="phase" class="form-control" id="phase" disabled>
-                          <option value="A">PHASE A</option>
-                          <option value="B">PHASE B</option>
-                          <option value="C">PHASE C</option>
-                          <option value="D">PHASE D</option>
-                        </select>
+{#                        <select name="phase" class="form-control" id="phase" disabled>#}
+{#                          <option value="A">PHASE A</option>#}
+{#                          <option value="B">PHASE B</option>#}
+{#                          <option value="C">PHASE C</option>#}
+{#                          <option value="D">PHASE D</option>#}
+{#                        </select>#}
                       {% endif %}
                       <br>
                       {% if extra != -1 %}
@@ -76,15 +76,15 @@
                           {{ form.id }}
                           {% for field in form %}
                               {% if field.label != 'Id' %}
-                                  {% if field.label == "Call Time" %}
-                                      <div id="phaseA" class="fields">
-                                  {% elif field.label == "Plate number" %}
-                                      <div id="phaseB" class="fields">
-                                  {% elif field.label == "Driver Salary" %}
-                                      <div id="phaseC" class="fields">
-                                  {% elif field.label == "Billed Date" %}
-                                      <div id="phaseD" class="fields">
-                                  {% endif %}
+{#                                  {% if field.label == "Call Time" %}#}
+{#                                      <div id="phaseA" class="fields">#}
+{#                                  {% elif field.label == "Plate number" %}#}
+{#                                      <div id="phaseB" class="fields">#}
+{#                                  {% elif field.label == "Driver Salary" %}#}
+{#                                      <div id="phaseC" class="fields">#}
+{#                                  {% elif field.label == "Billed Date" %}#}
+{#                                      <div id="phaseD" class="fields">#}
+{#                                  {% endif %}#}
                                   <div class="form-group">
                                       <label class="col-sm-2 col-sm-2 control-label">{{ field.label_tag }}</label>
                                       <div class="col-sm-10">
@@ -1691,15 +1691,15 @@
                                           {% elif field.label == "Entry Fee" or field.label == "Parking" or field.label == "Toll Fee" or field.label == "Others" %}
                                               <br>
                                               <button class="btn btn-info" type="button" data-toggle="modal" data-target="#splitAmountsForm" onclick="updateSplitAmountModalValues('{{ field.label }}')">Split Amounts</button>
-                                          {% elif field.label == "Billed Date" %}
-                                              <br>
-                                              <button id="billingInfoButton" class="btn btn-info" type="button" data-toggle="modal" data-target="#billingInfoModal" disabled>BILLING INFORMATION</button>
+{#                                          {% elif field.label == "Billed Date" %}#}
+{#                                              <br>#}
+{#                                              <button id="billingInfoButton" class="btn btn-info" type="button" data-toggle="modal" data-target="#billingInfoModal" disabled>BILLING INFORMATION</button>#}
                                           {% endif %}
                                       </div>
                                   </div>
-                                  {% if field.label == "Remarks" or field.label == "Quantity" or field.label == "Revenue" or field.label == "Billed Date"%}
-                                      </div>
-                                  {% endif %}
+{#                                  {% if field.label == "Remarks" or field.label == "Quantity" or field.label == "Revenue" or field.label == "Billed Date"%}#}
+{#                                      </div>#}
+{#                                  {% endif %}#}
                               {% endif %}
                           {% endfor %}
                         <button type="submit" value="Submit" class="btn btn-primary center-block">Submit</button>
@@ -2276,6 +2276,15 @@
         });
 
         $('#id_calltime').on('keydown', function(e) {
+            //your code
+            if(e.keyCode != 8 && (this.value.length === 2 || this.value.length === 5)) {
+                this.value += ":";
+            }
+            //collapse double colons
+            this.value=this.value.replace(/:+/g,":");
+        });
+
+        $('#id_receivedtime').on('keydown', function(e) {
             //your code
             if(e.keyCode != 8 && (this.value.length === 2 || this.value.length === 5)) {
                 this.value += ":";
