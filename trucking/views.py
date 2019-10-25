@@ -1,7 +1,10 @@
+import xlrd, json
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect, redirect
 from django.http import JsonResponse
 from .forms import *
 from datetime import datetime
+from django.contrib import messages
+
 
 def index(request):
     return render(request, 'index.html',)
@@ -14,8 +17,185 @@ def testing(request):
 
 
 def database_operations(request):
+    if request.method == "GET":
+        list = Table1.objects.all()
+        return render(request, 'databaseOperations.html', {'list': list})
+
+    csv_file = request.FILES['file']
+
+    book = xlrd.open_workbook(file_contents=csv_file.read())
+    sheet = book.sheet_by_index(0)
+
+    for r in range(1,sheet.nrows):
+        x = str(int(sheet.cell(r, 0).value)).lstrip("0")
+        if int(x) > 2359:
+            x = 0
+        x = str(x).zfill(4)
+        time = x[:2] + ':' + x[2:] + ":00"
+
+        x = int(sheet.cell(r, 1).value)
+        date = datetime.fromordinal(datetime(1900, 1, 1).toordinal() + x - 2).date()
+
+        plateno = str(sheet.cell(r, 2).value)
+        wbno = str(sheet.cell(r, 3).value).replace('.0', '')
+        origin = str(sheet.cell(r, 4).value)
+        destination = str(sheet.cell(r, 5).value)
+
+        driver = str(sheet.cell(r, 6).value)
+        if not Driver.objects.filter(drivername=driver).exists():
+            id = Driver.objects.count() + 1
+            newDriver = Driver(
+                driverid=id,
+                drivername=driver
+            )
+            newDriver.save()
+            driver = newDriver
+        else:
+            existingDriver = Driver.objects.get(drivername=driver)
+            driver = existingDriver
+
+        helper = str(sheet.cell(r, 7).value)
+
+        client = str(sheet.cell(r, 8).value)
+        if not Client.objects.filter(clientname=client).exists():
+            id = Client.objects.count() + 1
+            newClient = Client(
+                clientid=id,
+                clientname=client
+            )
+            newClient.save()
+            client = newClient
+        else:
+            existingClient = Client.objects.get(clientname=client)
+            client = existingClient
+
+        customer = str(sheet.cell(r, 9).value)
+        if not Customer.objects.filter(customername=customer).exists():
+            id = Customer.objects.count() + 1
+            newCustomer = Customer(
+                customerid=id,
+                customername=customer
+            )
+            newCustomer.save()
+            customer = newCustomer
+        else:
+            existingCustomer = Customer.objects.get(customername=customer)
+            customer = existingCustomer
+
+        trucktype = str(sheet.cell(r, 10).value)
+        qty = str(sheet.cell(r, 11).value)
+        remarks = str(sheet.cell(r, 12).value)
+
+        diesel = sheet.cell(r, 13).value
+        truckbudget = sheet.cell(r, 14).value
+        cahelper = sheet.cell(r, 14).value
+        entryfee = sheet.cell(r, 15).value
+        parking = sheet.cell(r, 16).value
+        tollfee = sheet.cell(r, 17).value
+        others = sheet.cell(r, 18).value
+        liq = sheet.cell(r, 19).value
+        unliq = sheet.cell(r, 20).value
+        driversal = sheet.cell(r, 21).value
+        helpersal = sheet.cell(r, 23).value
+        driveraddl = sheet.cell(r, 24).value
+        helperaddl = sheet.cell(r, 25).value
+        billing = sheet.cell(r, 26).value
+        addl = sheet.cell(r, 27).value
+        revenue = sheet.cell(r, 28).value
+
+        if diesel == '':
+            diesel = None
+        if truckbudget == '':
+            truckbudget = None
+        if cahelper == '':
+            cahelper = None
+        if entryfee == '':
+            entryfee = None
+        if parking == '':
+            parking = None
+        if tollfee == '':
+            tollfee = None
+        if others == '':
+            others = None
+        if liq == '':
+            liq = None
+        if unliq == '':
+            unliq = None
+        if driversal == '':
+            driversal = None
+        if helpersal == '':
+            helpersal = None
+        if driveraddl == '':
+            driveraddl = None
+        if helperaddl == '':
+            helperaddl = None
+        if billing == '':
+            billing = None
+        if addl == '':
+            addl = None
+        if revenue == '':
+            revenue = None
+
+        if sheet.cell(r, 29).value != '' and sheet.cell(r, 29).value != "N/A":
+            x = int(sheet.cell(r, 29).value)
+            billeddate = datetime.fromordinal(datetime(1900, 1, 1).toordinal() + x - 2).date()
+        else:
+            billeddate = None
+
+        receivedby = sheet.cell(r, 30).value
+
+        if sheet.cell(r, 31).value != '':
+            x = str(int(sheet.cell(r, 31).value)).lstrip("0")
+            if int(x) > 2359:
+                x = 0
+            x = str(x).zfill(4)
+            receivedtime = x[:2] + ':' + x[2:] + ":00"
+        else:
+            receivedtime = None
+
+        newOperation = Table1(
+            date=date,
+            calltime=time,
+            plateno=plateno,
+            wbno=wbno,
+            origin=origin,
+            destination=destination,
+            driver=driver,
+            helper=helper,
+            customer=customer,
+            client=client,
+            trucktype=trucktype,
+            qty=qty,
+            remarks=remarks,
+            diesel=diesel,
+            truckbudget=truckbudget,
+            cahelper=cahelper,
+            tollfee=tollfee,
+            parking=parking,
+            entryfee=entryfee,
+            others=others,
+            totalliq=liq,
+            unliq=unliq,
+            driversal=driversal,
+            addldriversal=driveraddl,
+            helpersal=helpersal,
+            addlhelpersal=helperaddl,
+            billing=billing,
+            addl=addl,
+            revenue=revenue,
+            billeddate=billeddate,
+            receivedby=receivedby,
+            receivedtime=receivedtime
+        )
+
+        newOperation.save()
+
     list = Table1.objects.all()
-    return render(request, 'databaseOperations.html', {'list': list})
+    context = {
+        'list': list,
+    }
+    messages.success(request, 'Import successful (' + str(sheet.nrows - 1) + ' rows)')
+    return render(request, 'databaseOperations.html', context)
 
 
 def new_database_operation(request):
@@ -634,3 +814,78 @@ def delete_split_amount(request):
     SplitAmounts.objects.filter(splitamountid=splitAmountID).delete()
 
     return JsonResponse([], safe=False)
+
+
+def get_dbo(request):
+    draw = request.GET.get('draw')
+    start = request.GET.get('start')
+    length = request.GET.get('length')
+    search = request.GET.get('search')
+
+    print(length)
+
+    list = Table1.objects.all()
+
+    data = []
+    for operation in list:
+        try:
+            date = operation.date.strftime("%d-%b-%y")
+        except:
+            date = ''
+        try:
+            calltime = operation.calltime.strftime("%-H%M")
+        except:
+            calltime = ''
+        try:
+            billeddate = operation.billeddate.strftime("%d-%b-%y")
+        except:
+            billeddate = ''
+        try:
+            receivedtime = operation.receivedtime.strftime("%-H%M")
+        except:
+            receivedtime = ''
+
+        data.append([
+            operation.id,
+            date,
+            calltime,
+            operation.plateno or '',
+            operation.wbno or '',
+            operation.origin or '',
+            operation.destination or '',
+            operation.driver.drivername or '',
+            operation.helper or '',
+            operation.client.clientname or '',
+            operation.customer.customername or '',
+            operation.trucktype or '',
+            operation.qty or '',
+            operation.remarks or '',
+            operation.diesel or '',
+            operation.truckbudget or '',
+            operation.cahelper or '',
+            operation.entryfee or '',
+            operation.parking or '',
+            operation.tollfee or '',
+            operation.others or '',
+            operation.totalliq or '',
+            operation.unliq or '',
+            operation.driversal or '',
+            operation.helpersal or '',
+            operation.addldriversal or '',
+            operation.addlhelpersal or '',
+            operation.billing or '',
+            operation.addl or '',
+            operation.revenue or '',
+            billeddate,
+            operation.receivedby or '',
+            receivedtime,
+        ])
+
+    json_test = json.dumps({
+        "draw": draw,
+        "recordsTotal": Table1.objects.all().count(),
+        "recordsFiltered": list.count(),
+        "data": data
+    })
+
+    return HttpResponse(json_test, content_type="application/json")

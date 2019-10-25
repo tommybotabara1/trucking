@@ -43,4 +43,5 @@ urlpatterns = [
     path('get_split_amount/', views.get_split_amount, name='get_split_amount'),
     path('get_split_amount_total/', views.get_split_amount_total, name='get_split_amount_total'),
     path('delete_split_amount/', views.delete_split_amount, name='delete_split_amount'),
+    path('ajax/get_dbo/', views.get_dbo, name='get_dbo'),
 ]

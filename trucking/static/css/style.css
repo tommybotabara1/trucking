@@ -12,6 +12,7 @@ Website: http://Alvarez.is/
 */
 
 /* Import fonts */
+/*noinspection CssUnknownTarget*/
 @import url(http://fonts.googleapis.com/css?family=Ruda:400,700,900);
 
 /* BASIC THEME CONFIGURATION */
@@ -255,6 +256,7 @@ ul.top-menu > li > .logout {
 }
 
 /*LEFT NAVIGATION ICON*/
+/*noinspection CssUnknownTarget*/
 .dcjq-icon {
     height:17px;
     width:17px;
@@ -267,6 +269,8 @@ ul.top-menu > li > .logout {
     right:10px;
     top:15px;
 }
+
+/*noinspection CssUnknownTarget*/
 .active .dcjq-icon {
     background: url("../img/nav-expand.png") no-repeat bottom;
     border-radius:3px;
@@ -508,11 +512,12 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
     -webkit-border-radius: 4px;
 }
 
+/*noinspection SyntaxError*/
 @media screen and (-webkit-min-device-pixel-ratio:0) {
     /* Safari and Chrome */
     .dropdown-menu.extended  {
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.176) !important;
-    };
+    }
     }
 
 .dropdown-menu.extended li p {
@@ -696,6 +701,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
     border-top-color: #000;
 }
 
+/*noinspection CssUnknownTarget*/
 .log-arrow-up {
     background: url("../img/arrow-up.png") no-repeat;
     width: 20px;
@@ -1091,6 +1097,7 @@ PANELS CONFIGURATIONS
 /*WEATHER PANELS*/
 
 /* Weather 1 */
+/*noinspection CssUnknownTarget*/
 .weather {
 	background: url(../img/weather.jpg) no-repeat center top;
 	text-align: center;
@@ -1238,7 +1245,8 @@ PANELS CONFIGURATIONS
 
 /* Instagram Panel*/
 .instagram-panel {
-	background: url(../img/instagram.jpg) no-repeat center top;
+    /*noinspection CssUnknownTarget*/
+    background: url(../img/instagram.jpg) no-repeat center top;
 	text-align: center;
 	background-position: center center;
 }
@@ -1281,10 +1289,12 @@ PANELS CONFIGURATIONS
 }
 
 /* Soptify Panel */
+/*noinspection CssUnknownTarget*/
 #spotify {
 	background: url(../img/lorde.jpg) no-repeat center top;
 	margin-top: -15px;
-	background-attachment: relative;
+    /*noinspection CssInvalidPropertyValue,CssInvalidPropertyValue,CssInvalidPropertyValue*/
+    background-attachment: relative;
 	background-position: center center;
 	min-height: 220px;
 	width: 100%;
@@ -1325,10 +1335,12 @@ PANELS CONFIGURATIONS
 }
 
 /* BLOG PANEL */
+/*noinspection CssInvalidPropertyValue,CssUnknownTarget*/
 #blog-bg {
 	background: url(../img/blog-bg.jpg) no-repeat center top;
 	margin-top: -15px;
-	background-attachment: relative;
+    /*noinspection CssInvalidPropertyValue,CssInvalidPropertyValue,CssInvalidPropertyValue,CssInvalidPropertyValue,CssInvalidPropertyValue*/
+    background-attachment: relative;
 	background-position: center center;
 	min-height: 150px;
 	width: 100%;
@@ -1450,10 +1462,12 @@ PANELS CONFIGURATIONS
 
 /* PROFILE PANELS */
 /* Profile 01*/
+/*noinspection ALL,CssInvalidPropertyValue,CssUnknownTarget*/
 #profile-01 {
 	background: url(../img/profile-01.jpg) no-repeat center top;
 	margin-top: -15px;
-	background-attachment: relative;
+    /*noinspection CssInvalidPropertyValue,CssInvalidPropertyValue*/
+    background-attachment: relative;
 	background-position: center center;
 	min-height: 150px;
 	width: 100%;
@@ -1498,10 +1512,12 @@ PANELS CONFIGURATIONS
 }
 
 /* Profile 02*/
+/*noinspection ALL*/
 #profile-02 {
 	background: url(../img/profile-02.jpg) no-repeat center top;
 	margin-top: -15px;
-	background-attachment: relative;
+    /*noinspection CssInvalidPropertyValue,CssInvalidPropertyValue,CssInvalidPropertyValue*/
+    background-attachment: relative;
 	background-position: center center;
 	min-height: 200px;
 	width: 100%;
@@ -1624,8 +1640,8 @@ PANELS CONFIGURATIONS
 
 /* Grid Showcase*/
 
-	margin-bottom: 15px;
-}
+/*	margin-bottom: 15px;*/
+/*}*/
 
 .show-grid [class^=col-] {
 	padding-top: 10px;
@@ -1685,6 +1701,7 @@ PANELS CONFIGURATIONS
 
 }
 
+/*noinspection CssUnknownTarget*/
 .project:hover .photo-wrapper {
   background-color: #4ECDC4;
 	background-image:url(../img/zoom.png);
@@ -1773,6 +1790,7 @@ label {
 }
 
 /* TOGGLE CONFIGURATION */
+/*noinspection CssUnknownTarget,CssUnknownTarget*/
 .has-switch {
     border-radius: 30px;
     -webkit-border-radius: 30px;
@@ -1887,9 +1905,12 @@ label {
     transition: 0.25s ease-out;
     -webkit-backface-visibility: hidden;
 }
+
+/*noinspection CssUnknownTarget*/
 .switch-square {
     border-radius: 6px;
     -webkit-border-radius: 6px;
+    /*noinspection CssUnknownTarget*/
     -webkit-mask: url('../img/mask.png') 0 0 no-repeat;
     mask: url('../img/mask.png') 0 0 no-repeat;
 }
@@ -3161,11 +3182,12 @@ ul.chat-available-user li a:hover {
     display: inline-block;
 }
 
+/*noinspection SyntaxError*/
 @media screen and (-webkit-min-device-pixel-ratio:0) {
     /* Safari and Chrome */
     .panel-footer.revenue-foot {
         margin-bottom: -4px;
-    };
+    }
     }
 
 

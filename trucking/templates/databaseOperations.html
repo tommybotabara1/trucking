@@ -41,6 +41,14 @@
               <!-- /panel-heading -->
               <div class="panel-body">
                 <div class="tab-content">
+                {% if messages %}
+                    <div class="alert alert-success alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        {% for message in messages %}
+                            <strong>{{ message }}</strong>
+                        {% endfor %}
+                    </div>
+                {% endif %}
                 {% if extra != none %}
                 <div class="alert alert-danger alert-dismissable">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -50,8 +58,9 @@
                   <div id="overview" class="tab-pane active">
                   <h2 class="centered">Database Operations</h2>
                   <hr>
-                  <a class="btn btn-primary btn-lg btn-block" href="{% url 'new_database_operation' %}" role="button">Create New Database Operations</a>
-                  <a class="btn btn-primary btn-lg btn-block" href="" role="button">Generate Statement Billing</a>
+                  <a class="btn btn-primary" href="{% url 'new_database_operation' %}" role="button">Create New Database Operations</a>
+                  <a class="btn btn-primary" href="" role="button">Generate Statement Billing</a>
+                  <button type="submit" class="btn btn-default" data-toggle="modal" data-target="#importDataModal">Import data</button>
                   <hr>
                       <table id="listTable" class="display nowrap" style="width:100%">
                             <thead>
@@ -96,44 +105,44 @@
                             {% for item in list %}
                              <tr>
                                 <td>
-                                    <div class="btn-group-vertical btn-group-sm" role="group" aria-label="...">
-                                        <a class="btn btn-round btn-success" href="{% url 'edit_database_operation' item.id "A" %}" role="button">Edit</a>
-                                        <a class="btn btn-round btn-danger" href="{% url 'delete_database_operation' item.id %}" role="button">Delete</a>
+                                    <div class="btn-group-justified btn-group-sm" role="group" aria-label="...">
+                                        <a class="btn btn-success" href="{% url 'edit_database_operation' item.id "A" %}" role="button"><i class="fa fa-pencil"></i></a>
+                                        <a class="btn btn-danger" href="{% url 'delete_database_operation' item.id %}" role="button"><i class="fa fa-trash"></i></a>
                                     </div>
                                 </td>
                                 <td>{{ item.id }}</td>
-                                <td>{{ item.date|date:'m/d/Y' }}</td>
-                                <td>{{ item.calltime|time:'H:i' }}</td>
-                                <td>{{ item.plateno }}</td>
-                                <td>{{ item.wbno }}</td>
-                                <td>{{ item.origin }}</td>
-                                <td>{{ item.destination }}</td>
-                                <td>{{ item.driver.drivername }}</td>
-                                <td>{{ item.helper }}</td>
-                                <td>{{ item.customer.customername }}</td>
-                                <td>{{ item.client.clientname }}</td>
-                                <td>{{ item.trucktype }}</td>
-                                <td>{{ item.qty }}</td>
-                                <td>{{ item.remarks }}</td>
-                                <td>{{ item.diesel }}</td>
-                                <td>{{ item.truckbudget }}</td>
-                                <td>{{ item.cahelper }}</td>
-                                <td>{{ item.tollfee }}</td>
-                                <td>{{ item.parking }}</td>
-                                <td>{{ item.entryfee }}</td>
-                                <td>{{ item.others }}</td>
-                                <td>{{ item.totalliq }}</td>
-                                <td>{{ item.unliq }}</td>
-                                <td>{{ item.driversal }}</td>
-                                <td>{{ item.addldriversal }}</td>
-                                <td>{{ item.helpersal }}</td>
-                                <td>{{ item.addlhelpersal }}</td>
-                                <td>{{ item.billing }}</td>
-                                <td>{{ item.addl }}</td>
-                                <td>{{ item.revenue }}</td>
-                                <td>{{ item.billeddate|date:'m/d/Y' }}</td>
-                                <td>{{ item.receivedby }}</td>
-                                <td>{{ item.receivedtime|time:'H:i' }}</td>
+                                <td>{{ item.date|date:'m/d/Y'|default_if_none:"" }}</td>
+                                <td>{{ item.calltime|time:'H:i'|default_if_none:"" }}</td>
+                                <td>{{ item.plateno|default_if_none:"" }}</td>
+                                <td>{{ item.wbno|default_if_none:"" }}</td>
+                                <td>{{ item.origin|default_if_none:"" }}</td>
+                                <td>{{ item.destination|default_if_none:"" }}</td>
+                                <td>{{ item.driver.drivername|default_if_none:"" }}</td>
+                                <td>{{ item.helper|default_if_none:"" }}</td>
+                                <td>{{ item.customer.customername|default_if_none:"" }}</td>
+                                <td>{{ item.client.clientname|default_if_none:"" }}</td>
+                                <td>{{ item.trucktype|default_if_none:"" }}</td>
+                                <td>{{ item.qty|default_if_none:"" }}</td>
+                                <td>{{ item.remarks|default_if_none:"" }}</td>
+                                <td>{{ item.diesel|default_if_none:""|floatformat:2 }}</td>
+                                <td>{{ item.truckbudget|default_if_none:""|floatformat:2 }}</td>
+                                <td>{{ item.cahelper|default_if_none:""|floatformat:2 }}</td>
+                                <td>{{ item.tollfee|default_if_none:""|floatformat:2 }}</td>
+                                <td>{{ item.parking|default_if_none:""|floatformat:2 }}</td>
+                                <td>{{ item.entryfee|default_if_none:""|floatformat:2 }}</td>
+                                <td>{{ item.others|default_if_none:""|floatformat:2 }}</td>
+                                <td>{{ item.totalliq|default_if_none:""|floatformat:2 }}</td>
+                                <td>{{ item.unliq|default_if_none:""|floatformat:2 }}</td>
+                                <td>{{ item.driversal|default_if_none:""|floatformat:2 }}</td>
+                                <td>{{ item.addldriversal|default_if_none:""|floatformat:2 }}</td>
+                                <td>{{ item.helpersal|default_if_none:""|floatformat:2 }}</td>
+                                <td>{{ item.addlhelpersal|default_if_none:""|floatformat:2 }}</td>
+                                <td>{{ item.billing|default_if_none:""|floatformat:2 }}</td>
+                                <td>{{ item.addl|default_if_none:""|floatformat:2 }}</td>
+                                <td>{{ item.revenue|default_if_none:""|floatformat:2 }}</td>
+                                <td>{{ item.billeddate|date:'m/d/Y'|default_if_none:"" }}</td>
+                                <td>{{ item.receivedby|default_if_none:"" }}</td>
+                                <td>{{ item.receivedtime|time:'H:i'|default_if_none:"" }}</td>
                              </tr>
                             {% endfor %}
                             </tbody>
@@ -158,6 +167,28 @@
                       </div>
                     </div>
 
+                    <div class="modal fade" id="importDataModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="modalLabel">Import data (XLSX files only)</h5>
+                          </div>
+                          <div id="modalBody" class="modal-body">
+                              Use this format: <a  href="{% static 'download/sample_xlsx.xlsx' %}" download> Download sample file </a>
+                              <hr>
+
+                              <form method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <input type="file" name="file">
+                          </div>
+                          <div class="modal-footer">
+                                    <button type="submit" class="btn btn-round btn-primary">Upload</button>
+                              </form>
+                            <button type="button" class="btn btn-round" data-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   <!-- /tab-pane -->
                 </div>
                 <!-- /tab-content -->
@@ -211,10 +242,11 @@
         time = hour+':'+minute+':'+second;
         $(document).ready(function() {
             $('#listTable').DataTable({
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 responsive: true,
                 retrieve: true,
-                paging: false,
-                dom: 'Bfrtip',
+                paging: true,
+                dom: 'Blfrtip',
                 "scrollX": true,
                 buttons: [
                     {
@@ -250,10 +282,11 @@
         }
         else {
             table = $('#listTable').DataTable({
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 responsive: true,
                 retrieve: true,
-                paging: false,
-                dom: 'Bfrtip',
+                paging: true,
+                dom: 'Blfrtip',
                 "scrollX": true,
                 buttons: [
                     {
