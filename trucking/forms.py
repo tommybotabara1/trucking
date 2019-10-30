@@ -21,6 +21,23 @@ class ClientForm(ModelForm):
         self.fields['clientid'].initial = Client.objects.count() + 1
 
 
+class HelperForm(ModelForm):
+    class Meta:
+        model = Helper
+        fields = '__all__'
+        widgets = {
+            'helperid': NumberInput(attrs={'type': 'hidden', 'value': Helper.objects.count() + 1}),
+            'helpername': TextInput(attrs={'class': 'form-control', 'maxlength': "30"}),
+        }
+        labels = {
+            'helpername': "Helper Name",
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(HelperForm, self).__init__(*args, **kwargs)
+        self.fields['helperid'].initial = Helper.objects.count() + 1
+
+
 class CustomerForm(ModelForm):
     class Meta:
         model = Customer
@@ -99,7 +116,7 @@ class DatabaseOperationForm(ModelForm):
             'plateno': TextInput(attrs={'class': 'form-control', 'maxlength': "10"}),
             'wbno': TextInput(attrs={'class': 'form-control', 'maxlength': "10"}),
             'driver': Select(attrs={'class': 'form-control'}),
-            'helper': TextInput(attrs={'class': 'form-control'}),
+            'helper': Select(attrs={'class': 'form-control'}),
             'trucktype': Select(attrs={'class': 'form-control', 'maxlength': "30"}),
             'qty': TextInput(attrs={'class': 'form-control', 'maxlength': "20"}),
             'driversal': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999",}),
@@ -155,6 +172,13 @@ class DatabaseOperationForm(ModelForm):
         for dic in driver_values:
             driver_choices.append((int(dic[0]), dic[1]))
 
+        helper_values = Helper.objects.all().values_list('helperid', 'helpername')
+
+        helper_choices = [('', '----------')]
+
+        for dic in helper_values:
+            helper_choices.append((int(dic[0]), dic[1]))
+
         customer_values = Customer.objects.all().values_list('customerid', 'customername')
 
         customer_choices = [('', '----------')]
@@ -172,6 +196,7 @@ class DatabaseOperationForm(ModelForm):
         self.fields['driver'].choices = driver_choices
         self.fields['customer'].choices = customer_choices
         self.fields['client'].choices = client_choices
+        self.fields['helper'].choices = helper_choices
 
 
 class TariffForm(ModelForm):

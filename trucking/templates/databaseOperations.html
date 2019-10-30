@@ -118,7 +118,7 @@
                                 <td>{{ item.origin|default_if_none:"" }}</td>
                                 <td>{{ item.destination|default_if_none:"" }}</td>
                                 <td>{{ item.driver.drivername|default_if_none:"" }}</td>
-                                <td>{{ item.helper|default_if_none:"" }}</td>
+                                <td>{{ item.helper.helpername|default_if_none:"" }}</td>
                                 <td>{{ item.customer.customername|default_if_none:"" }}</td>
                                 <td>{{ item.client.clientname|default_if_none:"" }}</td>
                                 <td>{{ item.trucktype|default_if_none:"" }}</td>

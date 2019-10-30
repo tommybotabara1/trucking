@@ -39,6 +39,7 @@ urlpatterns = [
     path('add_new_driver/', views.add_new_driver, name='add_new_driver'),
     path('add_new_customer/', views.add_new_customer, name='add_new_customer'),
     path('add_new_client/', views.add_new_client, name='add_new_client'),
+    path('add_new_helper/', views.add_new_helper, name='add_new_helper'),
     path('add_new_split_amount/', views.add_new_split_amount, name='add_new_split_amount'),
     path('get_split_amount/', views.get_split_amount, name='get_split_amount'),
     path('get_split_amount_total/', views.get_split_amount_total, name='get_split_amount_total'),

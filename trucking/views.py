@@ -55,6 +55,20 @@ def database_operations(request):
             driver = existingDriver
 
         helper = str(sheet.cell(r, 7).value)
+        if helper == '':
+            helper = None
+        else:
+            if not Helper.objects.filter(helpername=helper).exists():
+                id = Helper.objects.count() + 1
+                newHelper = Helper(
+                    helperid=id,
+                    helpername=helper
+                )
+                newHelper.save()
+                helper = newHelper
+            else:
+                existingHelper = Helper.objects.get(helpername=helper)
+                helper = existingHelper
 
         client = str(sheet.cell(r, 8).value)
         if not Client.objects.filter(clientname=client).exists():
@@ -207,7 +221,8 @@ def new_database_operation(request):
             # process the data in form.cleaned_data as required
             newDatabaseOperation = form.save()
             # redirect to a new URL:
-            return redirect('edit_database_operation', id=Table1.objects.last().id, phase="B")
+            #return redirect('edit_database_operation', id=Table1.objects.last().id, phase="B")
+            return redirect('database_operations')
         else:
             return HttpResponse(form.errors)
     else:
@@ -215,12 +230,14 @@ def new_database_operation(request):
         driver_form = DriverForm()
         customer_form = CustomerForm()
         client_form = ClientForm()
+        helper_form = HelperForm()
         extra = -1
         return render(request, 'forms/databaseOperationForm.html', {'form': form,
                                                               'extra': extra,
                                                               'driver_form': driver_form,
                                                               'customer_form': customer_form,
                                                               'client_form': client_form,
+                                                              'helper_form': helper_form,
                                                                     })
 
 
@@ -762,6 +779,32 @@ def add_new_client(request):
     return JsonResponse(['not'], safe=False)
 
 
+def add_new_helper(request):
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = HelperForm(request.POST)
+        print(form)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            newHelperForm = form.save()
+            # redirect to a new URL:
+            newHelper = Helper.objects.last()
+            response = [{
+                "response": 'New Helper Added',
+                "helperName": newHelper.helpername,
+                "helperID": newHelper.helperid
+            }]
+            return JsonResponse(response, safe=False)
+        else:
+            return HttpResponse(form.errors)
+    else:
+        form = DatabaseOperationForm()
+        helper_form = HelperForm()
+
+    return JsonResponse(['not'], safe=False)
+
+
 def add_new_split_amount(request):
     amounts = request.GET.getlist('amounts[]')
     remarks = request.GET.getlist('remarks[]')
@@ -854,7 +897,7 @@ def get_dbo(request):
             operation.origin or '',
             operation.destination or '',
             operation.driver.drivername or '',
-            operation.helper or '',
+            operation.helper.helpername or '',
             operation.client.clientname or '',
             operation.customer.customername or '',
             operation.trucktype or '',

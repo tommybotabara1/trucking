@@ -114,6 +114,15 @@ TRUCK_TYPE_CHOICES = (
 )
 
 
+class Helper(models.Model):
+    helperid = models.IntegerField(db_column='helperID', primary_key=True)  # Field name made lowercase.
+    helpername = models.CharField(db_column='helperName', max_length=30, blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'helper'
+
+
 class StatementOfAccount(models.Model):
     statementofaccountid = models.AutoField(db_column='statementOfAccountID', primary_key=True)  # Field name made lowercase.
     month = models.CharField(max_length=15, blank=True, null=True)
@@ -144,7 +153,7 @@ class Table1(models.Model):
     origin = models.CharField(max_length=30, blank=True, null=True)
     destination = models.CharField(max_length=30, blank=True, null=True)
     driver = models.ForeignKey(Driver, models.DO_NOTHING, db_column='driver', blank=True, null=True)
-    helper = models.CharField(max_length=30, blank=True, null=True)
+    helper = models.ForeignKey(Helper, models.DO_NOTHING, db_column='helper', blank=True, null=True)
     customer = models.ForeignKey(Customer, models.DO_NOTHING, db_column='customer', blank=True, null=True)
     client = models.ForeignKey(Client, models.DO_NOTHING, db_column='client', blank=True, null=True)
     trucktype = models.CharField(db_column='truckType', max_length=20, blank=True,

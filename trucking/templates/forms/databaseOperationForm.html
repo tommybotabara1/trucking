@@ -1682,6 +1682,9 @@
                                           {% elif field.label == "Driver" %}
                                               <br>
                                               <button class="btn btn-info" type="button" data-toggle="modal" data-target="#driverFormModal">Add Driver</button>
+                                          {% elif field.label == "Helper" %}
+                                              <br>
+                                              <button class="btn btn-info" type="button" data-toggle="modal" data-target="#helperFormModal">Add Helper</button>
                                           {% elif field.label == "Customer" %}
                                               <br>
                                               <button class="btn btn-info" type="button" data-toggle="modal" data-target="#customerFormModal">Add Customer</button>
@@ -1765,6 +1768,41 @@
           {% csrf_token %}
              {% for field in driver_form %}
                       {% if field.label != 'Driverid' %}
+                          <div class="form-group">
+                          <label class="control-label">{{ field.label_tag }}</label>
+                          <div class="">
+                              {{ field }}
+                          </div>
+                      </div>
+                      {% else %}
+                          {{ field }}
+                      {% endif %}
+             {% endfor %}
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Add</button>
+            <button type="reset" class="btn btn-danger">Reset</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="helperFormModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">ADD NEW HELPER</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+          <form id="helperForm">
+          {% csrf_token %}
+             {% for field in helper_form %}
+                      {% if field.label != 'Helperid' %}
                           <div class="form-group">
                           <label class="control-label">{{ field.label_tag }}</label>
                           <div class="">
@@ -2112,6 +2150,38 @@
                     var x = data[0].clientID;
 
                     $("#id_client").val(x);
+                }
+            });
+        });
+
+        $("#helperForm").submit(function(e) {
+
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+
+            var values = {};
+            $.each($('#helperForm').serializeArray(), function(i, field) {
+                values[field.name] = field.value;
+            });
+
+            $.ajax({
+                type: "POST",
+                url: '{% url 'add_new_helper' %}',
+                data: values, // serializes the form's elements.
+                success: function (data) {
+                    alert(data[0].response); // show response from the php script.
+                    $( "#id_helper" ).append( "<option value='"+ data[0].helperID +"'>"+ data[0].helperName +"</option>");
+
+                    var nextID = data[0].helperID + 1;
+
+                    $("#id_helperid").val(nextID);
+
+                    $('#helperForm').trigger("reset");
+
+                    $('#helperFormModal').modal('toggle');
+
+                    var x = data[0].clientID;
+
+                    $("#id_helper").val(x);
                 }
             });
         });
