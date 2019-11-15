@@ -18,8 +18,9 @@ def testing(request):
 
 def database_operations(request):
     if request.method == "GET":
-        list = Table1.objects.all()
-        return render(request, 'databaseOperations.html', {'list': list})
+        list = Table1.objects.all()[:50]
+        clients = Client.objects.all()
+        return render(request, 'databaseOperations.html', {'list': list, 'clients': clients})
 
     csv_file = request.FILES['file']
 
@@ -102,14 +103,14 @@ def database_operations(request):
 
         diesel = sheet.cell(r, 13).value
         truckbudget = sheet.cell(r, 14).value
-        cahelper = sheet.cell(r, 14).value
-        entryfee = sheet.cell(r, 15).value
-        parking = sheet.cell(r, 16).value
-        tollfee = sheet.cell(r, 17).value
-        others = sheet.cell(r, 18).value
-        liq = sheet.cell(r, 19).value
-        unliq = sheet.cell(r, 20).value
-        driversal = sheet.cell(r, 21).value
+        cahelper = sheet.cell(r, 15).value
+        entryfee = sheet.cell(r, 16).value
+        parking = sheet.cell(r, 17).value
+        tollfee = sheet.cell(r, 18).value
+        others = sheet.cell(r, 19).value
+        liq = sheet.cell(r, 20).value
+        unliq = sheet.cell(r, 21).value
+        driversal = sheet.cell(r, 22).value
         helpersal = sheet.cell(r, 23).value
         driveraddl = sheet.cell(r, 24).value
         helperaddl = sheet.cell(r, 25).value

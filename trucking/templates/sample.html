@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css" media="print">
+    @page {
+      size: auto;  /* auto is the initial value */
+      margin: 0mm; /* this affects the margin in the printer settings */
+    }
+    html {
+      background-color: #FFFFFF;
+      margin: 0px; /* this affects the margin on the HTML before sending to printer */
+    }
+    {#body {#}
+    {#  border: solid 1px blue;#}
+    {#  margin: 10mm 15mm 10mm 15mm; /* margin you want for the content */#}
+    {#}#}
+    </style>
+    <style>
+        #billedTo{
+            padding-left: 80px;
+            padding-top: 100px;
+        }
+        #billedDate{
+            float:right;
+            padding-right: 80px;
+        }
+        #tin{
+            padding-left: 80px;
+        }
+        #busStyle{
+            padding-left: 80px;
+        }
+        #address{
+            padding-left: 80px;
+        }
+        #haulingCharges{
+            padding-left:  80px;
+            padding-top:   40px;
+        }
+        .amount{
+            padding-left: 250px;
+        }
+        .php{
+            padding-right: 440px;
+            float: right;
+
+        }
+        #sales{
+            padding-left: 150px;
+            padding-top:   80px;
+        }
+        #vatableAmountPHP{
+            padding-left: 175px;
+        }
+        #zeroRatedAmountPHP{
+            padding-left: 147px;
+        }
+        #vatExemptAmountPHP{
+            padding-left: 148px;
+        }
+        #totalAmountPHP{
+            padding-left: 194px;
+        }
+        #vatAmountPHP{
+            padding-left: 268px;
+        }
+        #amountInWords{
+            padding-left:  100px;
+            padding-top:   40px;
+        }
+        #preparedBy{
+            padding-left:  80px;
+            padding-top:   70px;
+        }
+    </style>
+</head>
+<body>
+    <div id="printableArea">
+        <p id="billedTo">UPS SCS (PHILIPPINES) INC.
+        <span id="billedDate">
+            {% now "F j, Y" %}
+        </span>
+        </p>
+        <p id="tin">001-776-941-000</p>
+        <p id="busStyle">FREIGHT FORWARDING</p>
+        <p id="address">ADDRESS</p>
+        <p id="haulingCharges">
+          HAULING CHARGES <br>
+          OCT. 28-31, 2019
+            <span class="amount">PHP <span id="haulingChargesAmount" class="php">34,500.00</span></span>
+            <br>
+          PLEASE SEE ATTACHED
+        </p>
+        <p id="sales">
+            VATABLE SALES
+            <span id="vatableAmountPHP">PHP <span id="vatableAmountSales" class="php">34,500.00</span></span>
+            <br>
+            ZERO RATED SALES
+            <span id="zeroRatedAmountPHP">PHP <span id="zeroRatedAmountSales" class="php">-</span></span>
+            <br>
+            VAT EXEMPT SALES
+            <span id="vatExemptAmountPHP">PHP <span id="vatExemptAmountSales" class="php">-</span></span>
+            <br>
+            TOTAL SALES
+            <span id="totalAmountPHP">PHP <span id="totalAmountSales" class="php">4,140.00</span></span>
+            <br>
+            VAT
+            <span id="vatAmountPHP">PHP <span id="vatAmountSales" class="php">38,640.00 <span style="padding-left: 25px">38,640.00</span></span></span>
+            <br>
+        </p>
+        <p id="amountInWords">THIRTY-EIGHT THOUSAND SIX HUNDRED FORTY PESOS ONLY ...</p>
+        <p id="preparedBy">
+            PAUL <span style="padding-left: 150px">MMA</span>
+        </p>
+    </div>
+    <hr>
+    <center><button id="modalGenerateBillingButton" role="button" onclick="printDiv('printableArea')">Generate Statement Billing</button></center>
+</body>
+<script>
+    function printDiv(divName) {
+             var printContents = document.getElementById(divName).innerHTML;
+             var originalContents = document.body.innerHTML;
+
+             document.body.innerHTML = printContents;
+
+             window.print();
+
+             document.body.innerHTML = originalContents;
+        }
+</script>
+</html>

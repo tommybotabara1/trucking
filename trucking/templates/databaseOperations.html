@@ -12,6 +12,7 @@
         }
     </style>
 
+
     <link rel="stylesheet" type="text/css" href="{% static 'css/datatables.min.css' %}"/>
     <script type="text/javascript" src="{% static 'js/http_cdn.datatables.net_v_dt_dt-1.10.18_b-1.5.4_datatables.js' %}"></script>
     <script src="{% static 'js/city.js' %}"></script>
@@ -29,7 +30,6 @@
     <section id="main-content">
       <section class="wrapper site-min-height">
         <div class="row">
-
           <!-- /col-lg-12 -->
           <div class="col-lg-12">
           <nav aria-label="breadcrumb">
@@ -59,7 +59,7 @@
                   <h2 class="centered">Database Operations</h2>
                   <hr>
                   <a class="btn btn-primary" href="{% url 'new_database_operation' %}" role="button">Create New Database Operations</a>
-                  <a class="btn btn-primary" href="" role="button">Generate Statement Billing</a>
+                  <a class="btn btn-primary" href="" role="button" data-toggle="modal" data-target="#generateBillingDataModal">Generate Statement Billing</a>
                   <button type="submit" class="btn btn-default" data-toggle="modal" data-target="#importDataModal">Import data</button>
                   <hr>
                       <table id="listTable" class="display nowrap" style="width:100%">
@@ -149,6 +149,57 @@
                       </table>
                   </div>
                     <!-- Modal -->
+                    <div class="modal fade" id="generateBillingDataModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="modalLabelBenerateBilling">Generate Billing</h5>
+                          </div>
+                          <div id="modalBodyGenerateBilling" class="modal-body">
+                              <label for="id_billedTo">Billed to:</label>
+                              <select name="billedTo" class="form-control" id="id_billedTo">
+                                <option value="" selected="">----------</option>
+                                  {% for client in clients %}
+                                      <option value="{{ client.clientname }}">{{ client.clientname }}</option>
+                                  {% endfor %}
+                              </select>
+                              <label for="id_TIN">TIN: </label><input type="text" name="TIN" class="form-control" id="id_TIN">
+                              <label for="id_busStyle">Bus. Style: </label><input type="text" name="TIN" class="form-control" id="id_busStyle">
+                              <label for="id_address">Address: </label><input type="text" name="address" class="form-control" id="id_address">
+                              <label for="id_haulingCharges">Hauling Charges: </label><input type="number" name="haulingCharges" class="form-control" id="id_haulingCharges">
+                              <label for="id_haulingChargesDate">Hauling Charges Dates: </label><input type="text" name="haulingChargesDate" class="form-control" id="id_haulingChargesDate">
+                          </div>
+                          <div class="modal-footer">
+                            <a class="btn btn-round btn-info" id="modalGenerateBillingButton" role="button" onclick="printDiv('printableArea')">Print</a>
+                            <button type="button" class="btn btn-round" data-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="modal fade" id="importDataModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="modalLabelImport">Import data (XLSX files only)</h5>
+                          </div>
+                          <div id="modalBodyImport" class="modal-body">
+                              Use this format: <a  href="{% static 'download/sample_xlsx.xlsx' %}" download> Download sample file </a>
+                              <hr>
+
+                              <form method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <input type="file" name="file">
+                          </div>
+                          <div class="modal-footer">
+                                    <button type="submit" class="btn btn-round btn-primary">Upload</button>
+                              </form>
+                            <button type="button" class="btn btn-round" data-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
                     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                       <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -161,29 +212,7 @@
                           <div class="modal-footer">
                             <a class="btn btn-round btn-success" id="modalEditButton" role="button">Edit</a>
                             <a class="btn btn-round btn-danger" id="modalDeleteButton" role="button">Delete</a>
-                            <button type="button" class="btn btn-round" data-dismiss="modal">Close</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="modal fade" id="importDataModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                      <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="modalLabel">Import data (XLSX files only)</h5>
-                          </div>
-                          <div id="modalBody" class="modal-body">
-                              Use this format: <a  href="{% static 'download/sample_xlsx.xlsx' %}" download> Download sample file </a>
-                              <hr>
-
-                              <form method="post" enctype="multipart/form-data">
-                                    {% csrf_token %}
-                                    <input type="file" name="file">
-                          </div>
-                          <div class="modal-footer">
-                                    <button type="submit" class="btn btn-round btn-primary">Upload</button>
-                              </form>
+                            <a class="btn btn-round btn-info" id="modalGenerateBillingButton" role="button" onclick="printDiv('printableArea')">Generate Statement Billing</a>
                             <button type="button" class="btn btn-round" data-dismiss="modal">Close</button>
                           </div>
                         </div>
@@ -210,6 +239,7 @@
       </section>
       <!-- /wrapper -->
     </section>
+
     <script>
         let today = new Date();
         let time = '';
@@ -331,5 +361,132 @@
             $('#modalDeleteButton').attr('href', '/database_operations/deleteDBO/' + table.row(this).data()[1]);
             $('#exampleModal').modal();
         } );
+
+        // Convert numbers to words
+        // copyright 25th July 2006, by Stephen Chapman http://javascript.about.com
+        // permission to use this Javascript on your web page is granted
+        // provided that all of the code (including this copyright notice) is
+        // used exactly as shown (you can change the numbering system if you wish)
+
+
+        // American Numbering System
+        var th = ['','THOUSAND','MILLION', 'BILLION','TRILLION'];
+        // uncomment this line for English Number System
+        // var th = ['','thousand','million', 'milliard','billion'];
+
+        var dg = ['ZERO','ONE','TWO','THREE','FOUR', 'FIVE','SIX','SEVEN','EIGHT','NINE'];
+        var tn = ['TEN','ELEVEN','TWELVE','THIRTEEN', 'FOURTEEN','FIFTEEN','SIXTEEN', 'SEVENTEEN','EIGHTEEN','NINETEEN'];
+        var tw = ['TWENTY','THIRTY','FORTY','FIFTY', 'SIXTY','SEVENTY','EIGHTY','NINETY'];
+        function toWords(s){
+            s = s.toString(); s = s.replace(/[, ]/g,'');
+            if (s != parseFloat(s)) return 'not a number';
+            var x = s.indexOf('.');
+            if (x == -1)
+                x = s.length;
+            if (x > 15)
+                return 'too big';
+            var n = s.split('');
+            var str = '';
+            var sk = 0;
+            for (var i=0; i < x; i++) {
+                if ((x-i)%3==2) {
+                    if (n[i] == '1') {
+                        str += tn[Number(n[i+1])] + ' ';
+                        i++; sk=1;
+                    }
+                    else if (n[i]!=0) {
+                        str += tw[n[i]-2] + ' ';
+                        sk=1;
+                    }
+                }
+                else if (n[i]!=0) {
+                    str += dg[n[i]] +' ';
+                    if ((x-i)%3==0)
+                        str += 'HUNDRED ';
+                    sk=1;
+                }
+                if ((x-i)%3==1) {
+                    if (sk)
+                        str += th[(x-i-1)/3] + ' ';
+                    sk=0;
+                }
+            }
+            if (x != s.length) {
+                var y = s.length;
+                str += 'AND ';
+                for (var i=x+1; i<y; i++)
+                    str += dg[n[i]] +' ';
+            }
+            return str.replace(/\s+/g,' ');
+        }
+
+        function numberWithCommas(x) {
+            var parts = x.toString().split(".");
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return parts.join(".");
+        }
+
+        function addZeroes(num) {
+            // Convert input string to a number and store as a variable.
+            var value = Number(num);
+            // Split the input string into two arrays containing integers/decimals
+            var res = num.split(".");
+            // If there is no decimal point or only one decimal place found.
+            if(res.length == 1 || res[1].length < 3) {
+            // Set the number to two decimal places
+                value = value.toFixed(2);
+            }
+            // Return updated or original number.
+            return value;
+        }
+
+
+        function printDiv(divName) {
+            var billedTo = $('#id_billedTo').val();
+            var tin = $('#id_TIN').val();
+            var busStyle = $('#id_busStyle').val();
+            var address = $('#id_address').val();
+            var haulingCharges = $('#id_haulingCharges').val();
+            var haulingChargesDate = $('#id_haulingChargesDate').val();
+            var vat = haulingCharges * 0.12;
+            vat = Math.round(vat * 100) / 100;
+            var total = vat + parseFloat(haulingCharges);
+
+            console.log(billedTo);
+            console.log(tin);
+            console.log(busStyle);
+            console.log(address);
+            console.log(toWords(total));
+            console.log(numberWithCommas(addZeroes(haulingCharges)));
+            console.log(haulingChargesDate);
+            console.log(numberWithCommas(addZeroes(vat.toString())));
+
+
+            $('#clientName').html(billedTo);
+            $('#tin').html(tin);
+            $('#busStyle').html(busStyle);
+            $('#address').html(address);
+
+            $('#haulingChargesAmount').html(numberWithCommas(addZeroes(haulingCharges)));
+
+            $('#vatableAmountSales').html(numberWithCommas(addZeroes(haulingCharges)));
+            $('#totalAmountSales').html(numberWithCommas(addZeroes(haulingCharges)));
+            $('#amountInWords').html(toWords(addZeroes(total.toString())) + " ONLY ...");
+            $('#haulingChargesDate').html(haulingChargesDate);
+            $('#vat').html(numberWithCommas(addZeroes(vat.toString())));
+            $('#total').html(numberWithCommas(addZeroes(total.toString())));
+            $('#last').html(numberWithCommas(addZeroes(total.toString())));
+
+            var printContents = document.getElementById(divName).innerHTML;
+            var originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = printContents;
+
+            window.print();
+
+            document.body.innerHTML = originalContents;
+            location.reload();
+        }
+
     </script>
 {% endblock %}
