@@ -62,6 +62,26 @@
                   <a class="btn btn-primary" href="" role="button" data-toggle="modal" data-target="#generateBillingDataModal">Generate Statement Billing</a>
                   <button type="submit" class="btn btn-default" data-toggle="modal" data-target="#importDataModal">Import data</button>
                   <hr>
+                  <div class="form-inline">
+                    <div class="form-group">
+                      <label for="id_year">Year: </label>
+                      <select name="year" class="form-control" id="id_year">
+                          {% for date in dates %}
+                              <option value="{{ date.year }}">{{ date.year }}</option>
+                          {% endfor %}
+                      </select>
+                    </div>
+                     <div class="form-group">
+                      <label for="id_month">Month: </label>
+                      <select name="month" class="form-control" id="id_month">
+                          {% for date in dates %}
+                              <option value="{{ date.month }}">{{ date|date:"F" }}</option>
+                          {% endfor %}
+                      </select>
+                    </div>
+                    <button type="button" class="btn btn-theme">Submit</button>
+                  </div>
+                  <hr>
                       <table id="listTable" class="display nowrap" style="width:100%">
                             <thead>
                                 <tr>
@@ -187,7 +207,7 @@
                               Use this format: <a  href="{% static 'download/sample_xlsx.xlsx' %}" download> Download sample file </a>
                               <hr>
 
-                              <form method="post" enctype="multipart/form-data">
+                              <form method="post" enctype="multipart/form-data" action="{% url 'database_operations' %}">
                                     {% csrf_token %}
                                     <input type="file" name="file">
                           </div>
@@ -212,7 +232,7 @@
                           <div class="modal-footer">
                             <a class="btn btn-round btn-success" id="modalEditButton" role="button">Edit</a>
                             <a class="btn btn-round btn-danger" id="modalDeleteButton" role="button">Delete</a>
-                            <a class="btn btn-round btn-info" id="modalGenerateBillingButton" role="button" onclick="printDiv('printableArea')">Generate Statement Billing</a>
+{#                            <a class="btn btn-round btn-info" id="modalGenerateBillingButton" role="button" onclick="printDiv('printableArea')">Generate Statement Billing</a>#}
                             <button type="button" class="btn btn-round" data-dismiss="modal">Close</button>
                           </div>
                         </div>
@@ -461,6 +481,9 @@
             console.log(haulingChargesDate);
             console.log(numberWithCommas(addZeroes(vat.toString())));
 
+            if(Number.isNaN(total))
+                total = 0.00;
+
 
             $('#clientName').html(billedTo);
             $('#tin').html(tin);
@@ -487,6 +510,20 @@
             document.body.innerHTML = originalContents;
             location.reload();
         }
+
+        $(document).ready(function(){
+           $("#id_year").val({{ year }});
+           $("#id_month").val({{ month }});
+        });
+        
+
+        $( "#id_year" ).change(function() {
+            window.location.href = "/database_operations//year="  + $(this).val() + "/month=" + $("#id_month").val();
+        });
+
+        $( "#id_month" ).change(function() {
+            window.location.href = "/database_operations/year="  + $("#id_year").val() + "/month=" + $(this).val();
+        });
 
     </script>
 {% endblock %}

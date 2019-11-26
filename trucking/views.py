@@ -18,9 +18,30 @@ def testing(request):
 
 def database_operations(request):
     if request.method == "GET":
-        list = Table1.objects.all()[:50]
-        clients = Client.objects.all()
-        return render(request, 'databaseOperations.html', {'list': list, 'clients': clients})
+        try:
+            latest = Table1.objects.latest('date')
+            latest_date = latest.date
+            clients = Client.objects.all()
+            list = Table1.objects.filter(date__year=latest_date.year, date__month=latest_date.month)
+        except:
+            latest = datetime.now()
+            latest_date = latest.date
+            clients = Client.objects.all()
+            list = Table1.objects.filter(date__year=latest.year, date__month=latest.month)
+
+
+        dates = Table1.objects.dates('date', 'month')
+
+        context = {
+            'list': list,
+            'clients': clients,
+            'latest_date': latest_date,
+            'dates': dates,
+            'month': latest_date.month,
+            'year': latest_date.year
+        }
+
+        return render(request, 'databaseOperations.html', context)
 
     csv_file = request.FILES['file']
 
@@ -205,12 +226,46 @@ def database_operations(request):
 
         newOperation.save()
 
-    list = Table1.objects.all()
+    latest = Table1.objects.latest('date')
+    latest_date = latest.date
+    clients = Client.objects.all()
+    list = Table1.objects.filter(date__year=latest_date.year, date__month=latest_date.month)
+
+    dates = Table1.objects.dates('date', 'month')
+
     context = {
         'list': list,
+        'clients': clients,
+        'latest_date': latest_date,
+        'dates': dates,
+        'month': latest_date.month,
+        'year': latest_date.year
     }
+
     messages.success(request, 'Import successful (' + str(sheet.nrows - 1) + ' rows)')
     return render(request, 'databaseOperations.html', context)
+
+
+def database_operations_year_month(request, year, month):
+    if request.method == "GET":
+        latest = Table1.objects.latest('date')
+        latest_date = latest.date
+        clients = Client.objects.all()
+        list = Table1.objects.filter(date__year=year, date__month=month)
+
+        dates = Table1.objects.dates('date', 'month')
+
+        context = {
+            'list': list,
+            'clients': clients,
+            'latest_date': latest_date,
+            'dates': dates,
+            'month': month,
+            'year': year
+        }
+        print(year)
+        print(month)
+        return render(request, 'databaseOperations.html', context)
 
 
 def new_database_operation(request):
