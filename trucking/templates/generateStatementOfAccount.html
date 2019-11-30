@@ -1,5 +1,5 @@
 {% extends "includes/headerFooter.html" %}
-{% load staticfiles%}
+{% load staticfiles %}
 {% load humanize %}
 
 {% block content %}
@@ -35,7 +35,8 @@
           <div class="col-lg-12">
           <nav aria-label="breadcrumb">
               <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">Database Operations</li>
+                  <li class="breadcrumb-item"><a href="{% url 'database_operations' %}">Database Operations</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Generate Statement of Account</li>
               </ol>
           </nav>
             <div class="row content-panel">
@@ -57,189 +58,108 @@
                 </div>
                 {% endif %}
                   <div id="overview" class="tab-pane active">
-                  <h2 class="centered">Database Operations</h2>
-                  <hr>
-                  <a class="btn btn-primary" href="{% url 'new_database_operation' %}" role="button">Create New Database Operations</a>
-                  <a class="btn btn-primary" href="" role="button" data-toggle="modal" data-target="#generateBillingDataModal">Generate Statement Billing</a>
-                  <a class="btn btn-primary" href="" role="button" data-toggle="modal" data-target="#generateStatementOfAccountModal">Generate Statement of Account</a>
-                  <button type="submit" class="btn btn-default" data-toggle="modal" data-target="#importDataModal">Import data</button>
-                  <hr>
-                  <div class="form-inline">
-                    <div class="form-group">
-                      <label for="id_year">Year: </label>
-                      <select name="year" class="form-control" id="id_year">
-                          {% for date in dates %}
-                              <option value="{{ date.year }}">{{ date.year }}</option>
-                          {% endfor %}
-                      </select>
-                    </div>
-                     <div class="form-group">
-                      <label for="id_month">Month: </label>
-                      <select name="month" class="form-control" id="id_month">
-                          {% for date in dates %}
-                              <option value="{{ date.month }}">{{ date|date:"F" }}</option>
-                          {% endfor %}
-                      </select>
-                    </div>
-
-                  </div>
-                  <hr>
-                      <table id="listTable" class="display nowrap" style="width:100%">
+                      <h2 class="centered">Generate Statement of Account</h2>
+                      <hr>
+                      <a class="btn btn-primary" href="" role="button" data-toggle="modal" data-target="#generateStatementOfAccountModal">Generate Statement of Account</a>
+                      <a class="btn btn-default" role="button" onclick="printDiv('printDiv')">Print</a>
+                      <hr>
+                      <div id="printDiv">
+                          <h5><b>ULTIMATE EXPRESS TRANS LOGISTICS, CORP.</b></h5>
+                          <h5><b>STATEMENT OF ACCOUNT</b></h5>
+                          <div style="padding-left: 50px">
+                              <table>
+                              <tr>
+                                  <td style="text-align: right">Bill to:</td>
+                                  <td style="text-align: left; padding-left: 10px"><u><b><i>{{ client }}</i></b></u></td>
+                              </tr>
+                              <tr>
+                                  <td style="text-align: right">Billing Period:</td>
+                                  <td style="text-align: center; padding-left: 10px"><b><u><span style="padding-right: 10px">{{ billedFromDate|date:"F j, Y" }}</span></u></b> TO <b><u><span style="padding-left: 10px">{{ billingToDate|date:"F j, Y" }}</span></u></b></td>
+                              </tr>
+                              <tr>
+                                  <td style="text-align: right">Invoice #:</td>
+                                  <td style="text-align: center"></td>
+                              </tr>
+                              {% if customer is not None %}
+                                  <tr>
+                                      <td style="text-align: right">Customer:</td>
+                                      <td style="text-align: left; padding-left: 10px"><u><b><i>{{ customer.customername }}</i></b></u></td>
+                                  </tr>
+                              {% endif %}
+                              {% if plateNumber is not None %}
+                                  <tr>
+                                      <td style="text-align: right">Plate Number:</td>
+                                      <td style="text-align: left; padding-left: 10px"><u><b><i>{{ plateNumber }}</i></b></u></td>
+                                  </tr>
+                              {% endif %}
+                              {% if wayBillNumber is not None %}
+                                  <tr>
+                                      <td style="text-align: right">Way Bill Number:</td>
+                                      <td style="text-align: left; padding-left: 10px"><u><b><i>{{ wayBillNumber }}</i></b></u></td>
+                                  </tr>
+                              {% endif %}
+                            </table>
+                          </div>
+                          <table class="table table-condensed table-bordered">
                             <thead>
-                                <tr>
-                                    <th>Action</th>
-                                    <th>ID</th>
-                                    <th>DATE</th>
-                                    <th>CALL TIME</th>
-                                    <th>PLATE NO.</th>
-                                    <th>WB NO.</th>
-                                    <th>ORIGIN</th>
-                                    <th>DESTINATION</th>
-                                    <th>DRIVER</th>
-                                    <th>HELPER</th>
-                                    <th>CUSTOMER</th>
-                                    <th>CLIENT</th>
-                                    <th>TRUCK TYPE</th>
-                                    <th>QTY</th>
-                                    <th>REMARKS</th>
-                                    <th>DIESEL</th>
-                                    <th>TRUCK BUDGET</th>
-                                    <th>C/A HELPER</th>
-                                    <th>TOLL FEE</th>
-                                    <th>PARKING</th>
-                                    <th>ENTRY FEE</th>
-                                    <th>OTHERS</th>
-                                    <th>TOTAL LIQ</th>
-                                    <th>UNLIQ.</th>
-                                    <th>DRIVER-SAL</th>
-                                    <th>ADDITIONAL DRIVER SALARY</th>
-                                    <th>HELPER-SAL</th>
-                                    <th>ADDITIONAL HELPER SALARY</th>
-                                    <th>BILLING</th>
-                                    <th>ADD'L</th>
-                                    <th>REVENUE</th>
-                                    <th>BILLED DATE</th>
-                                    <th>RECEIVED BY</th>
-                                    <th>RECEIVED TIME</th>
-                                </tr>
+                              <tr>
+                                <th style="text-align: center">DATE</th>
+                                <th style="text-align: center">PLATE NO.</th>
+                                <th style="text-align: center">WAYBILL NO.</th>
+                                <th style="text-align: center">CUSTOMER</th>
+                                <th style="text-align: center">CLIENT</th>
+                                <th style="text-align: center"></th>
+                                <th style="text-align: center">QTY</th>
+                                <th style="text-align: center">ORIGIN</th>
+                                <th style="text-align: center">BILLING</th>
+                                <th style="text-align: center">ADD'L</th>
+                                <th style="text-align: center">REMARKS</th>
+                              </tr>
                             </thead>
                             <tbody>
-                            {% for item in list %}
-                             <tr>
-                                <td>
-                                    <div class="btn-group-justified btn-group-sm" role="group" aria-label="...">
-                                        <a class="btn btn-success" href="{% url 'edit_database_operation' item.id "A" %}" role="button"><i class="fa fa-pencil"></i></a>
-                                        <a class="btn btn-danger" href="{% url 'delete_database_operation' item.id %}" role="button"><i class="fa fa-trash"></i></a>
-                                    </div>
-                                </td>
-                                <td>{{ item.id }}</td>
-                                <td>{{ item.date|date:'m/d/Y'|default_if_none:"" }}</td>
-                                <td>{{ item.calltime|time:'H:i'|default_if_none:"" }}</td>
-                                <td>{{ item.plateno|default_if_none:"" }}</td>
-                                <td>{{ item.wbno|default_if_none:"" }}</td>
-                                <td>{{ item.origin|default_if_none:"" }}</td>
-                                <td>{{ item.destination|default_if_none:"" }}</td>
-                                <td>{{ item.driver.drivername|default_if_none:"" }}</td>
-                                <td>{{ item.helper.helpername|default_if_none:"" }}</td>
-                                <td>{{ item.customer.customername|default_if_none:"" }}</td>
-                                <td>{{ item.client.clientname|default_if_none:"" }}</td>
-                                <td>{{ item.trucktype|default_if_none:"" }}</td>
-                                <td>{{ item.qty|default_if_none:"" }}</td>
-                                <td>{{ item.remarks|default_if_none:"" }}</td>
-                                <td>{{ item.diesel|default_if_none:""|floatformat:2|intcomma }}</td>
-                                <td>{{ item.truckbudget|default_if_none:""|floatformat:2|intcomma }}</td>
-                                <td>{{ item.cahelper|default_if_none:""|floatformat:2|intcomma }}</td>
-                                <td>{{ item.tollfee|default_if_none:""|floatformat:2|intcomma }}</td>
-                                <td>{{ item.parking|default_if_none:""|floatformat:2|intcomma }}</td>
-                                <td>{{ item.entryfee|default_if_none:""|floatformat:2|intcomma }}</td>
-                                <td>{{ item.others|default_if_none:""|floatformat:2|intcomma }}</td>
-                                <td>{{ item.totalliq|default_if_none:""|floatformat:2|intcomma }}</td>
-                                <td>{{ item.unliq|default_if_none:""|floatformat:2|intcomma }}</td>
-                                <td>{{ item.driversal|default_if_none:""|floatformat:2|intcomma }}</td>
-                                <td>{{ item.addldriversal|default_if_none:""|floatformat:2|intcomma }}</td>
-                                <td>{{ item.helpersal|default_if_none:""|floatformat:2|intcomma }}</td>
-                                <td>{{ item.addlhelpersal|default_if_none:""|floatformat:2|intcomma }}</td>
-                                <td>{{ item.billing|default_if_none:""|floatformat:2|intcomma }}</td>
-                                <td>{{ item.addl|default_if_none:""|floatformat:2|intcomma }}</td>
-                                <td>{{ item.revenue|default_if_none:""|floatformat:2|intcomma }}</td>
-                                <td>{{ item.billeddate|date:'m/d/Y'|default_if_none:"" }}</td>
-                                <td>{{ item.receivedby|default_if_none:"" }}</td>
-                                <td>{{ item.receivedtime|time:'H:i'|default_if_none:"" }}</td>
-                             </tr>
-                            {% endfor %}
+                                {% for item in list %}
+                                    <tr>
+                                        <td style="text-align: center">{{ item.date|date:"d-M-y" }}</td>
+                                        <td style="text-align: center">{{ item.plateno }}</td>
+                                        <td style="text-align: center">{{ item.wbno }}</td>
+                                        <td style="text-align: center">{{ item.customer.customername }}</td>
+                                        <td style="text-align: center">{{ item.client.clientname }}</td>
+                                        <td style="text-align: center">{{ item.trucktype }}</td>
+                                        <td style="text-align: center">{{ item.qty }}</td>
+                                        <td style="text-align: center">{{ item.origin }}</td>
+                                        <td style="text-align: right">{{ item.billing|floatformat:2|intcomma }}</td>
+                                        {% if item.addl is None %}
+                                            <td style="text-align: right">-</td>
+                                        {% else %}
+                                            <td style="text-align: right">{{ item.addl|default_if_none:"-"|floatformat:2|intcomma }}</td>
+                                        {% endif %}
+                                        <td style="text-align: center">{{ item.remarks }}</td>
+                                    </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td colspan="7" style="border: 0"></td>
+                                    <td style="text-align: center; border: 0">Subtotal:</td>
+                                    <td style="text-align: right; border: 0"><u><b><i>{{ subtotal.billing__sum|floatformat:2|intcomma }}</i></b></u></td>
+                                    {% if item.addl is None %}
+                                        <td style="text-align: right; border: 0"><u><b><i>-</i></b></u></td>
+                                    {% else %}
+                                        <td style="text-align: right; border: 0"><u><b><i>{{ addltotal.addl__sum|default_if_none:"-"|floatformat:2|intcomma }}</i></b></u></td>
+                                    {% endif %}
+                                    <td style="border: 0"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7" style="border: 0"></td>
+                                    <td style="text-align: center; border: 0">Grand Total:</td>
+                                    <td style="text-align: right; border: 0"><u><b>{{ grandtotal|floatformat:2|intcomma }}</b></u></td>
+                                    <td style="border: 0"></td>
+                                    <td style="border: 0"></td>
+                                </tr>
                             </tbody>
-                      </table>
+                          </table>
+                      </div>
+
                   </div>
                     <!-- Modal -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                          <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="modalLabel">Modal title</h5>
-                              </div>
-                              <div id="modalBody" class="modal-body">
-                                ...
-                              </div>
-                              <div class="modal-footer">
-                                <a class="btn btn-round btn-success" id="modalEditButton" role="button">Edit</a>
-                                <a class="btn btn-round btn-danger" id="modalDeleteButton" role="button">Delete</a>
-    {#                            <a class="btn btn-round btn-info" id="modalGenerateBillingButton" role="button" onclick="printDiv('printableArea')">Generate Statement Billing</a>#}
-                                <button type="button" class="btn btn-round" data-dismiss="modal">Close</button>
-                              </div>
-                            </div>
-                          </div>
-                    </div>
-                    <div class="modal fade" id="generateBillingDataModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                      <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="modalLabelBenerateBilling">Generate Billing</h5>
-                          </div>
-                          <div id="modalBodyGenerateBilling" class="modal-body">
-                              <label for="id_billedTo">Billed to:</label>
-                              <select name="billedTo" class="form-control" id="id_billedTo">
-                                <option value="" selected="">----------</option>
-                                  {% for client in clients %}
-                                      <option value="{{ client.clientname }}">{{ client.clientname }}</option>
-                                  {% endfor %}
-                              </select>
-                              <label for="id_TIN">TIN: </label><input type="text" name="TIN" class="form-control" id="id_TIN">
-                              <label for="id_busStyle">Bus. Style: </label><input type="text" name="TIN" class="form-control" id="id_busStyle">
-                              <label for="id_address">Address: </label><input type="text" name="address" class="form-control" id="id_address">
-                              <label for="id_haulingCharges">Hauling Charges: </label><input type="number" name="haulingCharges" class="form-control" id="id_haulingCharges">
-                              <label for="id_haulingChargesDate">Hauling Charges Dates: </label><input type="text" name="haulingChargesDate" class="form-control" id="id_haulingChargesDate">
-                          </div>
-                          <div class="modal-footer">
-                            <a class="btn btn-round btn-info" id="modalGenerateBillingButton" role="button" onclick="printDiv('printableArea')">Print</a>
-                            <button type="button" class="btn btn-round" data-dismiss="modal">Close</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="modal fade" id="importDataModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                      <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="modalLabelImport">Import data (XLSX files only)</h5>
-                          </div>
-                          <div id="modalBodyImport" class="modal-body">
-                              Use this format: <a  href="{% static 'download/sample_xlsx.xlsx' %}" download> Download sample file </a>
-                              <hr>
-
-                              <form method="post" enctype="multipart/form-data" action="{% url 'database_operations' %}">
-                                    {% csrf_token %}
-                                    <input type="file" name="file">
-                          </div>
-                          <div class="modal-footer">
-                                    <button type="submit" class="btn btn-round btn-primary">Upload</button>
-                              </form>
-                            <button type="button" class="btn btn-round" data-dismiss="modal">Close</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
                     <div class="modal fade" id="generateStatementOfAccountModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                       <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -255,7 +175,7 @@
                                 <label for="billingFromDate">Billing From Date</label>
                                  <div class="form-group">
                                   <div class="col-md-12">
-                                      <input type="date" id="billingFromDate" name="billingFromDate" size="16" class="form-control" required>
+                                      <input type="date" id="billingFromDate" name="billingFromDate" size="16" class="form-control">
                                   </div>
                                 </div>
                             </div>
@@ -263,14 +183,14 @@
                                 <label>Billing To Date</label>
                                  <div class="form-group">
                                   <div class="col-md-12">
-                                      <input type="date" id="billingToDate" name="billingToDate" size="16" class="form-control" required>
+                                      <input type="date" id="billingToDate" name="billingToDate" size="16" class="form-control">
                                   </div>
                                 </div>
                             </div>
                           </div>
                           <br>
                           <label for="client">Client</label>
-                          <select name="client" class="form-control" id="client" required>
+                          <select name="client" class="form-control" id="client">
                                 <option value="" selected="">----------</option>
                                   {% for client in clients %}
                                       <option value="{{ client.clientname }}">{{ client.clientname }}</option>
@@ -309,6 +229,25 @@
 
                               </form>
                           <div class="modal-footer">
+                            <button type="button" class="btn btn-round" data-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="modalLabel">Modal title</h5>
+                          </div>
+                          <div id="modalBody" class="modal-body">
+                            ...
+                          </div>
+                          <div class="modal-footer">
+                            <a class="btn btn-round btn-success" id="modalEditButton" role="button">Edit</a>
+                            <a class="btn btn-round btn-danger" id="modalDeleteButton" role="button">Delete</a>
+{#                            <a class="btn btn-round btn-info" id="modalGenerateBillingButton" role="button" onclick="printDiv('printableArea')">Generate Statement Billing</a>#}
                             <button type="button" class="btn btn-round" data-dismiss="modal">Close</button>
                           </div>
                         </div>
@@ -443,7 +382,7 @@
 
         $('#listTable tbody').on( 'click', 'tr', function () {
             // alert( table.row( this ).data() );
-            var modalBody = "<table class=\"table table-condensed table-bordered\">";
+            var modalBody = "<table class=\"table table-bordered\">";
             for(var i = 2; i <= 32 ; i++){
                 modalBody += "<tr>";
                 modalBody += "<td><b>"+ table.columns(i).header()[0].textContent +"</b></td>";
@@ -538,43 +477,25 @@
 
 
         function printDiv(divName) {
-            var billedTo = $('#id_billedTo').val();
-            var tin = $('#id_TIN').val();
-            var busStyle = $('#id_busStyle').val();
-            var address = $('#id_address').val();
-            var haulingCharges = $('#id_haulingCharges').val();
-            var haulingChargesDate = $('#id_haulingChargesDate').val();
-            var vat = haulingCharges * 0.12;
-            vat = Math.round(vat * 100) / 100;
-            var total = vat + parseFloat(haulingCharges);
+            var dboIDs = [
+                {% for item in list %}
+                    {{ item.id }},
+                {% endfor %}
+            ];
 
-            console.log(billedTo);
-            console.log(tin);
-            console.log(busStyle);
-            console.log(address);
-            console.log(toWords(total));
-            console.log(numberWithCommas(addZeroes(haulingCharges)));
-            console.log(haulingChargesDate);
-            console.log(numberWithCommas(addZeroes(vat.toString())));
-
-            if(Number.isNaN(total))
-                total = 0.00;
-
-
-            $('#clientName').html(billedTo);
-            $('#tin').html(tin);
-            $('#busStyle').html(busStyle);
-            $('#address').html(address);
-
-            $('#haulingChargesAmount').html(numberWithCommas(addZeroes(haulingCharges)));
-
-            $('#vatableAmountSales').html(numberWithCommas(addZeroes(haulingCharges)));
-            $('#totalAmountSales').html(numberWithCommas(addZeroes(haulingCharges)));
-            $('#amountInWords').html(toWords(addZeroes(total.toString())) + " ONLY ...");
-            $('#haulingChargesDate').html(haulingChargesDate);
-            $('#vat').html(numberWithCommas(addZeroes(vat.toString())));
-            $('#total').html(numberWithCommas(addZeroes(total.toString())));
-            $('#last').html(numberWithCommas(addZeroes(total.toString())));
+            $.ajax({
+              url: '{% url "update_billing_dates" %}',
+              data: {
+                "dboIDs[]": dboIDs,
+              },
+              dataType: 'json',
+              success: function(data){
+                  console.log(dboIDs);
+              },
+              error: function () {
+                alert("error");
+              },
+            });
 
             var printContents = document.getElementById(divName).innerHTML;
             var originalContents = document.body.innerHTML;
@@ -584,7 +505,6 @@
             window.print();
 
             document.body.innerHTML = originalContents;
-            location.reload();
         }
 
         $(document).ready(function(){

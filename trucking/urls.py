@@ -7,6 +7,7 @@ urlpatterns = [
     path('database_operations/newDBO', views.new_database_operation, name='new_database_operation'),
     path('database_operations/editDBO/<int:id>/<str:phase>', views.edit_database_operation, name='edit_database_operation'),
     path('database_operations/deleteDBO/<int:id>', views.delete_database_operation, name='delete_database_operation'),
+    path('database_operations/statement_of_account', views.dbo_statement_of_account, name='dbo_statement_of_account'),
     path('tariff/', views.tariff, name='tariff'),
     path('tariff/new_tariff', views.new_tariff, name='new_tariff'),
     path('tariff/edit_tariff/<int:id>', views.edit_tariff, name='edit_tariff'),
@@ -46,4 +47,5 @@ urlpatterns = [
     path('get_split_amount_total/', views.get_split_amount_total, name='get_split_amount_total'),
     path('delete_split_amount/', views.delete_split_amount, name='delete_split_amount'),
     path('ajax/get_dbo/', views.get_dbo, name='get_dbo'),
+    path('ajax/update_billing_date/', views.update_billing_dates, name='update_billing_dates'),
 ]

@@ -76,15 +76,15 @@
                           {{ form.id }}
                           {% for field in form %}
                               {% if field.label != 'Id' %}
-{#                                  {% if field.label == "Call Time" %}#}
-{#                                      <div id="phaseA" class="fields">#}
-{#                                  {% elif field.label == "Plate number" %}#}
-{#                                      <div id="phaseB" class="fields">#}
-{#                                  {% elif field.label == "Driver Salary" %}#}
-{#                                      <div id="phaseC" class="fields">#}
-{#                                  {% elif field.label == "Billed Date" %}#}
-{#                                      <div id="phaseD" class="fields">#}
-{#                                  {% endif %}#}
+                                  {% if field.label == "Date" %}
+                                      <div id="phaseA" class="fields">
+                                  {% elif field.label == "Plate number" %}
+                                      <div id="phaseB" class="fields">
+                                  {% elif field.label == "Diesel" %}
+                                      <div id="phaseC" class="fields">
+                                  {% elif field.label == "Billed Date" %}
+                                      <div id="phaseD" class="fields">
+                                  {% endif %}
                                   <div class="form-group">
                                       <label class="col-sm-2 col-sm-2 control-label">{{ field.label_tag }}</label>
                                       <div class="col-sm-10">
@@ -1700,9 +1700,9 @@
                                           {% endif %}
                                       </div>
                                   </div>
-{#                                  {% if field.label == "Remarks" or field.label == "Quantity" or field.label == "Revenue" or field.label == "Billed Date"%}#}
-{#                                      </div>#}
-{#                                  {% endif %}#}
+                                  {% if field.label == "Remarks" or field.label == "Quantity" or field.label == "Billing Additional" or field.label == "Billed Date"%}
+                                      </div>
+                                  {% endif %}
                               {% endif %}
                           {% endfor %}
                         <button type="submit" value="Submit" class="btn btn-primary center-block">Submit</button>
@@ -2187,6 +2187,7 @@
         });
 
         $(document).ready(function(){
+            /*
             $.ajax({
               url: '{% url "get_split_amount_total" %}',
               data: {
@@ -2252,6 +2253,7 @@
             $("#phaseC").hide();
             $("#phaseD").hide();
 
+
             var date = $("#id_receiveddatetime").attr("value");
             var replaced = date.split(' ').join('T');
             replaced = replaced.substring(0, replaced.length - 3);
@@ -2261,6 +2263,7 @@
                 $("#billingInfoButton").removeAttr("disabled");
                 console.log("not null");
             }
+            */
         });
 
         $( "#phase" ).change(function() {
@@ -2306,6 +2309,7 @@
         });
 
         function updatePhaseC(){
+
             var driverSal = parseFloat($("#id_driversal").val()) || 0;
             var helperSal = parseFloat($("#id_helpersal").val()) || 0;
             var billing = parseFloat($("#id_billing").val()) || 0;
@@ -2333,7 +2337,7 @@
 
             $("#id_revenue").val(revenue);
 
-            console.log(($("#id_receiveddatetime").val()));
+
         }
 
         $("#id_billeddate").change(function(){

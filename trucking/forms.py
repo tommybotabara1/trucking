@@ -123,7 +123,7 @@ class DatabaseOperationForm(ModelForm):
             'helpersal': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999",}),
             'receivedby': TextInput(attrs={'class': 'form-control'}),
             'receivedtime': TimeInput(attrs={'type': 'text', 'class': 'form-control A', "placeholder": "HH:MM:SS", "maxlength": "8"}),
-            'totalliq': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999",}),
+            'totalliq': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "readonly": "true"}),
             'addl': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999",}),
             'addldriversal': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999",}),
             'addlhelpersal': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999",}),
@@ -135,9 +135,9 @@ class DatabaseOperationForm(ModelForm):
             'parking': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", }),
             'entryfee': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", }),
             'others': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", }),
-            'unliq': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", }),
-            'revenue': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999",}),
-            'billeddate': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'unliq': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999",  }),
+            'revenue': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "readonly": "true"}),
+            'billeddate': DateInput(attrs={'type': 'date', 'class': 'form-control', "readonly": "true"}),
         }
         labels = {
 

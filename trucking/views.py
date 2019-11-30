@@ -4,6 +4,9 @@ from django.http import JsonResponse
 from .forms import *
 from datetime import datetime
 from django.contrib import messages
+from django.db.models import Sum
+from datetime import date
+
 
 
 def index(request):
@@ -21,20 +24,23 @@ def database_operations(request):
         try:
             latest = Table1.objects.latest('date')
             latest_date = latest.date
-            clients = Client.objects.all()
-            list = Table1.objects.filter(date__year=latest_date.year, date__month=latest_date.month)
+            clients = Client.objects.all().order_by('clientname')
+            list = Table1.objects.filter(date__year=latest_date.year, date__month=latest_date.month)[:50]
         except:
             latest = datetime.now()
             latest_date = latest.date
-            clients = Client.objects.all()
+            clients = Client.objects.all().order_by('clientname')
             list = Table1.objects.filter(date__year=latest.year, date__month=latest.month)
 
 
         dates = Table1.objects.dates('date', 'month')
 
+        customers = Customer.objects.all().order_by('customername')
+
         context = {
             'list': list,
             'clients': clients,
+            'customers': customers,
             'latest_date': latest_date,
             'dates': dates,
             'month': latest_date.month,
@@ -228,7 +234,8 @@ def database_operations(request):
 
     latest = Table1.objects.latest('date')
     latest_date = latest.date
-    clients = Client.objects.all()
+    clients = Client.objects.all().order_by('clientname')
+    customers = Customer.objects.all().order_by('customername')
     list = Table1.objects.filter(date__year=latest_date.year, date__month=latest_date.month)
 
     dates = Table1.objects.dates('date', 'month')
@@ -236,6 +243,7 @@ def database_operations(request):
     context = {
         'list': list,
         'clients': clients,
+        'customers': customers,
         'latest_date': latest_date,
         'dates': dates,
         'month': latest_date.month,
@@ -250,7 +258,8 @@ def database_operations_year_month(request, year, month):
     if request.method == "GET":
         latest = Table1.objects.latest('date')
         latest_date = latest.date
-        clients = Client.objects.all()
+        clients = Client.objects.all().order_by('clientname')
+        customers = Customer.objects.all().order_by('customername')
         list = Table1.objects.filter(date__year=year, date__month=month)
 
         dates = Table1.objects.dates('date', 'month')
@@ -258,6 +267,7 @@ def database_operations_year_month(request, year, month):
         context = {
             'list': list,
             'clients': clients,
+            'customers': customers,
             'latest_date': latest_date,
             'dates': dates,
             'month': month,
@@ -332,12 +342,75 @@ def edit_database_operation(request, id, phase):
 
 
 def delete_database_operation(request, id):
-    list = Table1.objects.all()
+    latest = Table1.objects.latest('date')
+    latest_date = latest.date
+    list = Table1.objects.filter(date__year=latest_date.year, date__month=latest_date.month)
 
     Table1.objects.get(id=id).delete()
     extra = "Database Operation " + str(id) + " Deleted"
 
     return render(request, 'databaseOperations.html', {'list': list, 'extra': extra})
+
+
+def dbo_statement_of_account(request):
+    billingFromDate = request.POST.get("billingFromDate")
+    billingToDate = request.POST.get("billingToDate")
+    client = request.POST.get("client")
+    customer = request.POST.get("customer")
+    plateNumber = request.POST.get("plateNumber")
+    wayBillNumber = request.POST.get("wayBillNumber")
+
+    billingFromDate = datetime.strptime(billingFromDate, '%Y-%m-%d').date()
+    billingToDate = datetime.strptime(billingToDate, '%Y-%m-%d').date()
+
+    list = Table1.objects.filter(date__gte=billingFromDate, date__lte=billingToDate, client__clientname=client)
+
+    if customer != '':
+        list = list.filter(customer=customer)
+        customer = Customer.objects.get(customerid=customer)
+    else:
+        customer = None
+
+    if plateNumber != '':
+        list = list.filter(plateno=plateNumber)
+    else:
+        plateNumber = None
+
+    if wayBillNumber != '':
+        list = list.filter(wbno=wayBillNumber)
+    else:
+        wayBillNumber = None
+
+    subtotal = list.aggregate(Sum('billing'))
+    addltotal = list.aggregate(Sum('addl'))
+
+    if subtotal['billing__sum'] is not None:
+        if addltotal['addl__sum'] is not None:
+            grandtotal = subtotal['billing__sum'] + addltotal['addl__sum']
+        else:
+            grandtotal = subtotal['billing__sum']
+    else:
+        grandtotal = None
+
+    clients = Client.objects.all().order_by('clientname')
+    customers = Customer.objects.all().order_by('customername')
+
+    context = {
+        "billedFromDate": billingFromDate,
+        "billingToDate": billingToDate,
+        "client": client,
+        "customer": customer,
+        "plateNumber": plateNumber,
+        "wayBillNumber": wayBillNumber,
+        "list": list,
+        "clients": clients,
+        "customers": customers,
+        "subtotal": subtotal,
+        "addltotal": addltotal,
+        "grandtotal": grandtotal,
+    }
+
+    return render(request, 'generateStatementOfAccount.html', context)
 
 
 def tariff(request):
@@ -988,3 +1061,14 @@ def get_dbo(request):
     })
 
     return HttpResponse(json_test, content_type="application/json")
+
+
+def update_billing_dates(request):
+    dboIDs = request.GET.getlist('dboIDs[]')
+
+    for id in dboIDs:
+        row = Table1.objects.get(id=id)
+        row.billeddate = date.today()
+        row.save()
+
+    return JsonResponse([], safe=False)
