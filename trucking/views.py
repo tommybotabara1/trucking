@@ -32,20 +32,39 @@ def database_operations(request):
             clients = Client.objects.all().order_by('clientname')
             list = Table1.objects.filter(date__year=latest.year, date__month=latest.month)
 
-
         dates = Table1.objects.dates('date', 'month')
 
         customers = Customer.objects.all().order_by('customername')
 
-        context = {
-            'list': list,
-            'clients': clients,
-            'customers': customers,
-            'latest_date': latest_date,
-            'dates': dates,
-            'month': latest_date.month,
-            'year': latest_date.year
-        }
+        years = []
+
+        for date in dates:
+            if not date.year in years:
+                years.append(date.year)
+
+
+        if len(dates) != 0:
+            context = {
+                'list': list,
+                'clients': clients,
+                'customers': customers,
+                'latest_date': latest_date,
+                'dates': dates,
+                'month': latest_date.month,
+                'year': latest_date.year,
+                'years': years
+            }
+        else:
+            context = {
+                'list': list,
+                'clients': clients,
+                'customers': customers,
+                'latest_date': latest_date,
+                'dates': dates,
+                'month': 0,
+                'year': 0,
+                'years': years
+            }
 
         return render(request, 'databaseOperations.html', context)
 
@@ -186,6 +205,9 @@ def database_operations(request):
 
         receivedby = sheet.cell(r, 30).value
 
+        if receivedby == '':
+            receivedby = None
+
         if sheet.cell(r, 31).value != '':
             x = str(int(sheet.cell(r, 31).value)).lstrip("0")
             if int(x) > 2359:
@@ -240,6 +262,12 @@ def database_operations(request):
 
     dates = Table1.objects.dates('date', 'month')
 
+    years = []
+
+    for date in dates:
+        if not date.year in years:
+            years.append(date.year)
+
     context = {
         'list': list,
         'clients': clients,
@@ -247,22 +275,32 @@ def database_operations(request):
         'latest_date': latest_date,
         'dates': dates,
         'month': latest_date.month,
-        'year': latest_date.year
+        'year': latest_date.year,
+        'years': years
     }
 
     messages.success(request, 'Import successful (' + str(sheet.nrows - 1) + ' rows)')
     return render(request, 'databaseOperations.html', context)
 
 
-def database_operations_year_month(request, year, month):
+def database_operations_year_month(request, year, month, day):
     if request.method == "GET":
         latest = Table1.objects.latest('date')
         latest_date = latest.date
         clients = Client.objects.all().order_by('clientname')
         customers = Customer.objects.all().order_by('customername')
-        list = Table1.objects.filter(date__year=year, date__month=month)
+        if day == 0:
+            list = Table1.objects.filter(date__year=year, date__month=month)
+        else:
+            list = Table1.objects.filter(date__year=year, date__month=month, date__day=day)
 
         dates = Table1.objects.dates('date', 'month')
+
+        years = []
+
+        for date in dates:
+            if not date.year in years:
+                years.append(date.year)
 
         context = {
             'list': list,
@@ -271,10 +309,11 @@ def database_operations_year_month(request, year, month):
             'latest_date': latest_date,
             'dates': dates,
             'month': month,
-            'year': year
+            'year': year,
+            'day': day,
+            'years': years
         }
-        print(year)
-        print(month)
+
         return render(request, 'databaseOperations.html', context)
 
 
@@ -298,12 +337,26 @@ def new_database_operation(request):
         client_form = ClientForm()
         helper_form = HelperForm()
         extra = -1
+        persons = Table1.objects.values_list('receivedby').order_by('receivedby')
+        receivedBy = []
+        for person in persons:
+            if person[0] not in receivedBy and person[0] is not None:
+                receivedBy.append(person[0])
+
+        words = Table1.objects.values_list('remarks').order_by('remarks')
+        remarks = []
+        for word in words:
+            if word[0] not in remarks and word[0] is not None:
+                remarks.append(word[0])
+
         return render(request, 'forms/databaseOperationForm.html', {'form': form,
                                                               'extra': extra,
                                                               'driver_form': driver_form,
                                                               'customer_form': customer_form,
                                                               'client_form': client_form,
                                                               'helper_form': helper_form,
+                                                              'receivedBy': receivedBy,
+                                                              'remarks': remarks,
                                                                     })
 
 
@@ -333,11 +386,25 @@ def edit_database_operation(request, id, phase):
         customer_form = CustomerForm()
         client_form = ClientForm()
 
+        persons = Table1.objects.values_list('receivedby').order_by('receivedby')
+        receivedBy = []
+        for person in persons:
+            if person[0] not in receivedBy and person[0] is not None:
+                receivedBy.append(person[0])
+
+        words = Table1.objects.values_list('remarks').order_by('remarks')
+        remarks = []
+        for word in words:
+            if word[0] not in remarks and word[0] is not None:
+                remarks.append(word[0])
+
     return render(request, 'forms/databaseOperationForm.html', {'form': form,
                                                           'extra': extra,
                                                           'driver_form': driver_form,
                                                           'customer_form': customer_form,
                                                           'client_form': client_form,
+                                                          'receivedBy': receivedBy,
+                                                          'remarks': remarks,
                                                           'phase': phase})
 
 
@@ -355,19 +422,20 @@ def delete_database_operation(request, id):
 def dbo_statement_of_account(request):
     billingFromDate = request.POST.get("billingFromDate")
     billingToDate = request.POST.get("billingToDate")
-    client = request.POST.get("client")
+    client = Client.objects.get(clientid=request.POST.get("client"))
     customer = request.POST.get("customer")
     plateNumber = request.POST.get("plateNumber")
     wayBillNumber = request.POST.get("wayBillNumber")
+    truckType = request.POST.get("truckType")
 
     billingFromDate = datetime.strptime(billingFromDate, '%Y-%m-%d').date()
     billingToDate = datetime.strptime(billingToDate, '%Y-%m-%d').date()
 
-    list = Table1.objects.filter(date__gte=billingFromDate, date__lte=billingToDate, client__clientname=client)
+    list = Table1.objects.filter(date__gte=billingFromDate, date__lte=billingToDate, client=client, billeddate__isnull=True)
 
     if customer != '':
+        customer = Customer.objects.get(customerid=request.POST.get("customer"))
         list = list.filter(customer=customer)
-        customer = Customer.objects.get(customerid=customer)
     else:
         customer = None
 
@@ -380,6 +448,11 @@ def dbo_statement_of_account(request):
         list = list.filter(wbno=wayBillNumber)
     else:
         wayBillNumber = None
+
+    if truckType != '':
+        list = list.filter(trucktype=truckType)
+    else:
+        truckType = None
 
     subtotal = list.aggregate(Sum('billing'))
     addltotal = list.aggregate(Sum('addl'))
@@ -402,6 +475,7 @@ def dbo_statement_of_account(request):
         "customer": customer,
         "plateNumber": plateNumber,
         "wayBillNumber": wayBillNumber,
+        "truckType": truckType,
         "list": list,
         "clients": clients,
         "customers": customers,
@@ -1072,3 +1146,100 @@ def update_billing_dates(request):
         row.save()
 
     return JsonResponse([], safe=False)
+
+
+def get_client(request):
+    startDate = request.GET.get('startDate')
+    endDate = request.GET.get('endDate')
+
+    clientsObjects = []
+
+    dbo = Table1.objects.filter(billeddate__isnull=True, receivedby__isnull=False, date__gte=startDate, date__lte=endDate)
+
+    for record in dbo:
+        if not record.client in clientsObjects:
+            clientsObjects.append(record.client)
+
+    clients = []
+
+    for client in clientsObjects:
+        clients.append({
+            "id": client.clientid,
+            "name": client.clientname,
+        })
+
+    return JsonResponse(clients, safe=False)
+
+
+def get_customer(request):
+    startDate = request.GET.get('startDate')
+    endDate = request.GET.get('endDate')
+    client = Client.objects.get(clientid=request.GET.get('client'))
+
+    customersObjects = []
+
+    dbo = Table1.objects.filter(billeddate__isnull=True, receivedby__isnull=False, date__gte=startDate, date__lte=endDate, client=client)
+
+    for record in dbo:
+        if not record.customer in customersObjects:
+            customersObjects.append(record.customer)
+
+    customers = []
+
+    for customer in customersObjects:
+        customers.append({
+            "id": customer.customerid,
+            "name": customer.customername,
+        })
+
+    return JsonResponse(customers, safe=False)
+
+
+def get_plate_number(request):
+    startDate = request.GET.get('startDate')
+    endDate = request.GET.get('endDate')
+    client = Client.objects.get(clientid=request.GET.get('client'))
+
+    plateNumbers = []
+
+    dbo = Table1.objects.filter(billeddate__isnull=True, receivedby__isnull=False, date__gte=startDate, date__lte=endDate, client=client)
+
+    for record in dbo:
+        if not record.plateno in plateNumbers:
+            plateNumbers.append(record.plateno)
+
+    return JsonResponse(plateNumbers, safe=False)
+
+
+def get_way_bill_number(request):
+    startDate = request.GET.get('startDate')
+    endDate = request.GET.get('endDate')
+    client = Client.objects.get(clientid=request.GET.get('client'))
+
+    wayBillNumbers = []
+
+    dbo = Table1.objects.filter(billeddate__isnull=True, receivedby__isnull=False, date__gte=startDate, date__lte=endDate, client=client)
+
+    for record in dbo:
+        if not record.wbno in wayBillNumbers:
+            wayBillNumbers.append(record.wbno)
+
+    return JsonResponse(wayBillNumbers, safe=False)
+
+
+def get_truck_type(request):
+    startDate = request.GET.get('startDate')
+    endDate = request.GET.get('endDate')
+    client = Client.objects.get(clientid=request.GET.get('client'))
+
+    truckTypes = []
+
+    dbo = Table1.objects.filter(billeddate__isnull=True, receivedby__isnull=False, date__gte=startDate, date__lte=endDate, client=client)
+
+    for record in dbo:
+        if not record.trucktype in truckTypes:
+            truckTypes.append(record.trucktype)
+
+    return JsonResponse(truckTypes, safe=False)
+
+

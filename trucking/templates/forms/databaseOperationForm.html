@@ -2,7 +2,12 @@
 {% load staticfiles%}
 
 {% block content %}
-    <title>New Database Operation</title>
+    {% if extra != -1 %}
+        <title>Edit Database Operation {{ extra }}</title>
+    {% else %}
+       <title>New Database Operation</title>
+    {% endif %}
+
     <script type="text/javascript" charset="utf8" src="{% static 'js/http_code.jquery.com_jquery-3.3.1.js' %}"></script>
     <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_1.10.19_js_jquery.dataTables.js' %}"></script>
     <script src="{% static 'js/jquery.autocomplete.min.js' %}"></script>
@@ -1705,6 +1710,16 @@
                                   {% endif %}
                               {% endif %}
                           {% endfor %}
+                      <datalist id="receivedBy">
+                          {% for person in receivedBy %}
+                              <option value='{{ person }}'>
+                          {% endfor %}
+                      </datalist>
+                      <datalist id="remarks">
+                          {% for remark in remarks %}
+                              <option value='{{ remark }}'>
+                          {% endfor %}
+                      </datalist>
                         <button type="submit" value="Submit" class="btn btn-primary center-block">Submit</button>
                       </form>
 

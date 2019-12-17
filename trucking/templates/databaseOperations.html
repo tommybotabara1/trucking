@@ -57,6 +57,7 @@
                 </div>
                 {% endif %}
                   <div id="overview" class="tab-pane active">
+                  <a class="btn btn-primary" href="{% url 'database_operations' %}" role="button">Refresh</a>
                   <h2 class="centered">Database Operations</h2>
                   <hr>
                   <a class="btn btn-primary" href="{% url 'new_database_operation' %}" role="button">Create New Database Operations</a>
@@ -68,8 +69,8 @@
                     <div class="form-group">
                       <label for="id_year">Year: </label>
                       <select name="year" class="form-control" id="id_year">
-                          {% for date in dates %}
-                              <option value="{{ date.year }}">{{ date.year }}</option>
+                          {% for year in years %}
+                              <option value="{{ year }}">{{ year }}</option>
                           {% endfor %}
                       </select>
                     </div>
@@ -79,6 +80,43 @@
                           {% for date in dates %}
                               <option value="{{ date.month }}">{{ date|date:"F" }}</option>
                           {% endfor %}
+                      </select>
+                    </div>
+                     <div class="form-group">
+                      <label for="id_day">Day: </label>
+                      <select name="day" class="form-control" id="id_day">
+                          <option value="0"></option>
+                          <option value="1">01</option>
+                          <option value="2">02</option>
+                          <option value="3">03</option>
+                          <option value="4">04</option>
+                          <option value="5">05</option>
+                          <option value="6">06</option>
+                          <option value="7">07</option>
+                          <option value="8">08</option>
+                          <option value="9">09</option>
+                          <option value="10">10</option>
+                          <option value="11">11</option>
+                          <option value="12">12</option>
+                          <option value="13">13</option>
+                          <option value="14">14</option>
+                          <option value="15">15</option>
+                          <option value="16">16</option>
+                          <option value="17">17</option>
+                          <option value="18">18</option>
+                          <option value="19">19</option>
+                          <option value="20">20</option>
+                          <option value="21">21</option>
+                          <option value="22">22</option>
+                          <option value="23">23</option>
+                          <option value="24">24</option>
+                          <option value="25">25</option>
+                          <option value="26">26</option>
+                          <option value="27">27</option>
+                          <option value="28">28</option>
+                          <option value="29">29</option>
+                          <option value="30">30</option>
+                          <option value="31">31</option>
                       </select>
                     </div>
 
@@ -97,8 +135,8 @@
                                     <th>DESTINATION</th>
                                     <th>DRIVER</th>
                                     <th>HELPER</th>
-                                    <th>CUSTOMER</th>
                                     <th>CLIENT</th>
+                                    <th>CUSTOMER</th>
                                     <th>TRUCK TYPE</th>
                                     <th>QTY</th>
                                     <th>REMARKS</th>
@@ -141,8 +179,8 @@
                                 <td>{{ item.destination|default_if_none:"" }}</td>
                                 <td>{{ item.driver.drivername|default_if_none:"" }}</td>
                                 <td>{{ item.helper.helpername|default_if_none:"" }}</td>
-                                <td>{{ item.customer.customername|default_if_none:"" }}</td>
                                 <td>{{ item.client.clientname|default_if_none:"" }}</td>
+                                <td>{{ item.customer.customername|default_if_none:"" }}</td>
                                 <td>{{ item.trucktype|default_if_none:"" }}</td>
                                 <td>{{ item.qty|default_if_none:"" }}</td>
                                 <td>{{ item.remarks|default_if_none:"" }}</td>
@@ -263,43 +301,51 @@
                                 <label>Billing To Date</label>
                                  <div class="form-group">
                                   <div class="col-md-12">
-                                      <input type="date" id="billingToDate" name="billingToDate" size="16" class="form-control" required>
+                                      <input type="date" id="billingToDate" name="billingToDate" size="16" class="form-control" required disabled>
                                   </div>
                                 </div>
                             </div>
                           </div>
                           <br>
                           <label for="client">Client</label>
-                          <select name="client" class="form-control" id="client" required>
-                                <option value="" selected="">----------</option>
+                          <select name="client" class="form-control" id="client" required disabled>
+                                <option value=''>----------</option>
                                   {% for client in clients %}
                                       <option value="{{ client.clientname }}">{{ client.clientname }}</option>
                                   {% endfor %}
                           </select>
                               <hr>
                           <label for="customer">Customer</label>
-                          <select name="customer" class="form-control" id="customer">
-                                <option value="" selected="">----------</option>
+                          <select name="customer" class="form-control" id="customer" disabled>
+                                <option value=''>----------</option>
                                   {% for customer in customers %}
                                       <option value="{{ customer.customerid }}">{{ customer.customername }}</option>
                                   {% endfor %}
                           </select>
                               <br>
                           <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label>Plate Number</label>
                                  <div class="form-group">
-                                  <div class="col-md-12">
-                                      <input type="text" id="plateNumber" name="plateNumber" size="16" class="form-control">
-                                  </div>
+                                      <input type="text" id="plateNumber" name="plateNumber" size="16" class="form-control" disabled list="plateNumbers">
+                                     <datalist id="plateNumbers">
+                                     </datalist>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label>Way Bill Number</label>
                                  <div class="form-group">
-                                  <div class="col-md-12">
-                                      <input type="text" id="wayBillNumber" name="wayBillNumber" size="16" class="form-control">
-                                  </div>
+                                      <input type="text" id="wayBillNumber" name="wayBillNumber" size="16" class="form-control" disabled list="wayBillNumbers">
+                                     <datalist id="wayBillNumbers">
+                                     </datalist>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Truck Type</label>
+                                 <div class="form-group">
+                                      <select name="truckType" class="form-control" id="truckType" disabled>
+                                            <option value="">----------</option>
+                                      </select>
                                 </div>
                             </div>
                           </div>
@@ -444,7 +490,7 @@
         $('#listTable tbody').on( 'click', 'tr', function () {
             // alert( table.row( this ).data() );
             var modalBody = "<table class=\"table table-condensed table-bordered\">";
-            for(var i = 2; i <= 32 ; i++){
+            for(var i = 2; i <= 33 ; i++){
                 modalBody += "<tr>";
                 modalBody += "<td><b>"+ table.columns(i).header()[0].textContent +"</b></td>";
                 modalBody += "<td>" + table.row(this).data()[i] + "</td>";
@@ -590,16 +636,180 @@
         $(document).ready(function(){
            $("#id_year").val({{ year }});
            $("#id_month").val({{ month }});
+           $("#id_day").val({{ day }});
         });
         
 
         $( "#id_year" ).change(function() {
-            window.location.href = "/database_operations//year="  + $(this).val() + "/month=" + $("#id_month").val();
+            window.location.href = "/database_operations/year="  + $(this).val() + "/month=" + $("#id_month").val() + "/day=" + $("#id_day").val();
         });
 
         $( "#id_month" ).change(function() {
-            window.location.href = "/database_operations/year="  + $("#id_year").val() + "/month=" + $(this).val();
+            window.location.href = "/database_operations/year="  + $("#id_year").val() + "/month=" + $(this).val() + "/day=" + $("#id_day").val();
         });
+
+        $( "#id_day" ).change(function() {
+            window.location.href = "/database_operations/year="  + $("#id_year").val() + "/month=" + $("#id_month").val() + "/day=" + $(this).val();
+        });
+
+        $( "#billingFromDate" ).change(function() {
+            var startDate = $(this).val();
+            var endDate = $("#billingToDate").val();
+
+            getClients(startDate, endDate);
+
+            $( "#billingToDate" ).removeAttr("disabled");
+            $("#customer").val(0);
+            $("#truckType").val(0);
+            $("#plateNumber").val('');
+            $("#wayBillNumber").val('');
+        });
+
+        $( "#billingToDate" ).change(function() {
+            var startDate = $("#billingFromDate").val();
+            var endDate = $(this).val();
+
+            getClients(startDate, endDate);
+
+            $( "#client" ).removeAttr("disabled");
+            $("#customer").val(0);
+            $("#truckType").val(0);
+            $("#plateNumber").val('');
+            $("#wayBillNumber").val('');
+        });
+
+        $( "#client" ).change(function() {
+            var startDate = $("#billingFromDate").val();
+            var endDate = $("#billingToDate").val();
+            var client = $(this).val();
+
+            getCustomers(startDate, endDate, client);
+            getPlateNumbers(startDate, endDate, client);
+            getWayBillNumbers(startDate, endDate, client);
+            getTruckTypes(startDate, endDate, client);
+
+
+            $( "#customer" ).removeAttr("disabled");
+            $( "#plateNumber" ).removeAttr("disabled");
+            $( "#wayBillNumber" ).removeAttr("disabled");
+            $( "#truckType" ).removeAttr("disabled");
+        });
+
+        function getClients(startDate, endDate){
+            if(startDate == ''){
+                startDate = endDate
+            }
+            if(endDate == ''){
+                endDate = startDate
+            }
+
+            $.ajax({
+              url: '{% url "get_client" %}',
+              data: {
+                "startDate":startDate,
+                "endDate": endDate,
+              },
+              dataType: 'json',
+              success: function(data){
+                  var html = "<option value=''>----------</option>";
+                  for(var i = 0; i < data.length; i++){
+                      html += "<option value='" + data[i].id + "'>" + data[i].name + "</option>";
+                  }
+                  $("#client").html(html);
+              },
+              error: function () {
+                alert("error");
+              },
+            });
+        }
+
+        function getCustomers(startDate, endDate, client){
+            $.ajax({
+              url: '{% url "get_customer" %}',
+              data: {
+                "startDate":startDate,
+                "endDate": endDate,
+                "client": client
+              },
+              dataType: 'json',
+              success: function(data){
+                  var html = "<option value=''>----------</option>";
+                  for(var i = 0; i < data.length; i++){
+                      html += "<option value='" + data[i].id + "'>" + data[i].name + "</option>";
+                  }
+                  $("#customer").html(html);
+              },
+              error: function () {
+                alert("No client selected");
+              },
+            });
+        }
+
+        function getPlateNumbers(startDate, endDate, client){
+            $.ajax({
+              url: '{% url "get_plate_number" %}',
+              data: {
+                "startDate":startDate,
+                "endDate": endDate,
+                "client": client
+              },
+              dataType: 'json',
+              success: function(data){
+                  var html = "";
+                  for(var i = 0; i < data.length; i++){
+                      html += "<option value='"+data[i]+"'>";
+                  }
+                  $("#plateNumbers").html(html);
+              },
+              error: function () {
+
+              },
+            });
+        }
+
+        function getWayBillNumbers(startDate, endDate, client){
+            $.ajax({
+              url: '{% url "get_way_bill_number" %}',
+              data: {
+                "startDate":startDate,
+                "endDate": endDate,
+                "client": client
+              },
+              dataType: 'json',
+              success: function(data){
+                  var html = "";
+                  for(var i = 0; i < data.length; i++){
+                      html += "<option value='"+data[i]+"'>";
+                  }
+                  $("#wayBillNumbers").html(html);
+              },
+              error: function () {
+
+              },
+            });
+        }
+
+        function getTruckTypes(startDate, endDate, client){
+            $.ajax({
+              url: '{% url "get_truck_type" %}',
+              data: {
+                "startDate":startDate,
+                "endDate": endDate,
+                "client": client
+              },
+              dataType: 'json',
+              success: function(data){
+                  var html = "<option value=''>----------</option>";
+                  for(var i = 0; i < data.length; i++){
+                      html += "<option value='" + data[i] + "'>" + data[i] + "</option>";
+                  }
+                  $("#truckType").html(html);
+              },
+              error: function () {
+
+              },
+            });
+        }
 
     </script>
 {% endblock %}

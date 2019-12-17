@@ -3,7 +3,7 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('database_operations/', views.database_operations, name='database_operations'),
-    path('database_operations/year=<int:year>/month=<int:month>', views.database_operations_year_month, name='database_operations_year_month'),
+    path('database_operations/year=<int:year>/month=<int:month>/day=<int:day>', views.database_operations_year_month, name='database_operations_year_month'),
     path('database_operations/newDBO', views.new_database_operation, name='new_database_operation'),
     path('database_operations/editDBO/<int:id>/<str:phase>', views.edit_database_operation, name='edit_database_operation'),
     path('database_operations/deleteDBO/<int:id>', views.delete_database_operation, name='delete_database_operation'),
@@ -46,6 +46,13 @@ urlpatterns = [
     path('get_split_amount/', views.get_split_amount, name='get_split_amount'),
     path('get_split_amount_total/', views.get_split_amount_total, name='get_split_amount_total'),
     path('delete_split_amount/', views.delete_split_amount, name='delete_split_amount'),
+
+
     path('ajax/get_dbo/', views.get_dbo, name='get_dbo'),
     path('ajax/update_billing_date/', views.update_billing_dates, name='update_billing_dates'),
+    path('ajax/get_client/', views.get_client, name='get_client'),
+    path('ajax/get_customer/', views.get_customer, name='get_customer'),
+    path('ajax/get_plate_number/', views.get_plate_number, name='get_plate_number'),
+    path('ajax/get_way_bill_number/', views.get_way_bill_number, name='get_way_bill_number'),
+    path('ajax/get_truck_type/', views.get_truck_type, name='get_truck_type'),
 ]

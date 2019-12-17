@@ -154,8 +154,8 @@ class Table1(models.Model):
     destination = models.CharField(max_length=30, blank=True, null=True)
     driver = models.ForeignKey(Driver, models.DO_NOTHING, db_column='driver', blank=True, null=True)
     helper = models.ForeignKey(Helper, models.DO_NOTHING, db_column='helper', blank=True, null=True)
-    customer = models.ForeignKey(Customer, models.DO_NOTHING, db_column='customer', blank=True, null=True)
     client = models.ForeignKey(Client, models.DO_NOTHING, db_column='client', blank=True, null=True)
+    customer = models.ForeignKey(Customer, models.DO_NOTHING, db_column='customer', blank=True, null=True)
     trucktype = models.CharField(db_column='truckType', max_length=20, blank=True,
                                  null=True, choices=TRUCK_TYPE_CHOICES)  # Field name made lowercase.
     qty = models.CharField(blank=True, null=True, max_length=20)
