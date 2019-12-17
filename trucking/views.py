@@ -431,7 +431,7 @@ def dbo_statement_of_account(request):
     billingFromDate = datetime.strptime(billingFromDate, '%Y-%m-%d').date()
     billingToDate = datetime.strptime(billingToDate, '%Y-%m-%d').date()
 
-    list = Table1.objects.filter(date__gte=billingFromDate, date__lte=billingToDate, client=client, billeddate__isnull=True)
+    list = Table1.objects.filter(date__gte=billingFromDate, date__lte=billingToDate, client=client, billeddate__isnull=True, receivedby__isnull=True)
 
     if customer != '':
         customer = Customer.objects.get(customerid=request.POST.get("customer"))
