@@ -549,27 +549,28 @@ def dbo_summary_of_payroll(request):
         addlTotal = 0
         dbo = Table1.objects.filter(helper=helper, date__gte=payrollFromDate, date__lte=payrollToDate)
         for record in dbo:
-            caTotal += record.cahelper or 0
-            liqTotal += record.totalliq or 0
-            unliqTotal += record.unliq or 0
-            salaryTotal += record.helpersal or 0
-            addlTotal += record.addlhelpersal or 0
+            if record.wbno != "DTR":
+                caTotal += record.cahelper or 0
+                liqTotal += 0
+                unliqTotal += record.cahelper or 0
+                salaryTotal += record.helpersal or 0
+                addlTotal += record.addlhelpersal or 0
 
-            report_data_detail.append({
-                "name": helper.helpername,
-                "date": record.date,
-                "plateno": record.plateno,
-                "wbno": record.wbno,
-                "origin": record.origin,
-                "destination": record.destination,
-                "customer": record.customer.customername,
-                "client": record.client.clientname,
-                "ca": record.cahelper,
-                "liq": record.totalliq,
-                "unliq": record.unliq,
-                "salary": record.helpersal,
-                "addl": record.addlhelpersal,
-            })
+                report_data_detail.append({
+                    "name": helper.helpername,
+                    "date": record.date,
+                    "plateno": record.plateno,
+                    "wbno": record.wbno,
+                    "origin": record.origin,
+                    "destination": record.destination,
+                    "customer": record.customer.customername,
+                    "client": record.client.clientname,
+                    "ca": record.cahelper,
+                    "liq": None,
+                    "unliq": record.cahelper,
+                    "salary": record.helpersal,
+                    "addl": record.addlhelpersal,
+                })
 
         pay = (salaryTotal + addlTotal) - unliqTotal
 
