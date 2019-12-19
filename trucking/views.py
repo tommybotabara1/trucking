@@ -549,7 +549,7 @@ def dbo_summary_of_payroll(request):
         addlTotal = 0
         dbo = Table1.objects.filter(helper=helper, date__gte=payrollFromDate, date__lte=payrollToDate)
         for record in dbo:
-            caTotal += record.truckbudget or 0
+            caTotal += record.cahelper or 0
             liqTotal += record.totalliq or 0
             unliqTotal += record.unliq or 0
             salaryTotal += record.helpersal or 0
@@ -564,7 +564,7 @@ def dbo_summary_of_payroll(request):
                 "destination": record.destination,
                 "customer": record.customer.customername,
                 "client": record.client.clientname,
-                "ca": record.truckbudget,
+                "ca": record.cahelper,
                 "liq": record.totalliq,
                 "unliq": record.unliq,
                 "salary": record.helpersal,
