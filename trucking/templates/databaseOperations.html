@@ -60,10 +60,20 @@
                   <a class="btn btn-primary" href="{% url 'database_operations' %}" role="button">Refresh</a>
                   <h2 class="centered">Database Operations</h2>
                   <hr>
-                  <a class="btn btn-primary" href="{% url 'new_database_operation' %}" role="button">Create New Database Operations</a>
-                  <a class="btn btn-primary" href="" role="button" data-toggle="modal" data-target="#generateBillingDataModal">Generate Statement Billing</a>
-                  <a class="btn btn-primary" href="" role="button" data-toggle="modal" data-target="#generateStatementOfAccountModal">Generate Statement of Account</a>
-                  <button type="submit" class="btn btn-default" data-toggle="modal" data-target="#importDataModal">Import data</button>
+                  <div class="row">
+                      <div class="col-md-12">
+                          <a class="btn btn-primary" href="{% url 'new_database_operation' %}" role="button">Create New Database Operations</a>
+                          <button type="submit" class="btn btn-default" data-toggle="modal" data-target="#importDataModal">Import data</button>
+                      </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                      <div class="col-md-12">
+                          <a class="btn btn-facebook" href="" role="button" data-toggle="modal" data-target="#generateBillingDataModal">Generate Statement Billing</a>
+                          <a class="btn btn-facebook" href="" role="button" data-toggle="modal" data-target="#generateStatementOfAccountModal">Generate Statement of Account</a>
+                          <a class="btn btn-facebook" href="" role="button" data-toggle="modal" data-target="#generateSummaryOfPayroll">Generate Summary of Payroll</a>
+                      </div>
+                  </div>
                   <hr>
                   <div class="form-inline">
                     <div class="form-group">
@@ -353,6 +363,48 @@
                               <center><button type="submit" class="btn btn-primary btn-block">Generate</button></center>
                           </div>
 
+                              </form>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-round" data-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <!-- /tab-pane -->
+                </div>
+
+                    <div class="modal fade" id="generateSummaryOfPayroll" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="modalLabel">Generate Summary of Payroll</h5>
+                          </div>
+                          <div id="modalBody" class="modal-body">
+                              <form method="post" enctype="multipart/form-data" action="{% url 'dbo_summary_of_payroll' %}">
+                              {% csrf_token %}
+                                  <div class="login-wrap">
+                                      <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="billingFromDate">From Date</label>
+                                             <div class="form-group">
+                                              <div class="col-md-12">
+                                                  <input type="date" id="payrollFromDate" name="payrollFromDate" size="16" class="form-control" required>
+                                              </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>To Date</label>
+                                             <div class="form-group">
+                                              <div class="col-md-12">
+                                                  <input type="date" id="payrollToDate" name="payrollToDate" size="16" class="form-control" required>
+                                              </div>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <br>
+                                      <hr>
+                                      <center><button type="submit" class="btn btn-primary btn-block">Generate</button></center>
+                                  </div>
                               </form>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-round" data-dismiss="modal">Close</button>

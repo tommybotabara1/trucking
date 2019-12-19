@@ -8,6 +8,9 @@ urlpatterns = [
     path('database_operations/editDBO/<int:id>/<str:phase>', views.edit_database_operation, name='edit_database_operation'),
     path('database_operations/deleteDBO/<int:id>', views.delete_database_operation, name='delete_database_operation'),
     path('database_operations/statement_of_account', views.dbo_statement_of_account, name='dbo_statement_of_account'),
+    path('database_operations/summary_of_payroll', views.dbo_summary_of_payroll, name='dbo_summary_of_payroll'),
+
+
     path('tariff/', views.tariff, name='tariff'),
     path('tariff/new_tariff', views.new_tariff, name='new_tariff'),
     path('tariff/edit_tariff/<int:id>', views.edit_tariff, name='edit_tariff'),

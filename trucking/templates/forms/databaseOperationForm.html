@@ -2346,11 +2346,11 @@
             var totalUnliq =  truckBudget - totalLiq;
             var revenue =  (billing + addLBilling) - totalLiq - diesel - driverSal - addLDriverSal - helperSal - addLHelperSal ;
 
-            $("#id_totalliq").val(totalLiq);
+            $("#id_totalliq").val(totalLiq.toFixed(2));
 
-            $("#id_unliq").val(totalUnliq);
+            $("#id_unliq").val(totalUnliq.toFixed(2));
 
-            $("#id_revenue").val(revenue);
+            $("#id_revenue").val(revenue.toFixed(2));
 
 
         }
@@ -2381,6 +2381,19 @@
             //collapse double colons
             this.value=this.value.replace(/:+/g,":");
         });
+
+        function matthy(obj) {
+            try {
+                obj.value = eval(obj.value);
+                if(obj.value == "undefined")
+                    obj.value = '';
+                obj.value = parseFloat(obj.value).toFixed(2);
+            }
+            catch(err) {
+                obj.value = '';
+            }
+            updatePhaseC();
+        }
 
 
     </script>

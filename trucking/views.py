@@ -8,7 +8,6 @@ from django.db.models import Sum
 from datetime import date
 
 
-
 def index(request):
     return render(request, 'index.html',)
 
@@ -25,7 +24,7 @@ def database_operations(request):
             latest = Table1.objects.latest('date')
             latest_date = latest.date
             clients = Client.objects.all().order_by('clientname')
-            list = Table1.objects.filter(date__year=latest_date.year, date__month=latest_date.month)[:50]
+            list = Table1.objects.filter(date__year=latest_date.year, date__month=latest_date.month)
         except:
             latest = datetime.now()
             latest_date = latest.date
@@ -327,6 +326,7 @@ def new_database_operation(request):
             newDatabaseOperation = form.save()
             # redirect to a new URL:
             #return redirect('edit_database_operation', id=Table1.objects.last().id, phase="B")
+            messages.success(request, "New DBO created (" + str(Table1.objects.last().id) + ")")
             return redirect('database_operations')
         else:
             return HttpResponse(form.errors)
@@ -373,6 +373,7 @@ def edit_database_operation(request, id, phase):
             newDatabaseOperation = form.save()
             # redirect to a new URL:
             list = Table1.objects.all()
+            messages.info(request, "Database Operation " + str(id) + " edited")
             return redirect('database_operations')
         else:
             return HttpResponse(form.errors)
@@ -409,14 +410,10 @@ def edit_database_operation(request, id, phase):
 
 
 def delete_database_operation(request, id):
-    latest = Table1.objects.latest('date')
-    latest_date = latest.date
-    list = Table1.objects.filter(date__year=latest_date.year, date__month=latest_date.month)
-
     Table1.objects.get(id=id).delete()
-    extra = "Database Operation " + str(id) + " Deleted"
 
-    return render(request, 'databaseOperations.html', {'list': list, 'extra': extra})
+    messages.info(request, "Database Operation " + str(id) + " deleted")
+    return redirect('database_operations')
 
 
 def dbo_statement_of_account(request):
@@ -432,6 +429,7 @@ def dbo_statement_of_account(request):
     billingToDate = datetime.strptime(billingToDate, '%Y-%m-%d').date()
 
     list = Table1.objects.filter(date__gte=billingFromDate, date__lte=billingToDate, client=client, billeddate__isnull=True, receivedby__isnull=True)
+
 
     if customer != '':
         customer = Customer.objects.get(customerid=request.POST.get("customer"))
@@ -485,6 +483,119 @@ def dbo_statement_of_account(request):
     }
 
     return render(request, 'generateStatementOfAccount.html', context)
+
+
+def dbo_summary_of_payroll(request):
+    payrollFromDate = request.POST.get("payrollFromDate")
+    payrollToDate = request.POST.get("payrollToDate")
+
+    drivers = Driver.objects.all().order_by('drivername')
+    helpers = Helper.objects.all()
+
+    report_data_detail = []
+    report_data_summary = []
+
+    for driver in drivers:
+        caTotal = 0
+        liqTotal = 0
+        unliqTotal = 0
+        salaryTotal = 0
+        addlTotal = 0
+        dbo = Table1.objects.filter(driver=driver, date__gte=payrollFromDate, date__lte=payrollToDate)
+        for record in dbo:
+            caTotal += record.truckbudget or 0
+            liqTotal += record.totalliq or 0
+            unliqTotal += record.unliq or 0
+            salaryTotal += record.driversal or 0
+            addlTotal += record.addldriversal or 0
+
+            report_data_detail.append({
+                "name": driver.drivername,
+                "date": record.date,
+                "plateno": record.plateno,
+                "wbno": record.wbno,
+                "origin": record.origin,
+                "destination": record.destination,
+                "customer": record.customer.customername,
+                "client": record.client.clientname,
+                "ca": record.truckbudget,
+                "liq": record.totalliq,
+                "unliq": record.unliq,
+                "salary": record.driversal,
+                "addl": record.addldriversal,
+            })
+
+        pay = (salaryTotal + addlTotal) - unliqTotal
+
+        if len(report_data_detail) != 0:
+            report_data_summary.append({
+                "name": driver.drivername,
+                "caTotal": caTotal,
+                "liqTotal": liqTotal,
+                "unliqTotal": unliqTotal,
+                "salaryTotal": salaryTotal,
+                "addlTotal": addlTotal,
+                "pay": pay,
+                "details": report_data_detail,
+            })
+
+        report_data_detail = []
+
+    for helper in helpers:
+        caTotal = 0
+        liqTotal = 0
+        unliqTotal = 0
+        salaryTotal = 0
+        addlTotal = 0
+        dbo = Table1.objects.filter(helper=helper, date__gte=payrollFromDate, date__lte=payrollToDate)
+        for record in dbo:
+            caTotal += record.truckbudget or 0
+            liqTotal += record.totalliq or 0
+            unliqTotal += record.unliq or 0
+            salaryTotal += record.helpersal or 0
+            addlTotal += record.addlhelpersal or 0
+
+            report_data_detail.append({
+                "name": helper.helpername,
+                "date": record.date,
+                "plateno": record.plateno,
+                "wbno": record.wbno,
+                "origin": record.origin,
+                "destination": record.destination,
+                "customer": record.customer.customername,
+                "client": record.client.clientname,
+                "ca": record.truckbudget,
+                "liq": record.totalliq,
+                "unliq": record.unliq,
+                "salary": record.helpersal,
+                "addl": record.addlhelpersal,
+            })
+
+        pay = (salaryTotal + addlTotal) - unliqTotal
+
+        if len(report_data_detail) != 0:
+            report_data_summary.append({
+                "name": helper.helpername,
+                "caTotal": caTotal,
+                "liqTotal": liqTotal,
+                "unliqTotal": unliqTotal,
+                "salaryTotal": salaryTotal,
+                "addlTotal": addlTotal,
+                "pay": pay,
+                "details": report_data_detail,
+            })
+
+        report_data_detail = []
+
+    report_data_summary.sort(key=lambda x: x['name'], reverse=False)
+
+    context = {
+        "payrollFromDate": payrollFromDate,
+        "payrollToDate": payrollToDate,
+        "report_data_summary": report_data_summary
+    }
+
+    return render(request, 'generateSummaryOfPayroll.html', context)
 
 
 def tariff(request):
@@ -1154,7 +1265,7 @@ def get_client(request):
 
     clientsObjects = []
 
-    dbo = Table1.objects.filter(billeddate__isnull=True, receivedby__isnull=False, date__gte=startDate, date__lte=endDate)
+    dbo = Table1.objects.filter(billeddate__isnull=True, receivedby__isnull=False, date__gte=startDate, date__lte=endDate, billing__gt=0)
 
     for record in dbo:
         if not record.client in clientsObjects:
