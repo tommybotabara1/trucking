@@ -9,6 +9,9 @@ urlpatterns = [
     path('database_operations/deleteDBO/<int:id>', views.delete_database_operation, name='delete_database_operation'),
     path('database_operations/statement_of_account', views.dbo_statement_of_account, name='dbo_statement_of_account'),
     path('database_operations/summary_of_payroll', views.dbo_summary_of_payroll, name='dbo_summary_of_payroll'),
+    path('database_operations/balance_sheet', views.dbo_balance_sheet, name='dbo_balance_sheet'),
+    path('database_operations/income_statement', views.dbo_income_statement, name='dbo_income_statement'),
+    path('database_operations/summary', views.dbo_summary, name='dbo_summary'),
 
 
     path('tariff/', views.tariff, name='tariff'),

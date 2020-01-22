@@ -428,8 +428,7 @@ def dbo_statement_of_account(request):
     billingFromDate = datetime.strptime(billingFromDate, '%Y-%m-%d').date()
     billingToDate = datetime.strptime(billingToDate, '%Y-%m-%d').date()
 
-    list = Table1.objects.filter(date__gte=billingFromDate, date__lte=billingToDate, client=client, billeddate__isnull=True, receivedby__isnull=True)
-
+    list = Table1.objects.filter(date__gte=billingFromDate, date__lte=billingToDate, client=client, billeddate__isnull=True, receivedby__isnull=False)
 
     if customer != '':
         customer = Customer.objects.get(customerid=request.POST.get("customer"))
@@ -597,6 +596,18 @@ def dbo_summary_of_payroll(request):
     }
 
     return render(request, 'generateSummaryOfPayroll.html', context)
+
+
+def dbo_balance_sheet(request):
+    return render(request, 'balanceSheet.html')
+
+
+def dbo_income_statement(request):
+    return render(request, 'incomeStatement.html')
+
+
+def dbo_summary(request):
+    return render(request, 'summary.html')
 
 
 def tariff(request):
@@ -1353,5 +1364,3 @@ def get_truck_type(request):
             truckTypes.append(record.trucktype)
 
     return JsonResponse(truckTypes, safe=False)
-
-

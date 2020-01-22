@@ -1,0 +1,2927 @@
+{% extends "includes/headerFooter.html" %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block content %}
+    <title>Database Operations</title>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_code.jquery.com_jquery-3.3.1.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_1.10.19_js_jquery.dataTables.js' %}"></script>
+
+    <style>
+        div.dataTables_wrapper {
+            margin: 0 auto;
+        }
+
+        .borderless td, .borderless th{
+            border: none;
+        }
+    </style>
+
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/datatables.min.css' %}"/>
+    <script type="text/javascript" src="{% static 'js/http_cdn.datatables.net_v_dt_dt-1.10.18_b-1.5.4_datatables.js' %}"></script>
+    <script src="{% static 'js/city.js' %}"></script>
+
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_dataTables.buttons.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_buttons.flash.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdnjs.cloudflare.com_ajax_libs_jszip_3.1.3_jszip.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.36_pdfmake.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.36_vfs_fonts.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_buttons.html5.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_buttons.print.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_buttons.colVis.js' %}"></script>
+
+
+    <section id="main-content">
+      <section class="wrapper site-min-height">
+        <div class="row">
+          <!-- /col-lg-12 -->
+          <div class="col-lg-12">
+          <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="{% url 'database_operations' %}">Database Operations</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Balance Sheet</li>
+              </ol>
+          </nav>
+            <div class="row content-panel">
+              <!-- /panel-heading -->
+              <div class="panel-body">
+                <div class="tab-content">
+                {% if messages %}
+                    <div class="alert alert-success alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        {% for message in messages %}
+                            <strong>{{ message }}</strong>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if extra != none %}
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <strong>{{ extra }}</strong>
+                </div>
+                {% endif %}
+                  <div id="overview" class="tab-pane active">
+                      <a class="btn btn-primary" href="{% url 'database_operations' %}" role="button">Back</a>
+                      <h2 class="centered">Balance Sheet</h2>
+                      <hr>
+                      <div class="row">
+                          <div class="col-md-12">
+                              <a class="btn btn-success" href="{% url 'dbo_balance_sheet' %}">Balance Sheet</a>
+                              <a class="btn btn-success" href="{% url 'dbo_income_statement' %}">Income Statement</a>
+                              <a class="btn btn-success" href="{% url 'dbo_summary' %}">Summary</a>
+                          </div>
+                      </div>
+                      <br>
+                      <a class="btn btn-default" role="button" onclick="printDiv('printDiv')">Print</a>
+                      <hr>
+                      <div id="printDiv">
+                          <h5><b>ULTIMATE EXPRESS TRANS LOGISTICS, CORP.</b></h5>
+                          <h5><b>CHART OF ACCOUNTS</b></h5>
+                          <div style="padding-left: 50px">
+                            <table class="table-condensed borderless">
+                                <tr>
+                                    <td><b>Guide:</b></td>
+                                    <td><b>a.)  First Number</b></td>
+                                    <td><b>General Classification</b></td>
+                                    <td>Assets, Liability, Equity, Revenue, Expense</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><b>b.)  Second Number</b></td>
+                                    <td><b>Sub-Grouping</b></td>
+                                    <td>Current, Non-Current</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><b>c.)  Third and Fourth Number</b></td>
+                                    <td><b>General Account</b></td>
+                                    <td>Cash, Receivable, Inventory.. Etc..</td>
+                                </tr>
+                                <tr>
+                                    <td style="color: red"><b>FS - external</b></td>
+                                    <td style="color: red"><b>d.)  Fifth and Sixth Number</b></td>
+                                    <td style="color: red"><b>Particular Account</b></td>
+                                    <td>Cash on Hand, Cash on Bank, etc..</td>
+                                </tr>
+                                <tr>
+                                    <td><b>FS - internal</b></td>
+                                    <td><b>e.)  Seventh and Ninth Number</b></td>
+                                    <td><b>Detailed Account Information / Business Partner #</b></td>
+                                    <td>Customer / Supplier / Bank Account Number</td>
+                                </tr>
+                            </table>
+                            <br>
+                            <table class="table-condensed">
+                                <tr>
+                                    <td><b>Business Partners Guide:</b></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Management</td>
+                                    <td>001-049</td>
+                                    <td>Trucks - 050-089; Affiliates - 090-099</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Customers</td>
+                                    <td>101-299</td>
+                                    <td>Corporate - 101-199; Individual - 201-299</td>
+                                    <td><b>171-199 - Corporate - Statement of Account; 271-299 Individual - Statement of Account</b></td>
+                                </tr>
+                                <tr>
+                                    <td>Suppliers</td>
+                                    <td>301-499</td>
+                                    <td>Corporate - 301-399; Individual - 401-499</td>
+                                    <td><b>371-399 - Corporate - Statement of Account; 471-499 Individual - Statement of Account</b></td>
+                                </tr>
+                                <tr>
+                                    <td>Employees</td>
+                                    <td>501-799</td>
+                                    <td>Driver 501-599; Helper 601-699; Office 701-799</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Creditors</td>
+                                    <td>801-899</td>
+                                    <td>Banks 801-849; Financial Institutions 850-899</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Others</td>
+                                    <td>901-999</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                            <br>
+                          </div>
+                          <div>
+                            <table class="table table-condensed">
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>ACCOUNT TITLE</th>
+                                    <th style="text-align: center">Account Number</th>
+                                    <th style="text-align: center">Remarks</th>
+                                </tr>
+                                <tr>
+                                    <td><b>1</b></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>Asset</b></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Current Asset</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>01</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Cash</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>01</td>
+                                    <td>01</td>
+                                    <td></td>
+                                    <td style="color: red">Cash on Hand - Truck Budget</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>01</td>
+                                    <td>01</td>
+                                    <td>051</td>
+                                    <td>Truck#1</td>
+                                    <td style="text-align: center">110101701</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>01</td>
+                                    <td>01</td>
+                                    <td>052</td>
+                                    <td>Truck#2</td>
+                                    <td style="text-align: center">110101702</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>01</td>
+                                    <td>02</td>
+                                    <td></td>
+                                    <td style="color: red">Cash in Bank</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>01</td>
+                                    <td>02</td>
+                                    <td>001</td>
+                                    <td>Equicom Current Account # 12345678</td>
+                                    <td style="text-align: center">110102001</td>
+                                    <td>Per Bank Account</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>01</td>
+                                    <td>02</td>
+                                    <td>002</td>
+                                    <td>PNB Savings Account # 12345678</td>
+                                    <td style="text-align: center">110102002</td>
+                                    <td></td>
+                                </tr>
+                                <tr style="color: blue">
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>01</td>
+                                    <td>02</td>
+                                    <td>901</td>
+                                    <td>Clearing Account - Customers</td>
+                                    <td></td>
+                                    <td>(Statement of Account - Should be isolated - for external purposes)</td>
+                                </tr>
+                                <tr style="color: blue">
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>01</td>
+                                    <td>02</td>
+                                    <td>902</td>
+                                    <td>Clearing Account - Suppliers</td>
+                                    <td></td>
+                                    <td>(Statement of Account - Should be isolated - for external purposes)</td>
+
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>02</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Receivables</td>
+                                    <td></td>
+                                    <td></td>
+
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>02</td>
+                                    <td>01</td>
+                                    <td></td>
+                                    <td style="color: red">Trade Accounts Receivables</td>
+                                    <td></td>
+                                    <td></td>
+
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>02</td>
+                                    <td>01</td>
+                                    <td>101</td>
+                                    <td>AR - Customer #101 - Corporate</td>
+                                    <td style="text-align: center">110201101</td>
+                                    <td></td>
+
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>02</td>
+                                    <td>01</td>
+                                    <td>102</td>
+                                    <td>AR - Customer #102 - Corporate</td>
+                                    <td style="text-align: center">110201102</td>
+                                    <td></td>
+
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>02</td>
+                                    <td>01</td>
+                                    <td>201</td>
+                                    <td>AR - Customer #201 - Individual</td>
+                                    <td style="text-align: center">110201201</td>
+                                    <td></td>
+
+                                </tr>
+                                <tr style="color: blue">
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>02</td>
+                                    <td>01</td>
+                                    <td>171</td>
+                                    <td>AR - Customer #171 - Corporate</td>
+                                    <td style="text-align: center"></td>
+                                    <td>(Statement of Account - Should be isolated - for external purposes)</td>
+
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>02</td>
+                                    <td>02</td>
+                                    <td></td>
+                                    <td style="color: red">Non-Trade Receivables</td>
+                                    <td></td>
+                                    <td></td>
+
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>02</td>
+                                    <td>02</td>
+                                    <td>101</td>
+                                    <td>Company Name #101</td>
+                                    <td style="text-align: center">110202101</td>
+                                    <td>Advances to</td>
+
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>02</td>
+                                    <td>02</td>
+                                    <td>501</td>
+                                    <td>Company Name #501</td>
+                                    <td style="text-align: center">110202501</td>
+                                    <td>Advances to Employees - Bale</td>
+
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>02</td>
+                                    <td>09</td>
+                                    <td></td>
+                                    <td style="color: red">Allowance for Doubtful Accounts</td>
+                                    <td></td>
+                                    <td></td>
+
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>02</td>
+                                    <td>09</td>
+                                    <td>001</td>
+                                    <td>Allowance for Doubtful Accounts</td>
+                                    <td style="text-align: center">110209001</td>
+                                    <td></td>
+
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Inventory</td>
+                                    <td></td>
+                                    <td></td>
+
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>01</td>
+                                    <td></td>
+                                    <td style="color: red">Truck Parts</td>
+                                    <td></td>
+                                    <td></td>
+
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>01</td>
+                                    <td style="color: blue">001</td>
+                                    <td style="color: blue">(001-099 - To be used for Current Balances - if cannot be broken down - transition account until closed)</td>
+                                    <td></td>
+                                    <td style="color: red">Suggested Further Reclassification</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>01</td>
+                                    <td>101</td>
+                                    <td>Part #1</td>
+                                    <td style="text-align: center">110301101</td>
+                                    <td>100-199 Steering Wheel System</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>01</td>
+                                    <td>201</td>
+                                    <td>Part #2</td>
+                                    <td></td>
+                                    <td>200-299 Break System</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>01</td>
+                                    <td>301</td>
+                                    <td>Part #3</td>
+                                    <td></td>
+                                    <td>300-399 Transmission System</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>01</td>
+                                    <td></td>
+                                    <td style="color: red">(Please continue..)</td>
+                                    <td></td>
+                                    <td>400-499 Tires</td>
+                                </tr>
+                                 <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>02</td>
+                                    <td></td>
+                                    <td style="color: red">Truck Supplies</td>
+                                    <td></td>
+                                    <td></td>
+
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>02</td>
+                                    <td style="color: blue">001</td>
+                                    <td style="color: blue">(001-099 - To be used for Current Balances - if cannot be broken down - transition account until closed)</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>02</td>
+                                    <td>101</td>
+                                    <td>Supply #1</td>
+                                    <td style="text-align: center">110302101</td>
+                                    <td>100-199 Lubricants and Oil</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>02</td>
+                                    <td>201</td>
+                                    <td>Supply #2</td>
+                                    <td></td>
+                                    <td>200-299 System Fluids</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>02</td>
+                                    <td>301</td>
+                                    <td>Supply #3</td>
+                                    <td></td>
+                                    <td>300-399 Nuts and Bolts</td>
+                                </tr>
+                                 <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>03</td>
+                                    <td></td>
+                                    <td style="color: red">Office Supplies</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>03</td>
+                                    <td style="color: blue">001</td>
+                                    <td style="color: blue">(001-099 - To be used for Current Balances - if cannot be broken down - transition account until closed)</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>03</td>
+                                    <td>101</td>
+                                    <td>Supply #1</td>
+                                    <td style="text-align: center">110303101</td>
+                                    <td>100-199 Paper</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>03</td>
+                                    <td>201</td>
+                                    <td>Supply #2</td>
+                                    <td style="text-align: center">110303201</td>
+                                    <td>200-299 Ink</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>03</td>
+                                    <td>301</td>
+                                    <td>Supply #3</td>
+                                    <td></td>
+                                    <td style="text-align: right"></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>09</td>
+                                    <td></td>
+                                    <td style="color: red">Allowance for Inventory Obsolescence</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>09</td>
+                                    <td>001</td>
+                                    <td>Allowance for Inventory Obsolescence</td>
+                                    <td style="text-align: center">110309001</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>04</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Prepaid Assets</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>04</td>
+                                    <td>01</td>
+                                    <td></td>
+                                    <td style="color: red">Advance Rental</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>04</td>
+                                    <td>01</td>
+                                    <td>301</td>
+                                    <td>Company Name #301</td>
+                                    <td style="text-align: center">110401301</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>04</td>
+                                    <td>01</td>
+                                    <td>401</td>
+                                    <td>Company Name #401</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>04</td>
+                                    <td>02</td>
+                                    <td></td>
+                                    <td style="color: red">Advances to Suppliers</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>04</td>
+                                    <td>02</td>
+                                    <td>302</td>
+                                    <td>Company Name #302</td>
+                                    <td style="text-align: center">110402302</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>04</td>
+                                    <td>02</td>
+                                    <td>402</td>
+                                    <td>Individual Name #402</td>
+                                    <td style="text-align: center"></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>09</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Other Current Assets</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>09</td>
+                                    <td>01</td>
+                                    <td></td>
+                                    <td style="color: red">Input Tax</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>09</td>
+                                    <td>001</td>
+                                    <td style="color: blue">001</td>
+                                    <td style="color: blue">(001-099 - To be used for Current Balances - if cannot be broken down - transition account until closed)</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>09</td>
+                                    <td>01</td>
+                                    <td>101</td>
+                                    <td>Input Tax - Capital Goods - Current</td>
+                                    <td style="text-align: center">110901101</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>09</td>
+                                    <td>01</td>
+                                    <td>201</td>
+                                    <td>Input Tax - Non-Capital Goods - Local</td>
+                                    <td style="text-align: center"></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>09</td>
+                                    <td>01</td>
+                                    <td>301</td>
+                                    <td>Input Tax - Non-Capital Goods - Importation</td>
+                                    <td style="text-align: center"></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>09</td>
+                                    <td>01</td>
+                                    <td>401</td>
+                                    <td>Input Tax - Services - Local</td>
+                                    <td style="text-align: center"></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>09</td>
+                                    <td>01</td>
+                                    <td>501</td>
+                                    <td>Input Tax - Services - Foreign</td>
+                                    <td style="text-align: center"></td>
+                                    <td></td>
+                                </tr>
+                                <tr style="color: blue">
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>09</td>
+                                    <td>01</td>
+                                    <td>501</td>
+                                    <td>Input Tax - Non-Capital Goods - Local</td>
+                                    <td style="text-align: center"></td>
+                                    <td>(Statement of Account - Should be isolated - for external purposes)</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>09</td>
+                                    <td>02</td>
+                                    <td></td>
+                                    <td style="color: red">Creditable Withholding Tax</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>09</td>
+                                    <td>02</td>
+                                    <td>101</td>
+                                    <td>Customer #101</td>
+                                    <td style="text-align: center">110902101</td>
+                                    <td style="color: red">(Note - Customer #1 should be the same with AR and Sales)</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>09</td>
+                                    <td>02</td>
+                                    <td>102</td>
+                                    <td>Customer #102</td>
+                                    <td style="text-align: center"></td>
+                                    <td style="color: red"></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>09</td>
+                                    <td>02</td>
+                                    <td>103</td>
+                                    <td>Customer #103</td>
+                                    <td style="text-align: center"></td>
+                                    <td style="color: red"></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>09</td>
+                                    <td>09</td>
+                                    <td></td>
+                                    <td style="color: red">Other Current Assets</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>09</td>
+                                    <td>09</td>
+                                    <td>901</td>
+                                    <td>Other Current Assets</td>
+                                    <td style="text-align: center">110909901</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Non-Current Assets</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Furniture Tools and Equipment</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>01</td>
+                                    <td></td>
+                                    <td style="color: red">Transportation Equipment</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>01</td>
+                                    <td style="color: blue">050</td>
+                                    <td style="color: blue">(001-099 - To be used for Current Balances - if cannot be broken down - transition account until closed)</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>01</td>
+                                    <td>051</td>
+                                    <td>Truck - Plate No. 1</td>
+                                    <td style="text-align: center">120101101</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>01</td>
+                                    <td>052</td>
+                                    <td>Truck - Plate No. 2</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>01</td>
+                                    <td>053</td>
+                                    <td>Truck - Plate No. 3</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>05</td>
+                                    <td></td>
+                                    <td style="color: red">Accumulated Depreciation - Transportation Equipment</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>05</td>
+                                    <td style="color: blue">001</td>
+                                    <td style="color: blue">(001-099 - To be used for Current Balances - if cannot be broken down - transition account until closed)</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>05</td>
+                                    <td>101</td>
+                                    <td>Truck - Plate No. 1</td>
+                                    <td style="text-align: center">120105101</td>
+                                    <td style="color: red">(Note - Truck Plate  No. 1 should be the same with Transportation Equipment and Depreciation Expense)</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>05</td>
+                                    <td>102</td>
+                                    <td>Truck - Plate No. 2</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>05</td>
+                                    <td>103</td>
+                                    <td>Truck - Plate No. 3</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>11</td>
+                                    <td></td>
+                                    <td style="color: red">Tools and Garage Equipment</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>11</td>
+                                    <td style="color: blue">001</td>
+                                    <td style="color: blue">(001-099 - To be used for Current Balances - if cannot be broken down - transition account until closed)</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>11</td>
+                                    <td>101</td>
+                                    <td style="color: red">(Please add)</td>
+                                    <td style="text-align: center">120111101</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>15</td>
+                                    <td></td>
+                                    <td style="color: red">Accumulated Depreciation - Tools and Garage Equipment</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>15</td>
+                                    <td style="color: blue">001</td>
+                                    <td style="color: blue">(001-099 - To be used for Current Balances - if cannot be broken down - transition account until closed)</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>15</td>
+                                    <td>101</td>
+                                    <td style="color: red">(Please add)</td>
+                                    <td style="text-align: center">120115101</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>21</td>
+                                    <td></td>
+                                    <td style="color: red">Office Equipment</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>21</td>
+                                    <td style="color: blue">001</td>
+                                    <td style="color: blue">(001-099 - To be used for Current Balances - if cannot be broken down - transition account until closed)</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>21</td>
+                                    <td>101</td>
+                                    <td>Computer - Serial No. 1</td>
+                                    <td style="text-align: center">120121101</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>21</td>
+                                    <td>201</td>
+                                    <td>Air Conditioner - Serial No. 1</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>21</td>
+                                    <td>301</td>
+                                    <td>Mobile Phone - Serial No. 1</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>21</td>
+                                    <td>401</td>
+                                    <td style="color: red">(Please add)</td>
+                                    <td></td>
+                                    <td style="color: red">(Note - Office Equipment No. 1 should be the same with Office Equipment and Depreciation Expense)</td>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>25</td>
+                                    <td></td>
+                                    <td style="color: red">Accumulated Depreciation - Office Equipment</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>25</td>
+                                    <td style="color: blue">001</td>
+                                    <td style="color: blue">(001-099 - To be used for Current Balances - if cannot be broken down - transition account until closed)</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>25</td>
+                                    <td>101</td>
+                                    <td>Computer - Serial No. 1</td>
+                                    <td style="text-align: center">120121101</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>25</td>
+                                    <td>201</td>
+                                    <td>Air Conditioner - Serial No. 1</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>25</td>
+                                    <td>301</td>
+                                    <td>Mobile Phone - Serial No. 1</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>25</td>
+                                    <td>401</td>
+                                    <td style="color: red">(Please add)</td>
+                                    <td></td>
+                                    <td style="color: red">(Note - Office Equipment No. 1 should be the same with Office Equipment and Depreciation Expense)</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>31</td>
+                                    <td></td>
+                                    <td style="color: red">Office Furniture</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>31</td>
+                                    <td style="color: blue">001</td>
+                                    <td style="color: blue">(001-099 - To be used for Current Balances - if cannot be broken down - transition account until closed)</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>31</td>
+                                    <td>101</td>
+                                    <td>Table - Serial No. 1</td>
+                                    <td style="text-align: center">120131101</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>31</td>
+                                    <td>201</td>
+                                    <td>Chair - Serial No. 1</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>31</td>
+                                    <td>301</td>
+                                    <td style="color: red">(Please add)</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Leasehold Imrovements</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>11</td>
+                                    <td></td>
+                                    <td style="color: red">Garage Improvement</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>11</td>
+                                    <td style="color: blue">001</td>
+                                    <td style="color: blue">(001-099 - To be used for Current Balances - if cannot be broken down - transition account until closed)</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>11</td>
+                                    <td>101</td>
+                                    <td>Roofing</td>
+                                    <td style="text-align: center">120211101</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>11</td>
+                                    <td>201</td>
+                                    <td>Gate</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>11</td>
+                                    <td>301</td>
+                                    <td>Parking</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>11</td>
+                                    <td>401</td>
+                                    <td style="color: red">(Please add)</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>15</td>
+                                    <td></td>
+                                    <td style="color: red">Accumulated Depreciation - Garage Improvement</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>15</td>
+                                    <td style="color: blue">001</td>
+                                    <td style="color: blue">(001-099 - To be used for Current Balances - if cannot be broken down - transition account until closed)</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>15</td>
+                                    <td>101</td>
+                                    <td>Roofing</td>
+                                    <td style="text-align: center">120215101</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>15</td>
+                                    <td>201</td>
+                                    <td>Gate</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>15</td>
+                                    <td>301</td>
+                                    <td>Parking</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>15</td>
+                                    <td>401</td>
+                                    <td style="color: red">(Please add)</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>21</td>
+                                    <td></td>
+                                    <td style="color: red">Office Improvement</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>21</td>
+                                    <td style="color: blue">001</td>
+                                    <td style="color: blue">(001-099 - To be used for Current Balances - if cannot be broken down - transition account until closed)</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>21</td>
+                                    <td>101</td>
+                                    <td>Office Partitions</td>
+                                    <td style="text-align: center">120221101</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>21</td>
+                                    <td>201</td>
+                                    <td>Doors</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>21</td>
+                                    <td>301</td>
+                                    <td>Windows</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>21</td>
+                                    <td>401</td>
+                                    <td style="color: red">(Please add)</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>25</td>
+                                    <td></td>
+                                    <td style="color: red">Accumulated Depreciation - Office Improvement</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>25</td>
+                                    <td style="color: blue">001</td>
+                                    <td style="color: blue">(001-099 - To be used for Current Balances - if cannot be broken down - transition account until closed)</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>25</td>
+                                    <td>101</td>
+                                    <td>Office Partitions</td>
+                                    <td style="text-align: center">120225101</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>25</td>
+                                    <td>201</td>
+                                    <td>Doors</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>25</td>
+                                    <td>301</td>
+                                    <td>Windows</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>25</td>
+                                    <td>401</td>
+                                    <td style="color: red">(Please add)</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>09</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Other Non-Current Assets</td>
+                                    <td></td>
+                                    <td style="color: red">(More than 1 year)</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>09</td>
+                                    <td>10</td>
+                                    <td></td>
+                                    <td style="color: red">Non-Current Receivables - Trade</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>09</td>
+                                    <td>10</td>
+                                    <td>101</td>
+                                    <td>Customer #</td>
+                                    <td style="text-align: center">120910101</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>09</td>
+                                    <td>15</td>
+                                    <td></td>
+                                    <td style="color: red">Non-Current Receivables - Non-Trade</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>09</td>
+                                    <td>10</td>
+                                    <td>501</td>
+                                    <td>Company / Employee No.</td>
+                                    <td style="text-align: center">120915501</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>09</td>
+                                    <td>20</td>
+                                    <td></td>
+                                    <td style="color: red">Prepayments - Non-Current</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>09</td>
+                                    <td>10</td>
+                                    <td>301</td>
+                                    <td>Company</td>
+                                    <td style="text-align: center">120915501</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>09</td>
+                                    <td>30</td>
+                                    <td></td>
+                                    <td style="color: red">Input Tax - Deferred</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>09</td>
+                                    <td>30</td>
+                                    <td>001</td>
+                                    <td>Input Tax - Capital Goods - Deferred</td>
+                                    <td style="text-align: center">120930001</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><b>2</b></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>Liabilities</b></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Current Liabilities</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>01</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Accounts Payable</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>01</td>
+                                    <td>01</td>
+                                    <td></td>
+                                    <td style="color: red">Accounts Payable - Trade</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>01</td>
+                                    <td>01</td>
+                                    <td>301</td>
+                                    <td>Supplier #301 - Corporate</td>
+                                    <td style="text-align: center">210101301</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>01</td>
+                                    <td>01</td>
+                                    <td>302</td>
+                                    <td>Supplier #302 - Corporate</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>01</td>
+                                    <td>01</td>
+                                    <td>401</td>
+                                    <td>Supplier #401 - Individual</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr style="color: blue">
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>01</td>
+                                    <td>01</td>
+                                    <td>371</td>
+                                    <td>Supplier #371 - Corporate</td>
+                                    <td></td>
+                                    <td>(Statement of Account - Should be isolated - for external purposes)</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>01</td>
+                                    <td>02</td>
+                                    <td></td>
+                                    <td style="color: red">Non-Trade Payables</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>01</td>
+                                    <td>02</td>
+                                    <td>301</td>
+                                    <td>Company Name</td>
+                                    <td style="text-align: center">210102301</td>
+                                    <td>(Current Advances from)</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>01</td>
+                                    <td>02</td>
+                                    <td>401</td>
+                                    <td>Individual Name</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>02</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Taxes and License Payable</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>02</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td style="color: red">Taxes Payable</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>02</td>
+                                    <td>1</td>
+                                    <td>101</td>
+                                    <td>Income Tax Payable</td>
+                                    <td style="text-align: center">210201101</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>02</td>
+                                    <td>1</td>
+                                    <td>201</td>
+                                    <td>Value-Added Tax Payable (Output Tax)</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>02</td>
+                                    <td>1</td>
+                                    <td>301</td>
+                                    <td>Expanded Withhoding Tax Payable</td>
+                                    <td></td>
+                                    <td>@ 1% - Goods</td>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>02</td>
+                                    <td>1</td>
+                                    <td>302</td>
+                                    <td>Expanded Withhoding Tax Payable</td>
+                                    <td></td>
+                                    <td>@ 2% - Contractors / Services</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>02</td>
+                                    <td>1</td>
+                                    <td>305</td>
+                                    <td>Expanded Withhoding Tax Payable</td>
+                                    <td></td>
+                                    <td>@ 5% - Rental</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>02</td>
+                                    <td>1</td>
+                                    <td>310</td>
+                                    <td>Expanded Withhoding Tax Payable</td>
+                                    <td></td>
+                                    <td>@ 10% - Professionals</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>02</td>
+                                    <td>1</td>
+                                    <td>401</td>
+                                    <td>Withholding Tax on Compensation Payable</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr style="color: blue">
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>02</td>
+                                    <td>1</td>
+                                    <td>271</td>
+                                    <td>Value-Added Tax Payable (Output Tax)</td>
+                                    <td></td>
+                                    <td>(Statement of Account - Should be isolated - for external purposes)s</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Loans Payable - Current</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>01</td>
+                                    <td></td>
+                                    <td style="color: red">Loan - Banks - Current</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>01</td>
+                                    <td>801</td>
+                                    <td>Company Name #801</td>
+                                    <td>210301801</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>01</td>
+                                    <td>850</td>
+                                    <td>Company Name #850</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>02</td>
+                                    <td></td>
+                                    <td style="color: red">Loans - Individuals - Current</td>
+                                    <td></td>
+                                    <td></td>
+                                <tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>02</td>
+                                    <td>001</td>
+                                    <td>Individual Name #1</td>
+                                    <td>210302001</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>01</td>
+                                    <td>050</td>
+                                    <td>Company Name #050</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>02</td>
+                                    <td></td>
+                                    <td style="color: red">Loans - Individuals - Current</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>02</td>
+                                    <td>001</td>
+                                    <td>Individual Name #1</td>
+                                    <td style="text-align: center">210302001</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>03</td>
+                                    <td>02</td>
+                                    <td>050</td>
+                                    <td>Company Name #050</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>09</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Other Current Liabilities</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>09</td>
+                                    <td>09</td>
+                                    <td></td>
+                                    <td style="color: red">Other Current Liabilities</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>09</td>
+                                    <td>09</td>
+                                    <td>301</td>
+                                    <td>Company Name</td>
+                                    <td style="text-align: center">210909301</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>09</td>
+                                    <td>09</td>
+                                    <td>401</td>
+                                    <td>Individual Name</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Non-Current Liabilities</td>
+                                    <td style="color: red; text-align: center">(More than 1 year)</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Accounts Payable - Non-Current</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>01</td>
+                                    <td></td>
+                                    <td>Trade Accounts Payable - Non-Current</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>01</td>
+                                    <td>301</td>
+                                    <td>Supplier #301</td>
+                                    <td style="text-align: center">220101301</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>01</td>
+                                    <td>302</td>
+                                    <td>Supplier #302</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>02</td>
+                                    <td></td>
+                                    <td style="color: red">Non-Trade Paybles - Non-Current</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>02</td>
+                                    <td>301</td>
+                                    <td>Supplier #301</td>
+                                    <td style="text-align: center">220102301</td>
+                                    <td>(Long-Tern Advances from)</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>02</td>
+                                    <td>050</td>
+                                    <td>Company Name #050</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Loans Payable - Non-Current</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>01</td>
+                                    <td></td>
+                                    <td style="color: red">Loans - Individuals - Non-Current</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>01</td>
+                                    <td>001</td>
+                                    <td>Individual Name #1</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>01</td>
+                                    <td>002</td>
+                                    <td>Individual Name #2</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>02</td>
+                                    <td></td>
+                                    <td style="color: red">Loan - Banks - Non-Current</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>02</td>
+                                    <td>801</td>
+                                    <td>Company Name #801</td>
+                                    <td style="text-align: center">220202801</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>02</td>
+                                    <td>850</td>
+                                    <td>Company Name #850</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>09</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Other Non-Current Payables</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>09</td>
+                                    <td>09</td>
+                                    <td></td>
+                                    <td style="color: red">Other Non-Current Payables</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>09</td>
+                                    <td>09</td>
+                                    <td>901</td>
+                                    <td>Individual Name #901</td>
+                                    <td style="text-align: center">220909901</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>09</td>
+                                    <td>09</td>
+                                    <td>902</td>
+                                    <td>Company Name #902</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><b>3</b></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>Stockholders Equity</b></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>1</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Capital Contribution</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>1</td>
+                                    <td>01</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Capital Stock</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>1</td>
+                                    <td>01</td>
+                                    <td>01</td>
+                                    <td></td>
+                                    <td style="color: red">Common Stock</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>1</td>
+                                    <td>01</td>
+                                    <td>01</td>
+                                    <td>101</td>
+                                    <td>Common Stock</td>
+                                    <td style="text-align: center">310101101</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>1</td>
+                                    <td>01</td>
+                                    <td>02</td>
+                                    <td></td>
+                                    <td style="color: red">Additional Paid-in Capital</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>1</td>
+                                    <td>01</td>
+                                    <td>02</td>
+                                    <td>101</td>
+                                    <td>Additional Paid-in Capital</td>
+                                    <td style="text-align: center">310102101</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>2</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Retained Earnings</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Unappropriated Retained Earnings</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>01</td>
+                                    <td></td>
+                                    <td style="color: red">Unappropriated Retained Earnings</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>2</td>
+                                    <td>01</td>
+                                    <td>01</td>
+                                    <td>101</td>
+                                    <td>Unappropriated Retained Earnings</td>
+                                    <td style="text-align: center">320101101</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Appropriated Retained Earnings</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>01</td>
+                                    <td></td>
+                                    <td style="color: red">Appropriated Retained Earnings</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>01</td>
+                                    <td>101</td>
+                                    <td>For Future Expansion</td>
+                                    <td style="text-align: center">320201101</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>2</td>
+                                    <td>02</td>
+                                    <td>01</td>
+                                    <td>201</td>
+                                    <td>For Debt Payment</td>
+                                    <td style="text-align: center">320201201</td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                          </div>
+                          </div>
+
+                      </div>
+
+                  </div>
+                    <!-- Modal -->
+                <!-- /tab-content -->
+              </div>
+              <!-- /panel-body -->
+            </div>
+            <!-- /col-lg-12 -->
+          </div>
+          <!-- /row -->
+        </div>
+
+          <!-- col-lg-12-->
+        </div>
+          </div>
+          <!-- /col-lg-12 -->
+          <!-- CUSTOM TOGGLES -->
+        </div>
+        <!-- /row -->
+      </section>
+      <!-- /wrapper -->
+    </section>
+
+    <script>
+        let today = new Date();
+        let time = '';
+        let dd = today.getDate();
+        let mm = today.getMonth() + 1; //January is 0!
+        let yyyy = today.getFullYear();
+        let hour    = today.getHours();
+        let minute  = today.getMinutes();
+        let second  = today.getSeconds();
+
+        if (dd < 10) {
+          dd = '0' + dd;
+        }
+
+        if (mm < 10) {
+          mm = '0' + mm;
+        }
+
+        if(hour.toString().length == 1) {
+         hour = '0'+hour;
+        }
+        if(minute.toString().length == 1) {
+             minute = '0'+minute;
+        }
+        if(second.toString().length == 1) {
+             second = '0'+second;
+        }
+
+        today = mm + '/' + dd + '/' + yyyy;
+        time = hour+':'+minute+':'+second;
+        $(document).ready(function() {
+            $('#listTable').DataTable({
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                responsive: true,
+                retrieve: true,
+                paging: true,
+                dom: 'Blfrtip',
+                "scrollX": true,
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    'colvis'
+                ]
+            });
+        });
+
+        var table;
+
+        if ( $.fn.dataTable.isDataTable( '#listTable' ) ) {
+            table = $('#listTable').DataTable();
+        }
+        else {
+            table = $('#listTable').DataTable({
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                responsive: true,
+                retrieve: true,
+                paging: true,
+                dom: 'Blfrtip',
+                "scrollX": true,
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    'colvis'
+                ]
+            });
+        }
+
+        $('#listTable tbody').on( 'click', 'tr', function () {
+            // alert( table.row( this ).data() );
+            var modalBody = "<table class=\"table table-bordered\">";
+            for(var i = 2; i <= 32 ; i++){
+                modalBody += "<tr>";
+                modalBody += "<td><b>"+ table.columns(i).header()[0].textContent +"</b></td>";
+                modalBody += "<td>" + table.row(this).data()[i] + "</td>";
+                modalBody += "</tr>";
+            }
+            modalBody += "</table>";
+            $('#modalBody').html(modalBody);
+            $('#modalLabel').html("DATABASE OPERATION  " + table.row(this).data()[1]);
+            $('#modalEditButton').attr('href', '/database_operations/editDBO/' + table.row(this).data()[1]+"/A");
+            $('#modalDeleteButton').attr('href', '/database_operations/deleteDBO/' + table.row(this).data()[1]);
+            $('#exampleModal').modal();
+        } );
+
+        // Convert numbers to words
+        // copyright 25th July 2006, by Stephen Chapman http://javascript.about.com
+        // permission to use this Javascript on your web page is granted
+        // provided that all of the code (including this copyright notice) is
+        // used exactly as shown (you can change the numbering system if you wish)
+
+
+        // American Numbering System
+        var th = ['','THOUSAND','MILLION', 'BILLION','TRILLION'];
+        // uncomment this line for English Number System
+        // var th = ['','thousand','million', 'milliard','billion'];
+
+        var dg = ['ZERO','ONE','TWO','THREE','FOUR', 'FIVE','SIX','SEVEN','EIGHT','NINE'];
+        var tn = ['TEN','ELEVEN','TWELVE','THIRTEEN', 'FOURTEEN','FIFTEEN','SIXTEEN', 'SEVENTEEN','EIGHTEEN','NINETEEN'];
+        var tw = ['TWENTY','THIRTY','FORTY','FIFTY', 'SIXTY','SEVENTY','EIGHTY','NINETY'];
+        function toWords(s){
+            s = s.toString(); s = s.replace(/[, ]/g,'');
+            if (s != parseFloat(s)) return 'not a number';
+            var x = s.indexOf('.');
+            if (x == -1)
+                x = s.length;
+            if (x > 15)
+                return 'too big';
+            var n = s.split('');
+            var str = '';
+            var sk = 0;
+            for (var i=0; i < x; i++) {
+                if ((x-i)%3==2) {
+                    if (n[i] == '1') {
+                        str += tn[Number(n[i+1])] + ' ';
+                        i++; sk=1;
+                    }
+                    else if (n[i]!=0) {
+                        str += tw[n[i]-2] + ' ';
+                        sk=1;
+                    }
+                }
+                else if (n[i]!=0) {
+                    str += dg[n[i]] +' ';
+                    if ((x-i)%3==0)
+                        str += 'HUNDRED ';
+                    sk=1;
+                }
+                if ((x-i)%3==1) {
+                    if (sk)
+                        str += th[(x-i-1)/3] + ' ';
+                    sk=0;
+                }
+            }
+            if (x != s.length) {
+                var y = s.length;
+                str += 'AND ';
+                for (var i=x+1; i<y; i++)
+                    str += dg[n[i]] +' ';
+            }
+            return str.replace(/\s+/g,' ');
+        }
+
+        function numberWithCommas(x) {
+            var parts = x.toString().split(".");
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return parts.join(".");
+        }
+
+        function addZeroes(num) {
+            // Convert input string to a number and store as a variable.
+            var value = Number(num);
+            // Split the input string into two arrays containing integers/decimals
+            var res = num.split(".");
+            // If there is no decimal point or only one decimal place found.
+            if(res.length == 1 || res[1].length < 3) {
+            // Set the number to two decimal places
+                value = value.toFixed(2);
+            }
+            // Return updated or original number.
+            return value;
+        }
+
+
+        function printDiv(divName) {
+            var dboIDs = [
+                {% for item in list %}
+                    {{ item.id }},
+                {% endfor %}
+            ];
+
+            $.ajax({
+              url: '{% url "update_billing_dates" %}',
+              data: {
+                "dboIDs[]": dboIDs,
+              },
+              dataType: 'json',
+              success: function(data){
+                  console.log(dboIDs);
+              },
+              error: function () {
+                alert("error");
+              },
+            });
+
+            var printContents = document.getElementById(divName).innerHTML;
+            var originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = printContents;
+
+            window.print();
+
+            document.body.innerHTML = originalContents;
+        }
+
+        $(document).ready(function(){
+           $("#id_year").val({{ year }});
+           $("#id_month").val({{ month }});
+        });
+        
+
+        $( "#id_year" ).change(function() {
+            window.location.href = "/database_operations//year="  + $(this).val() + "/month=" + $("#id_month").val();
+        });
+
+        $( "#id_month" ).change(function() {
+            window.location.href = "/database_operations/year="  + $("#id_year").val() + "/month=" + $(this).val();
+        });
+
+    </script>
+{% endblock %}

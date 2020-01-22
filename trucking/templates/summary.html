@@ -1,0 +1,487 @@
+{% extends "includes/headerFooter.html" %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block content %}
+    <title>Database Operations</title>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_code.jquery.com_jquery-3.3.1.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_1.10.19_js_jquery.dataTables.js' %}"></script>
+
+    <style>
+        div.dataTables_wrapper {
+            margin: 0 auto;
+        }
+
+        .borderless td, .borderless th{
+            border: none;
+        }
+    </style>
+
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/datatables.min.css' %}"/>
+    <script type="text/javascript" src="{% static 'js/http_cdn.datatables.net_v_dt_dt-1.10.18_b-1.5.4_datatables.js' %}"></script>
+    <script src="{% static 'js/city.js' %}"></script>
+
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_dataTables.buttons.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_buttons.flash.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdnjs.cloudflare.com_ajax_libs_jszip_3.1.3_jszip.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.36_pdfmake.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.36_vfs_fonts.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_buttons.html5.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_buttons.print.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_buttons.colVis.js' %}"></script>
+
+
+    <section id="main-content">
+      <section class="wrapper site-min-height">
+        <div class="row">
+          <!-- /col-lg-12 -->
+          <div class="col-lg-12">
+          <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="{% url 'database_operations' %}">Database Operations</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Summary</li>
+              </ol>
+          </nav>
+            <div class="row content-panel">
+              <!-- /panel-heading -->
+              <div class="panel-body">
+                <div class="tab-content">
+                {% if messages %}
+                    <div class="alert alert-success alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        {% for message in messages %}
+                            <strong>{{ message }}</strong>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if extra != none %}
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <strong>{{ extra }}</strong>
+                </div>
+                {% endif %}
+                  <div id="overview" class="tab-pane active">
+                      <a class="btn btn-primary" href="{% url 'database_operations' %}" role="button">Back</a>
+                      <h2 class="centered">Summary</h2>
+                      <hr>
+                      <div class="row">
+                          <div class="col-md-12">
+                              <a class="btn btn-success" href="{% url 'dbo_balance_sheet' %}">Balance Sheet</a>
+                              <a class="btn btn-success" href="{% url 'dbo_income_statement' %}">Income Statement</a>
+                              <a class="btn btn-success" href="{% url 'dbo_summary' %}">Summary</a>
+                          </div>
+                      </div>
+                      <br>
+                      <a class="btn btn-default" role="button" onclick="printDiv('printDiv')">Print</a>
+                      <hr>
+                      <div id="printDiv">
+                          <div class="row">
+                              <div class="col-md-6">
+                                  <h5><b>BALANCE SHEET ACCOUNTS</b></h5>
+                                  <br>
+                                  <h5><b>ASSETS</b></h5>
+                                  <div style="padding-left: 30px">
+                                      <h5><b>CURRENT ASSETS</b></h5>
+                                      <div style="padding-left: 30px">
+                                          Cash on Hand - Truck Budget<br>
+                                          Cash in Bank<br>
+                                          Trade Accounts Receivables<br>
+                                          Non-Trade Receivables<br>
+                                          Allowance for Doubtful Accounts<br>
+                                          Truck Parts<br>
+                                          Truck Supplies<br>
+                                          Office Supplies<br>
+                                          Allowance for Inventory Obsolescence<br>
+                                          Advance Rental<br>
+                                          Advances to Suppliers<br>
+                                          Input Tax<br>
+                                          Creditable Withholding Tax<br>
+                                          Other Current Assets<br>
+                                      </div>
+                                  </div>
+                                  <br>
+                                  <div style="padding-left: 30px">
+                                      <h5><b>NON-CURRENT ASSETS</b></h5>
+                                      <div style="padding-left: 30px">
+                                          Transportation Equipment<br>
+                                          Accumulated Depreciation - Transportation Equipment<br>
+                                          Tools and Garage Equipment<br>
+                                          Accumulated Depreciation - Tools and Garage Equipment<br>
+                                          Office Equipment<br>
+                                          Accumulated Depreciation - Office Equipment<br>
+                                          Office Furniture<br>
+                                          Accumulated Depreciation - Office Furniture<br>
+                                          Garage Improvement<br>
+                                          Accumulated Depreciation - Garage Improvement<br>
+                                          Office Improvement<br>
+                                          Accumulated Depreciation - Office Improvement<br>
+                                          Non-Current Receivables - Trade<br>
+                                          Non-Current Receivables - Non-Trade<br>
+                                          Prepayments - Non-Current<br>
+                                          Input Tax - Deferred<br>
+                                      </div>
+                                  </div>
+                                  <br>
+                                  <br>
+                                  <h5><b>LIABILITIES</b></h5>
+                                  <div style="padding-left: 30px">
+                                      <h5><b>CURRENT LIABILITIES</b></h5>
+                                      <div style="padding-left: 30px">
+                                          Accounts Payable - Trade<br>
+                                          Non-Trade Payables<br>
+                                          Taxes Payable<br>
+                                          Loan - Banks - Current<br>
+                                          Loans - Individuals - Current<br>
+                                          Other Current Liabilities <br>
+                                      </div>
+                                  </div>
+                                  <br>
+                                  <div style="padding-left: 30px">
+                                      <h5><b>NON-CURRENT-LIABILITIES</b></h5>
+                                      <div style="padding-left: 30px">
+                                          Trade Accounts Payable - Non-Current<br>
+                                          Non-Trade Paybles - Non-Current<br>
+                                          Loans - Individuals - Non-Current<br>
+                                          Loan - Banks - Non-Current<br>
+                                          Other Non-Current Payables<br>
+                                      </div>
+                                  </div>
+                                  <br>
+                                  <div style="padding-left: 30px">
+                                      <h5><b>STOCKHOLDERS EQUITY</b></h5>
+                                      <div style="padding-left: 30px">
+                                          Common Stock<br>
+                                          Additional Paid-in Capital<br>
+                                          Unappropriated Retained Earnings<br>
+                                          Appropriated Retained Earnings<br>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="col-md-6">
+                                  <h5><b>INCOME STATEMENT ACCOUNTS</b></h5>
+                                  <br>
+                                  <h5><b>REVENUES</b></h5>
+                                  <div style="padding-left: 30px">
+                                      Hauling Charges<br>
+                                      Demurarages<br>
+                                      Interest and Penalties<br>
+                                      Sub-Contracted Income<br>
+                                      Other Revenues <br>
+                                  </div>
+                                  <br>
+                                  <h5><b>DIRECT COST</b></h5>
+                                  <div style="padding-left: 30px">
+                                      Fuel and Gasoline Expenses<br>
+                                      Direct Labor<br>
+                                      SSS & ECC Expense - Direct Labor<br>
+                                      Pag-ibig Fund Expense - Direct Labor<br>
+                                      Philhealth Expense - Direct Labor<br>
+                                      13th Month Pay - Direct Labor<br>
+                                      Other Employee Benefits - Direct Labor<br>
+                                      Transportation Expense - Direct Cost | Toll Fee, Sticker / Entry Fees, Parking Fees<br>
+                                      Repairs and Maintenance - Trucks<br>
+                                      Insurance - Trucks<br>
+                                      Rental Expense - Garage<br>
+                                      Depreciation - Trucks<br>
+                                      Sub-Contracted Expenses<br>
+                                      Others | Client Rebates, Police and Penalties<br>
+                                  </div>
+                                  <br>
+                                  <h5><b>OPERATING / OFFICE EXPENSES</b></h5>
+                                  <div style="padding-left: 30px">
+                                      Office Salaries<br>
+                                      SSS & ECC Expense - Office Personnel<br>
+                                      Pag-ibig Fund Expense - Office Personnel<br>
+                                      Philhealth Expense - Office Personnel<br>
+                                      13th Month Pay - Office Personnel<br>
+                                      Other Employee Benefits - Office Personnel<br>
+                                      Rental Expense - Office<br>
+                                      Utilities Expense<br>
+                                      Taxes & Licenses<br>
+                                      Representation Expenses<br>
+                                      Management Expenses<br>
+                                      Office Supplies Expense<br>
+                                      Transportation Expense - Office<br>
+                                      Repairs and Maintenance - Administrative Expenses<br>
+                                      Other Office Expenses<br>
+                                      Depreciation Expense<br>
+                                      Interest and Other Finance Charges<br>
+                                  </div>
+                              </div>
+                          </div>
+
+                      </div>
+
+                      </div>
+
+                  </div>
+                    <!-- Modal -->
+                <!-- /tab-content -->
+              </div>
+              <!-- /panel-body -->
+            </div>
+            <!-- /col-lg-12 -->
+          </div>
+          <!-- /row -->
+        </div>
+
+          <!-- col-lg-12-->
+        </div>
+          </div>
+          <!-- /col-lg-12 -->
+          <!-- CUSTOM TOGGLES -->
+        </div>
+        <!-- /row -->
+      </section>
+      <!-- /wrapper -->
+    </section>
+
+    <script>
+        let today = new Date();
+        let time = '';
+        let dd = today.getDate();
+        let mm = today.getMonth() + 1; //January is 0!
+        let yyyy = today.getFullYear();
+        let hour    = today.getHours();
+        let minute  = today.getMinutes();
+        let second  = today.getSeconds();
+
+        if (dd < 10) {
+          dd = '0' + dd;
+        }
+
+        if (mm < 10) {
+          mm = '0' + mm;
+        }
+
+        if(hour.toString().length == 1) {
+         hour = '0'+hour;
+        }
+        if(minute.toString().length == 1) {
+             minute = '0'+minute;
+        }
+        if(second.toString().length == 1) {
+             second = '0'+second;
+        }
+
+        today = mm + '/' + dd + '/' + yyyy;
+        time = hour+':'+minute+':'+second;
+        $(document).ready(function() {
+            $('#listTable').DataTable({
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                responsive: true,
+                retrieve: true,
+                paging: true,
+                dom: 'Blfrtip',
+                "scrollX": true,
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    'colvis'
+                ]
+            });
+        });
+
+        var table;
+
+        if ( $.fn.dataTable.isDataTable( '#listTable' ) ) {
+            table = $('#listTable').DataTable();
+        }
+        else {
+            table = $('#listTable').DataTable({
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                responsive: true,
+                retrieve: true,
+                paging: true,
+                dom: 'Blfrtip',
+                "scrollX": true,
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: 'Database Operations (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    'colvis'
+                ]
+            });
+        }
+
+        $('#listTable tbody').on( 'click', 'tr', function () {
+            // alert( table.row( this ).data() );
+            var modalBody = "<table class=\"table table-bordered\">";
+            for(var i = 2; i <= 32 ; i++){
+                modalBody += "<tr>";
+                modalBody += "<td><b>"+ table.columns(i).header()[0].textContent +"</b></td>";
+                modalBody += "<td>" + table.row(this).data()[i] + "</td>";
+                modalBody += "</tr>";
+            }
+            modalBody += "</table>";
+            $('#modalBody').html(modalBody);
+            $('#modalLabel').html("DATABASE OPERATION  " + table.row(this).data()[1]);
+            $('#modalEditButton').attr('href', '/database_operations/editDBO/' + table.row(this).data()[1]+"/A");
+            $('#modalDeleteButton').attr('href', '/database_operations/deleteDBO/' + table.row(this).data()[1]);
+            $('#exampleModal').modal();
+        } );
+
+        // Convert numbers to words
+        // copyright 25th July 2006, by Stephen Chapman http://javascript.about.com
+        // permission to use this Javascript on your web page is granted
+        // provided that all of the code (including this copyright notice) is
+        // used exactly as shown (you can change the numbering system if you wish)
+
+
+        // American Numbering System
+        var th = ['','THOUSAND','MILLION', 'BILLION','TRILLION'];
+        // uncomment this line for English Number System
+        // var th = ['','thousand','million', 'milliard','billion'];
+
+        var dg = ['ZERO','ONE','TWO','THREE','FOUR', 'FIVE','SIX','SEVEN','EIGHT','NINE'];
+        var tn = ['TEN','ELEVEN','TWELVE','THIRTEEN', 'FOURTEEN','FIFTEEN','SIXTEEN', 'SEVENTEEN','EIGHTEEN','NINETEEN'];
+        var tw = ['TWENTY','THIRTY','FORTY','FIFTY', 'SIXTY','SEVENTY','EIGHTY','NINETY'];
+        function toWords(s){
+            s = s.toString(); s = s.replace(/[, ]/g,'');
+            if (s != parseFloat(s)) return 'not a number';
+            var x = s.indexOf('.');
+            if (x == -1)
+                x = s.length;
+            if (x > 15)
+                return 'too big';
+            var n = s.split('');
+            var str = '';
+            var sk = 0;
+            for (var i=0; i < x; i++) {
+                if ((x-i)%3==2) {
+                    if (n[i] == '1') {
+                        str += tn[Number(n[i+1])] + ' ';
+                        i++; sk=1;
+                    }
+                    else if (n[i]!=0) {
+                        str += tw[n[i]-2] + ' ';
+                        sk=1;
+                    }
+                }
+                else if (n[i]!=0) {
+                    str += dg[n[i]] +' ';
+                    if ((x-i)%3==0)
+                        str += 'HUNDRED ';
+                    sk=1;
+                }
+                if ((x-i)%3==1) {
+                    if (sk)
+                        str += th[(x-i-1)/3] + ' ';
+                    sk=0;
+                }
+            }
+            if (x != s.length) {
+                var y = s.length;
+                str += 'AND ';
+                for (var i=x+1; i<y; i++)
+                    str += dg[n[i]] +' ';
+            }
+            return str.replace(/\s+/g,' ');
+        }
+
+        function numberWithCommas(x) {
+            var parts = x.toString().split(".");
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return parts.join(".");
+        }
+
+        function addZeroes(num) {
+            // Convert input string to a number and store as a variable.
+            var value = Number(num);
+            // Split the input string into two arrays containing integers/decimals
+            var res = num.split(".");
+            // If there is no decimal point or only one decimal place found.
+            if(res.length == 1 || res[1].length < 3) {
+            // Set the number to two decimal places
+                value = value.toFixed(2);
+            }
+            // Return updated or original number.
+            return value;
+        }
+
+
+        function printDiv(divName) {
+            var dboIDs = [
+                {% for item in list %}
+                    {{ item.id }},
+                {% endfor %}
+            ];
+
+            $.ajax({
+              url: '{% url "update_billing_dates" %}',
+              data: {
+                "dboIDs[]": dboIDs,
+              },
+              dataType: 'json',
+              success: function(data){
+                  console.log(dboIDs);
+              },
+              error: function () {
+                alert("error");
+              },
+            });
+
+            var printContents = document.getElementById(divName).innerHTML;
+            var originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = printContents;
+
+            window.print();
+
+            document.body.innerHTML = originalContents;
+        }
+
+        $(document).ready(function(){
+           $("#id_year").val({{ year }});
+           $("#id_month").val({{ month }});
+        });
+        
+
+        $( "#id_year" ).change(function() {
+            window.location.href = "/database_operations//year="  + $(this).val() + "/month=" + $("#id_month").val();
+        });
+
+        $( "#id_month" ).change(function() {
+            window.location.href = "/database_operations/year="  + $("#id_year").val() + "/month=" + $(this).val();
+        });
+
+    </script>
+{% endblock %}
