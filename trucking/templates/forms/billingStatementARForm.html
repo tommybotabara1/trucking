@@ -1,0 +1,135 @@
+{% extends "includes/headerFooter.html" %}
+{% load staticfiles%}
+
+{% block content %}
+    <title>Billing Statement - AR Form</title>
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="{% static 'js/jquery.autocomplete.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+    <style>
+        div.dataTables_wrapper {
+            margin: 0 auto;
+        }
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/datatables.min.css' %}"/>
+    <script type="text/javascript" src="{% static 'js/http_cdn.datatables.net_v_dt_dt-1.10.18_b-1.5.4_datatables.js' %}"></script>
+    <script src="{% static 'js/city.js' %}"></script>
+
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_dataTables.buttons.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_buttons.flash.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdnjs.cloudflare.com_ajax_libs_jszip_3.1.3_jszip.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.36_pdfmake.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.36_vfs_fonts.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_buttons.html5.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_buttons.print.js' %}"></script>
+
+
+    <section id="main-content"></nav>
+      <section class="wrapper site-min-height">
+        <div class="row">
+          <!-- /col-lg-12 -->
+          <div class="col-lg-12">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'billing_statement_or' %}">Billing Statement - AR</a></li>
+                  {% if extra != -1 %}
+                    <li class="breadcrumb-item active" aria-current="page">Edit Billing Statement - AR</li>
+                  {% else %}
+                    <li class="breadcrumb-item active" aria-current="page">New Billing Statement - AR</li>
+                  {% endif %}
+              </ol>
+            </nav>
+            <div class="row content-panel">
+                <!-- /panel-heading -->
+              <div class="panel-body">
+                <div class="tab-content">
+                  <div id="edit" class="tab-pane active">
+                    <div class="row">
+                      <div class="col-lg-8 col-lg-offset-2 detailed">
+                      {% if extra != -1 %}
+                        <h4 class="mb">Edit Billing Statement - AR {{ extra }}</h4>
+                      {% else %}
+                        <h4 class="mb">New Billing Statement - AR</h4>
+                      {% endif %}
+                      <br>
+                      {% if extra != -1 %}
+                        <form action="{% url 'edit_billing_statement_ar' extra %}" class="form-horizontal style-form" method="post">
+                      {% else %}
+                        <form action="{% url 'new_billing_statement_ar' %}" class="form-horizontal style-form" method="post" id="mainForm">
+                      {% endif %}
+                          {% csrf_token %}
+                          {{ form.id }}
+                          {% for field in form %}
+                              {% if field.label != 'Id' %}
+                                  <div class="form-group">
+                                      <label class="col-sm-2 col-sm-2 control-label">{{ field.label_tag }}</label>
+                                      <div class="col-sm-10">
+                                          {{ field }}
+                                      </div>
+                                  </div>
+                              {% endif %}
+                              {% if field.label == "Customer" %}
+                                  <datalist id="customers">
+                                      {% for item in list %}
+                                          <option>{{ item.customername }}</option>
+                                      {% endfor %}
+                                  </datalist>
+                              {% endif %}
+                          {% endfor %}
+                        <button type="submit" value="Submit" class="btn btn-primary center-block">Submit</button>
+                      </form>
+
+                      </div>
+
+                      <!-- /col-lg-8 -->
+                    </div>
+                    <!-- /row -->
+                  </div>
+                  <!-- /tab-pane -->
+                </div>
+                <!-- /tab-content -->
+              </div>
+              <!-- /panel-body -->
+            </div>
+            <!-- /col-lg-12 -->
+          </div>
+          <!-- /row -->
+        </div>
+
+          <!-- col-lg-12-->
+        </div>
+          </div>
+          <!-- /col-lg-12 -->
+          <!-- CUSTOM TOGGLES -->
+        </div>
+        <!-- /row -->
+      </section>
+      <!-- /wrapper -->
+    </section>
+    <script>
+        $(document).ready(function() {
+            $('#listTable').DataTable({
+                dom: 'Bfrtip',
+                "scrollX": true,
+                buttons: [
+                    'excel', 'pdf', 'print'
+                ]
+            });
+            var date = $("#id_month")[0]['defaultValue'] + "";
+            $("#id_month").val(date.slice(0, -3));
+            console.log($("#id_month").val());
+        });
+        /*
+        var arr=["tite", "pepe"];
+        $("#id_plateno").autocomplete ({
+            lookup: arr
+        });
+         */
+        $("#mainForm").submit(function(e) {
+            alert("New Billing Statement - AR Created");
+        });
+    </script>
+{% endblock %}

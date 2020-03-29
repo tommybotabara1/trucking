@@ -53,6 +53,35 @@ urlpatterns = [
     path('get_split_amount_total/', views.get_split_amount_total, name='get_split_amount_total'),
     path('delete_split_amount/', views.delete_split_amount, name='delete_split_amount'),
 
+    path('payables/', views.payables, name='payables'),
+    path('payables/new_payables', views.new_payables, name='new_payables'),
+    path('payables/edit_payables/<int:id>', views.edit_payables, name='edit_payables'),
+    path('payables/delete_payables/<int:id>', views.delete_payables, name='delete_payables'),
+
+    path('liquidation/', views.liquidation, name='liquidation'),
+    path('liquidation/new_liquidation', views.new_liquidation, name='new_liquidation'),
+    path('liquidation/edit_liquidation/<int:id>', views.edit_liquidation, name='edit_liquidation'),
+    path('liquidation/delete_liquidation/<int:id>', views.delete_liquidation, name='delete_liquidation'),
+
+    path('cash_monitoring/', views.cash_monitoring, name='cash_monitoring'),
+    path('cash_monitoring/new_cash_monitoring', views.new_cash_monitoring, name='new_cash_monitoring'),
+    path('cash_monitoring/edit_cash_monitoring/<int:id>', views.edit_cash_monitoring, name='edit_cash_monitoring'),
+    path('cash_monitoring/delete_cash_monitoring/<int:id>', views.delete_cash_monitoring, name='delete_cash_monitoring'),
+
+    path('cash_on_hand/', views.cash_on_hand, name='cash_on_hand'),
+    path('cash_on_hand/new_cash_on_hand', views.new_cash_on_hand, name='new_cash_on_hand'),
+    path('cash_on_hand/edit_cash_on_hand/<int:id>', views.edit_cash_on_hand, name='edit_cash_on_hand'),
+    path('cash_on_hand/delete_cash_on_hand/<int:id>', views.delete_cash_on_hand, name='delete_cash_on_hand'),
+
+    path('billing_statement_or/', views.billing_statement_or, name='billing_statement_or'),
+    path('billing_statement_or/new_billing_statement_or', views.new_billing_statement_or, name='new_billing_statement_or'),
+    path('billing_statement_or/edit_billing_statement_or/<int:id>', views.edit_billing_statement_or, name='edit_billing_statement_or'),
+    path('billing_statement_or/delete_billing_statement_or/<int:id>', views.delete_billing_statement_or, name='delete_billing_statement_or'),
+
+    path('billing_statement_ar/', views.billing_statement_ar, name='billing_statement_ar'),
+    path('billing_statement_ar/new_billing_statement_ar', views.new_billing_statement_ar, name='new_billing_statement_ar'),
+    path('billing_statement_ar/edit_billing_statement_ar/<int:id>', views.edit_billing_statement_ar, name='edit_billing_statement_ar'),
+    path('billing_statement_ar/delete_billing_statement_ar/<int:id>', views.delete_billing_statement_ar, name='delete_billing_statement_ar'),
 
     path('ajax/get_dbo/', views.get_dbo, name='get_dbo'),
     path('ajax/update_billing_date/', views.update_billing_dates, name='update_billing_dates'),

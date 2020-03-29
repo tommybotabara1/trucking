@@ -15,6 +15,10 @@
         .borderless td, .borderless th{
             border: none;
         }
+
+        th:hover{
+
+        }
     </style>
 
 
@@ -30,6 +34,7 @@
     <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_buttons.html5.js' %}"></script>
     <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_buttons.print.js' %}"></script>
     <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_buttons.colVis.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/jspdf.min.js' %}"></script>
 
 
     <section id="main-content">
@@ -74,6 +79,8 @@
                       </div>
                       <br>
                       <a class="btn btn-default" role="button" onclick="printDiv('printDiv')">Print</a>
+                      <button class="btn btn-default" id="pdf">PDF</button>
+
                       <hr>
                       <div id="printDiv">
                           <h5><b>ULTIMATE EXPRESS TRANS LOGISTICS, CORP.</b></h5>
@@ -2879,26 +2886,6 @@
 
 
         function printDiv(divName) {
-            var dboIDs = [
-                {% for item in list %}
-                    {{ item.id }},
-                {% endfor %}
-            ];
-
-            $.ajax({
-              url: '{% url "update_billing_dates" %}',
-              data: {
-                "dboIDs[]": dboIDs,
-              },
-              dataType: 'json',
-              success: function(data){
-                  console.log(dboIDs);
-              },
-              error: function () {
-                alert("error");
-              },
-            });
-
             var printContents = document.getElementById(divName).innerHTML;
             var originalContents = document.body.innerHTML;
 
@@ -2922,6 +2909,22 @@
         $( "#id_month" ).change(function() {
             window.location.href = "/database_operations/year="  + $("#id_year").val() + "/month=" + $(this).val();
         });
+
+        var doc = new jsPDF();
+        var specialElementHandlers = {
+            '#editor': function (element, renderer) {
+                return true;
+            }
+        };
+
+        $('#pdf').click(function () {
+            doc.fromHTML($('#printDiv').html(), 15, 15, {
+                'width': 170,
+                    'elementHandlers': specialElementHandlers
+            });
+            doc.save('sample-file.pdf');
+        });
+
 
     </script>
 {% endblock %}

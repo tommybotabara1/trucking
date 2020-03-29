@@ -1,0 +1,251 @@
+{% extends "includes/headerFooter.html" %}
+{% load staticfiles%}
+
+{% block content %}
+    <title>Liquidation</title>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_code.jquery.com_jquery-3.3.1.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_1.10.19_js_jquery.dataTables.js' %}"></script>
+
+    <style>
+        div.dataTables_wrapper {
+            margin: 0 auto;
+        }
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/datatables.min.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/buttons.dataTables.min.css' %}"/>
+    <script type="text/javascript" src="{% static 'js/http_cdn.datatables.net_v_dt_dt-1.10.18_b-1.5.4_datatables.js' %}"></script>
+
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_dataTables.buttons.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_buttons.flash.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdnjs.cloudflare.com_ajax_libs_jszip_3.1.3_jszip.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.36_pdfmake.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.36_vfs_fonts.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_buttons.html5.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_buttons.print.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_buttons.colVis.js' %}"></script>
+
+
+
+
+    <section id="main-content">
+      <section class="wrapper site-min-height">
+        <div class="row">
+
+          <!-- /col-lg-12 -->
+          <div class="col-lg-12">
+          <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">Liquidation</li>
+              </ol>
+          </nav>
+            <div class="row content-panel">
+              <!-- /panel-heading -->
+              <div class="panel-body">
+                <div class="tab-content">
+                {% if extra != none %}
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <strong>{{ extra }}</strong>
+                </div>
+                {% endif %}
+                  <div id="overview" class="tab-pane active">
+                  <h2 class="centered">Liquidation</h2>
+                  <hr>
+                  <a class="btn btn-primary btn-lg btn-block" href="{% url 'new_liquidation' %}" role="button">Create New Liquidation</a>
+                  <hr>
+                      <table id="listTable" class="display nowrap" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Action</th>
+                                    <th>ID</th>
+                                    <th>DATE</th>
+                                    <th>TRUCK ID</th>
+                                    <th>AMOUNT RECEIVED</th>
+                                    <th>LIQUIDATION</th>
+                                    <th>PARTICULARS</th>
+                                    <th>REMARKS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in list %}
+                             <tr>
+                                <td>
+                                    <div class="btn-group-vertical btn-group-sm" role="group" aria-label="...">
+                                        <a class="btn btn-round btn-success" href="{% url 'edit_liquidation' item.liquidationid %}" role="button">Edit</a>
+                                        <a class="btn btn-round btn-danger" href="{% url 'delete_liquidation' item.liquidationid %}" role="button">Delete</a>
+                                    </div>
+                                </td>
+                                <td>{{ item.liquidationid }}</td>
+                                <td>{{ item.date|date:'m/d/Y' }}</td>
+                                <td>{{ item.truckid }}</td>
+                                <td>{{ item.amountreceived }}</td>
+                                <td>{{ item.liquidation }}</td>
+                                <td>{{ item.particulars }}</td>
+                                <td>{{ item.remarks }}</td>
+                             </tr>
+                            {% endfor %}
+                            </tbody>
+                      </table>
+                  </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="modalLabel">Modal title</h5>
+                          </div>
+                          <div id="modalBody" class="modal-body">
+                            ...
+                          </div>
+                          <div class="modal-footer">
+                            <a class="btn btn-round btn-success" id="modalEditButton" role="button">Edit</a>
+                            <a class="btn btn-round btn-danger" id="modalDeleteButton" role="button">Delete</a>
+                            <button type="button" class="btn btn-round" data-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  <!-- /tab-pane -->
+                </div>
+                <!-- /tab-content -->
+              </div>
+              <!-- /panel-body -->
+            </div>
+            <!-- /col-lg-12 -->
+          </div>
+          <!-- /row -->
+        </div>
+
+          <!-- col-lg-12-->
+        </div>
+          </div>
+          <!-- /col-lg-12 -->
+          <!-- CUSTOM TOGGLES -->
+        </div>
+        <!-- /row -->
+      </section>
+      <!-- /wrapper -->
+    </section>
+    <script>
+        let today = new Date();
+        let time = '';
+        let dd = today.getDate();
+        let mm = today.getMonth() + 1; //January is 0!
+        let yyyy = today.getFullYear();
+        let hour    = today.getHours();
+        let minute  = today.getMinutes();
+        let second  = today.getSeconds();
+
+        if (dd < 10) {
+          dd = '0' + dd;
+        }
+
+        if (mm < 10) {
+          mm = '0' + mm;
+        }
+
+        if(hour.toString().length == 1) {
+         hour = '0'+hour;
+        }
+        if(minute.toString().length == 1) {
+             minute = '0'+minute;
+        }
+        if(second.toString().length == 1) {
+             second = '0'+second;
+        }
+
+        today = mm + '/' + dd + '/' + yyyy;
+        time = hour+':'+minute+':'+second;
+        $(document).ready(function() {
+            $('#listTable').DataTable({
+                responsive: true,
+                retrieve: true,
+                paging: false,
+                dom: 'Bfrtip',
+                "scrollX": true,
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        title: 'Damages (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Damages (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: 'Damages (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    'colvis'
+                ]
+            });
+        });
+
+        var table;
+
+        if ( $.fn.dataTable.isDataTable( '#listTable' ) ) {
+            table = $('#listTable').DataTable();
+        }
+        else {
+            table = $('#listTable').DataTable({
+                responsive: true,
+                retrieve: true,
+                paging: false,
+                dom: 'Bfrtip',
+                "scrollX": true,
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        title: 'Damages (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Damages (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: 'Damages (exported: ' + today + ' ' + time + ')',
+                        exportOptions: {
+                            columns: ':visible',
+                        }
+                    },
+                    'colvis'
+                ]
+            });
+        }
+
+        $('#listTable tbody').on( 'click', 'tr', function () {
+            // alert( table.row( this ).data() );
+            var modalBody = "<table class=\"table table-bordered\">";
+            for(var i = 2; i <= 7 ; i++){
+                modalBody += "<tr>";
+                modalBody += "<td><b>"+ table.columns(i).header()[0].textContent +"</b></td>";
+                modalBody += "<td>" + table.row(this).data()[i] + "</td>";
+                modalBody += "</tr>";
+            }
+            modalBody += "</table>";
+            $('#modalBody').html(modalBody);
+            $('#modalLabel').html("DAMAGES  " + table.row(this).data()[1]);
+            $('#modalEditButton').attr('href', '/liquidation/edit_liquidation/' + table.row(this).data()[1]);
+            $('#modalDeleteButton').attr('href', '/liquidation/delete_liquidation/' + table.row(this).data()[1]);
+            $('#exampleModal').modal();
+        } );
+    </script>
+{% endblock %}

@@ -1009,6 +1009,377 @@ def delete_damages(request, id):
     return render(request, 'damages.html', {'list': list, 'extra': extra})
 
 
+def payables(request):
+    list = Payables.objects.all()
+    return render(request, 'payables.html', {'list': list})
+
+
+def new_payables(request):
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = PayablesForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            newDatabaseOperation = form.save()
+            # redirect to a new URL:
+            return redirect('payables')
+        else:
+            return HttpResponse(form.errors)
+    else:
+        form = PayablesForm()
+        list = Payables.objects.all()
+        print(list)
+        extra = -1
+        return render(request, 'forms/payablesForm.html', {'form': form, 'list': list,
+                                                                    'extra': extra
+                                                                    })
+def edit_payables(request, id):
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        a = Payables.objects.get(payableid=id)
+        form = PayablesForm(request.POST, instance=a)
+
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            newDatabaseOperation = form.save()
+            # redirect to a new URL:
+            return redirect('payables')
+        else:
+            return HttpResponse(form.errors)
+    else:
+        a = Payables.objects.get(payableid=id)
+        form = PayablesForm(instance=a)
+        list = Payables.objects.values('supplier').distinct()
+        extra = id
+
+    return render(request, 'forms/payablesForm.html', {'form': form, 'list': list,
+                                                       'extra': extra
+                                                       })
+
+
+def delete_payables(request, id):
+    list = Payables.objects.all()
+
+    Payables.objects.get(payableid=id).delete()
+    extra = "Payable " + str(id) + " Deleted"
+
+    return render(request, 'payables.html', {'list': list, 'extra': extra})
+
+
+def liquidation(request):
+    list = Liquidation.objects.all()
+    return render(request, 'liquidation.html', {'list': list})
+
+
+def new_liquidation(request):
+    if request.method == 'POST':
+        form = LiquidationForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            newDatabaseOperation = form.save()
+            # redirect to a new URL:
+            return redirect('liquidation')
+        else:
+            return HttpResponse(form.errors)
+    else:
+        form = LiquidationForm()
+        list = Liquidation.objects.all()
+        extra = -1
+        return render(request, 'forms/liquidationForm.html', {'form': form, 'list': list,
+                                                                    'extra': extra
+                                                                    })
+
+def edit_liquidation(request, id):
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        a = Liquidation.objects.get(liquidationid=id)
+        form = LiquidationForm(request.POST, instance=a)
+
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            newDatabaseOperation = form.save()
+            # redirect to a new URL:
+            return redirect('liquidation')
+        else:
+            return HttpResponse(form.errors)
+    else:
+        a = Liquidation.objects.get(liquidationid=id)
+        form = LiquidationForm(instance=a)
+        list = Liquidation.objects.values('particulars').distinct()
+        extra = id
+
+    return render(request, 'forms/liquidationForm.html', {'form': form, 'list': list,
+                                                       'extra': extra
+                                                       })
+
+
+def delete_liquidation(request, id):
+    list = Liquidation.objects.all()
+
+    Liquidation.objects.get(liquidationid=id).delete()
+    extra = "Liquidation " + str(id) + " Deleted"
+
+    return render(request, 'liquidation.html', {'list': list, 'extra': extra})
+
+
+def billing_statement_or(request):
+    list = BillingStatementOr.objects.all()
+    return render(request, 'billingStatementOR.html', {'list': list})
+
+
+def new_billing_statement_or(request):
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        changed_data = dict(request.POST)
+        changed_data['month'][0] = changed_data['month'][0] + '-01'
+        updated_request = request.POST.copy()
+        updated_request.update({'month': changed_data['month'][0]})
+        form = BillingStatementOrForm(updated_request)
+
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            newDatabaseOperation = form.save()
+            # redirect to a new URL:
+            return redirect('billing_statement_or')
+        else:
+            return HttpResponse(form.errors)
+    else:
+        form = BillingStatementOrForm()
+        list = Customer.objects.all()
+        extra = -1
+        return render(request, 'forms/billingStatementORForm.html', {'form': form, 'list': list,
+                                                                    'extra': extra
+                                                                    })
+
+def edit_billing_statement_or(request, id):
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        a = BillingStatementOr.objects.get(billingstatementorid=id)
+
+        changed_data = dict(request.POST)
+        changed_data['month'][0] = changed_data['month'][0] + '-01'
+        updated_request = request.POST.copy()
+        updated_request.update({'month': changed_data['month'][0]})
+        form = BillingStatementOrForm(updated_request, instance=a)
+
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            newDatabaseOperation = form.save()
+            # redirect to a new URL:
+            return redirect('billing_statement_or')
+        else:
+            return HttpResponse(form.errors)
+    else:
+        a = BillingStatementOr.objects.get(billingstatementorid=id)
+        form = BillingStatementOrForm(instance=a)
+        list = Customer.objects.all()
+        extra = id
+
+    return render(request, 'forms/billingStatementORForm.html', {'form': form, 'list': list,
+                                                       'extra': extra
+                                                       })
+
+
+def delete_billing_statement_or(request, id):
+    list = BillingStatementOr.objects.all()
+
+    BillingStatementOr.objects.get(billingstatementorid=id).delete()
+    extra = "Billing Statement - OR " + str(id) + " Deleted"
+
+    return render(request, 'billingStatementOR.html', {'list': list, 'extra': extra})
+
+
+def billing_statement_ar(request):
+    list = BillingStatementAr.objects.all()
+    return render(request, 'billingStatementAR.html', {'list': list})
+
+
+def new_billing_statement_ar(request):
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        changed_data = dict(request.POST)
+        changed_data['month'][0] = changed_data['month'][0] + '-01'
+        updated_request = request.POST.copy()
+        updated_request.update({'month': changed_data['month'][0]})
+        form = BillingStatementArForm(updated_request)
+
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            newDatabaseOperation = form.save()
+            # redirect to a new URL:
+            return redirect('billing_statement_ar')
+        else:
+            return HttpResponse(form.errors)
+    else:
+        form = BillingStatementArForm()
+        list = Customer.objects.all()
+        extra = -1
+        return render(request, 'forms/billingStatementARForm.html', {'form': form, 'list': list,
+                                                                    'extra': extra
+                                                                    })
+
+def edit_billing_statement_ar(request, id):
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        a = BillingStatementAr.objects.get(billingstatementarid=id)
+
+        changed_data = dict(request.POST)
+        changed_data['month'][0] = changed_data['month'][0] + '-01'
+        updated_request = request.POST.copy()
+        updated_request.update({'month': changed_data['month'][0]})
+        form = BillingStatementArForm(updated_request, instance=a)
+
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            newDatabaseOperation = form.save()
+            # redirect to a new URL:
+            return redirect('billing_statement_ar')
+        else:
+            return HttpResponse(form.errors)
+    else:
+        a = BillingStatementAr.objects.get(billingstatementarid=id)
+        form = BillingStatementArForm(instance=a)
+        list = Customer.objects.all()
+        extra = id
+
+    return render(request, 'forms/billingStatementARForm.html', {'form': form, 'list': list,
+                                                       'extra': extra
+                                                       })
+
+
+def delete_billing_statement_ar(request, id):
+    list = BillingStatementAr.objects.all()
+
+    BillingStatementAr.objects.get(billingstatementarid=id).delete()
+    extra = "Billing Statement - AR " + str(id) + " Deleted"
+
+    return render(request, 'billingStatementAR.html', {'list': list, 'extra': extra})
+
+
+def cash_monitoring(request):
+    list = CashMonitoring.objects.all()
+    return render(request, 'cashMonitoring.html', {'list': list})
+
+
+def new_cash_monitoring(request):
+    if request.method == 'POST':
+        form = CashMonitoringForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            newDatabaseOperation = form.save()
+            # redirect to a new URL:
+            return redirect('cash_monitoring')
+        else:
+            return HttpResponse(form.errors)
+    else:
+        form = CashMonitoringForm()
+        list = CashMonitoring.objects.all()
+        extra = -1
+        return render(request, 'forms/cashMonitoringForm.html', {'form': form, 'list': list,
+                                                                    'extra': extra
+                                                                    })
+
+def edit_cash_monitoring(request, id):
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        a = CashMonitoring.objects.get(cashmonitoringid=id)
+        form = CashMonitoringForm(request.POST, instance=a)
+
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            newDatabaseOperation = form.save()
+            # redirect to a new URL:
+            return redirect('cash_monitoring')
+        else:
+            return HttpResponse(form.errors)
+    else:
+        a = CashMonitoring.objects.get(cashmonitoringid=id)
+        form = CashMonitoringForm(instance=a)
+        extra = id
+
+    return render(request, 'forms/cashMonitoringForm.html', {'form': form,
+                                                       'extra': extra
+                                                       })
+
+
+def delete_cash_monitoring(request, id):
+    list = CashMonitoring.objects.all()
+
+    CashMonitoring.objects.get(cashmonitoringid=id).delete()
+    extra = "Cash Monitoring " + str(id) + " Deleted"
+
+    return render(request, 'cashMonitoring.html', {'list': list, 'extra': extra})
+
+
+def cash_on_hand(request):
+    list = CashOnHand.objects.all()
+    return render(request, 'cashOnHand.html', {'list': list})
+
+
+def new_cash_on_hand(request):
+    if request.method == 'POST':
+        form = CashOnHandForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            newDatabaseOperation = form.save()
+            # redirect to a new URL:
+            return redirect('cash_on_hand')
+        else:
+            return HttpResponse(form.errors)
+    else:
+        form = CashOnHandForm()
+        list = CashOnHand.objects.all()
+        extra = -1
+        return render(request, 'forms/cashOnHandForm.html', {'form': form, 'list': list,
+                                                                    'extra': extra
+                                                                    })
+
+def edit_cash_on_hand(request, id):
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        a = CashOnHand.objects.get(cashonhandid=id)
+        form = CashOnHandForm(request.POST, instance=a)
+
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            newDatabaseOperation = form.save()
+            # redirect to a new URL:
+            return redirect('cash_on_hand')
+        else:
+            return HttpResponse(form.errors)
+    else:
+        a = CashOnHand.objects.get(cashonhandid=id)
+        form = CashOnHandForm(instance=a)
+        extra = id
+
+    return render(request, 'forms/cashOnHandForm.html', {'form': form,
+                                                       'extra': extra
+                                                       })
+
+
+def delete_cash_on_hand(request, id):
+    list = CashOnHand.objects.all()
+
+    CashOnHand.objects.get(cashonhandid=id).delete()
+    extra = "Cash on Hand " + str(id) + " Deleted"
+
+    return render(request, 'cashOnHand.html', {'list': list, 'extra': extra})
+
+######################################################### ajax #########################################################
+
+
 def users(request):
     users_list = Userinformation.objects.all()
     if request.method == 'POST':

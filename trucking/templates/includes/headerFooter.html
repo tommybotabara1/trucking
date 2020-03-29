@@ -231,6 +231,36 @@
               <li class="{% if request.resolver_match.view_name ==  'damages' or  request.resolver_match.view_name == 'new_damages' or  request.resolver_match.view_name == 'edit_damages' or request.resolver_match.view_name == 'delete_damages'%}active{% endif %}"><a href="{% url 'damages' %}">Damages</a></li>
             </ul>
           </li>
+          <li class="sub-menu">
+            <a href="" class="{% if request.resolver_match.view_name ==  'payables' or  request.resolver_match.view_name == 'new_payables' or  request.resolver_match.view_name == 'edit_payables' or request.resolver_match.view_name == 'delete_payables' or request.resolver_match.view_name ==  'liquidation' or  request.resolver_match.view_name == 'new_liquidation' or  request.resolver_match.view_name == 'edit_liquidation' or request.resolver_match.view_name == 'delete_liquidation' or request.resolver_match.view_name ==  'cash_monitoring' or  request.resolver_match.view_name == 'new_cash_monitoring' or  request.resolver_match.view_name == 'edit_cash_monitoring' or request.resolver_match.view_name == 'delete_cash_monitoring' or request.resolver_match.view_name ==  'cash_on_hand' or  request.resolver_match.view_name == 'new_cash_on_hand' or  request.resolver_match.view_name == 'edit_cash_on_hand' or request.resolver_match.view_name == 'delete_cash_on_hand'%}active{% endif %}">
+              <i class="fa fa-money"></i>
+              <span>Cash Monitoring and Disbursements</span>
+              </a>
+            <ul class="sub">
+              <li class="{% if request.resolver_match.view_name ==  'payables' or  request.resolver_match.view_name == 'new_payables' or  request.resolver_match.view_name == 'edit_payables' or request.resolver_match.view_name == 'delete_payables'%}active{% endif %}"><a href="{% url 'payables' %}">Payables</a></li>
+            </ul>
+            <ul class="sub">
+              <li class="{% if request.resolver_match.view_name ==  'liquidation' or  request.resolver_match.view_name == 'new_liquidation' or  request.resolver_match.view_name == 'edit_liquidation' or request.resolver_match.view_name == 'delete_liquidation'%}active{% endif %}"><a href="{% url 'liquidation' %}">Liquidation</a></li>
+            </ul>
+            <ul class="sub">
+              <li class="{% if request.resolver_match.view_name ==  'cash_monitoring' or  request.resolver_match.view_name == 'new_cash_monitoring' or  request.resolver_match.view_name == 'edit_cash_monitoring' or request.resolver_match.view_name == 'delete_cash_monitoring'%}active{% endif %}"><a href="{% url 'cash_monitoring' %}">Cash Monitoring</a></li>
+            </ul>
+            <ul class="sub">
+              <li class="{% if request.resolver_match.view_name ==  'cash_on_hand' or  request.resolver_match.view_name == 'new_cash_on_hand' or  request.resolver_match.view_name == 'edit_cash_on_hand' or request.resolver_match.view_name == 'delete_cash_on_hand'%}active{% endif %}"><a href="{% url 'cash_on_hand' %}">Cash on Hand</a></li>
+            </ul>
+          </li>
+          <li class="sub-menu">
+            <a href="" class="{% if request.resolver_match.view_name ==  'billing_statement_or' or  request.resolver_match.view_name == 'new_billing_statement_or' or  request.resolver_match.view_name == 'edit_billing_statement_or' or request.resolver_match.view_name == 'delete_billing_statement_or' or request.resolver_match.view_name ==  'billing_statement_ar' or  request.resolver_match.view_name == 'new_billing_statement_ar' or  request.resolver_match.view_name == 'edit_billing_statement_ar' or request.resolver_match.view_name == 'delete_billing_statement_ar'%}active{% endif %}">
+              <i class="fa fa-file"></i>
+              <span>Collection of Billings</span>
+              </a>
+            <ul class="sub">
+              <li class="{% if request.resolver_match.view_name ==  'billing_statement_or' or  request.resolver_match.view_name == 'new_billing_statement_or' or  request.resolver_match.view_name == 'edit_billing_statement_or' or request.resolver_match.view_name == 'delete_billing_statement_or'%}active{% endif %}"><a href="{% url 'billing_statement_or' %}">Billing Statement - OR</a></li>
+            </ul>
+            <ul class="sub">
+              <li class="{% if request.resolver_match.view_name ==  'billing_statement_ar' or  request.resolver_match.view_name == 'new_billing_statement_ar' or  request.resolver_match.view_name == 'edit_billing_statement_ar' or request.resolver_match.view_name == 'delete_billing_statement_ar'%}active{% endif %}"><a href="{% url 'billing_statement_ar' %}">Billing Statement - AR</a></li>
+            </ul>
+          </li>
         </ul>
         <!-- sidebar menu end-->
       </div>

@@ -74,6 +74,53 @@ class AuthUserUserPermissions(models.Model):
         unique_together = (('user', 'permission'),)
 
 
+class BillingStatementAr(models.Model):
+    billingstatementarid = models.AutoField(db_column='billingStatementARID', primary_key=True)  # Field name made lowercase.
+    month = models.DateField(blank=True, null=True)
+    soano = models.CharField(db_column='soaNo', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    customer = models.CharField(max_length=45, blank=True, null=True)
+    particulars = models.CharField(max_length=45, blank=True, null=True)
+    invoicedate = models.DateField(db_column='invoiceDate', blank=True, null=True)  # Field name made lowercase.
+    invoicereceiveddate = models.DateField(db_column='invoiceReceivedDate', blank=True, null=True)  # Field name made lowercase.
+    receivedby = models.CharField(db_column='receivedBy', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    totalsales = models.FloatField(db_column='totalSales', blank=True, null=True)  # Field name made lowercase.
+    arno = models.CharField(db_column='arNo', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    paidamount = models.FloatField(db_column='paidAmount', blank=True, null=True)  # Field name made lowercase.
+    datepaid = models.DateField(db_column='datePaid', blank=True, null=True)  # Field name made lowercase.
+    variancediff = models.FloatField(db_column='varianceDiff', blank=True, null=True)  # Field name made lowercase.
+    acctstitle = models.CharField(db_column='acctsTitle', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    remarks = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'billing_statement_ar'
+
+
+class BillingStatementOr(models.Model):
+    billingstatementorid = models.AutoField(db_column='billingStatementORID', primary_key=True)  # Field name made lowercase.
+    month = models.DateField(blank=True, null=True)
+    invoiceno = models.IntegerField(db_column='invoiceNo', blank=True, null=True)  # Field name made lowercase.
+    customer = models.CharField(max_length=45, blank=True, null=True)
+    particulars = models.CharField(max_length=45, blank=True, null=True)
+    invoicedate = models.DateField(db_column='invoiceDate', blank=True, null=True)  # Field name made lowercase.
+    invoicereceiveddate = models.DateField(db_column='invoiceReceivedDate', blank=True, null=True)  # Field name made lowercase.
+    receivedby = models.CharField(db_column='receivedBy', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    totalsales = models.FloatField(db_column='totalSales', blank=True, null=True)  # Field name made lowercase.
+    taxablesales = models.FloatField(db_column='taxableSales', blank=True, null=True)  # Field name made lowercase.
+    vat = models.FloatField(blank=True, null=True)
+    creditabletax = models.FloatField(db_column='creditableTax', blank=True, null=True)  # Field name made lowercase.
+    orno = models.IntegerField(db_column='orNo', blank=True, null=True)  # Field name made lowercase.
+    paidamount = models.FloatField(db_column='paidAmount', blank=True, null=True)  # Field name made lowercase.
+    datepaid = models.DateField(db_column='datePaid', blank=True, null=True)  # Field name made lowercase.
+    variancediff = models.FloatField(db_column='varianceDiff', blank=True, null=True)  # Field name made lowercase.
+    acctstitle = models.CharField(db_column='acctsTitle', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    remarks = models.CharField(max_length=45, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'billing_statement_or'
+
+
 class Breakdown(models.Model):
     breakdownid = models.AutoField(db_column='breakdownID', primary_key=True)  # Field name made lowercase.
     breakdowndate = models.DateField(db_column='breakdownDate', blank=True, null=True)  # Field name made lowercase.
@@ -109,6 +156,34 @@ class Canteen(models.Model):
     class Meta:
         managed = False
         db_table = 'canteen'
+
+
+class CashMonitoring(models.Model):
+    cashmonitoringid = models.AutoField(db_column='cashMonitoringID', primary_key=True)  # Field name made lowercase.
+    client = models.CharField(max_length=45, blank=True, null=True)
+    date = models.DateField(blank=True, null=True)
+    checkno = models.CharField(db_column='checkNo', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    checkvoucherno = models.CharField(db_column='checkVoucherNo', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    deposit = models.FloatField(blank=True, null=True)
+    withdrawal = models.FloatField(blank=True, null=True)
+    remarks = models.CharField(max_length=45, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'cash_monitoring'
+
+
+class CashOnHand(models.Model):
+    cashonhandid = models.AutoField(db_column='cashOnHandID', primary_key=True)  # Field name made lowercase.
+    date = models.DateField(blank=True, null=True)
+    truckid = models.CharField(db_column='truckID', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    received = models.FloatField(blank=True, null=True)
+    truckbudget = models.FloatField(db_column='truckBudget', blank=True, null=True)  # Field name made lowercase.
+    remarks = models.CharField(max_length=45, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'cash_on_hand'
 
 
 class Client(models.Model):
@@ -222,6 +297,41 @@ class Helper(models.Model):
     class Meta:
         managed = False
         db_table = 'helper'
+
+
+class Liquidation(models.Model):
+    liquidationid = models.AutoField(db_column='liquidationID', primary_key=True)  # Field name made lowercase.
+    date = models.DateField(blank=True, null=True)
+    truckid = models.CharField(db_column='truckID', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    amountreceived = models.FloatField(db_column='amountReceived', blank=True, null=True)  # Field name made lowercase.
+    liquidation = models.FloatField(blank=True, null=True)
+    particulars = models.CharField(max_length=45, blank=True, null=True)
+    remarks = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'liquidation'
+
+
+class Payables(models.Model):
+    payableid = models.AutoField(db_column='payableID', primary_key=True)  # Field name made lowercase.
+    date = models.DateField(blank=True, null=True)
+    invoiceno = models.CharField(db_column='invoiceNo', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    documentdate = models.DateField(db_column='documentDate', blank=True, null=True)  # Field name made lowercase.
+    supplier = models.CharField(max_length=45, blank=True, null=True)
+    amount = models.FloatField(blank=True, null=True)
+    particulars = models.CharField(max_length=45, blank=True, null=True)
+    checkvoucherno = models.CharField(db_column='checkVoucherNo', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    checkvoucherdate = models.DateField(db_column='checkVoucherDate', blank=True, null=True)  # Field name made lowercase.
+    checkno = models.IntegerField(db_column='checkNo', blank=True, null=True)  # Field name made lowercase.
+    checkdate = models.DateField(db_column='checkDate', blank=True, null=True)  # Field name made lowercase.
+    checkreleaseddate = models.DateField(db_column='checkReleasedDate', blank=True, null=True)  # Field name made lowercase.
+    cleareddate = models.DateField(db_column='clearedDate', blank=True, null=True)  # Field name made lowercase.
+    remarks = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'payables'
 
 
 class SplitAmounts(models.Model):

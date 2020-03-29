@@ -400,6 +400,173 @@ class DamagesForm(ModelForm):
             'cadate': "CA Date",
         }
 
+
+class PayablesForm(ModelForm):
+    class Meta:
+        model = Payables
+        fields = '__all__'
+        widgets = {
+            'payableid': NumberInput(attrs={'type': 'hidden', 'value': Payables.objects.count() + 1}),
+            'date': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'invoiceno': TextInput(attrs={'class': 'form-control', 'maxlength': "45"}),
+            'documentdate': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'supplier': TextInput(attrs={'class': 'form-control', 'maxlength': "45", 'list': 'suppliers'}),
+            'amount': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'particulars': TextInput(attrs={'class': 'form-control', 'maxlength': "45", 'list': 'particulars'}),
+            'checkvoucherno': NumberInput(attrs={'class': 'form-control', 'step': "1", "placeholder": "12345", "max": "999999999999999",}),
+            'checkvoucherdate': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'checkno': TextInput(attrs={'class': 'form-control', 'maxlength': "45"}),
+            'checkdate': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'checkreleaseddate': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'cleareddate': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'remarks': TextInput(attrs={'class': 'form-control', 'maxlength': "45"}),
+        }
+        labels = {
+            'invoiceno': "Invoice Number",
+            'documentdate': "Document Date",
+            'checkvoucherno': "Check Voucher #",
+            'checkvoucherdate': "Check Voucher Date",
+            'checkno': "Check #",
+            'checkdate': "Check Date",
+            'checkreleaseddate': "Date Check Released",
+            'cleareddate': "Date Cleared",
+        }
+
+
+class LiquidationForm(ModelForm):
+    class Meta:
+        model = Liquidation
+        fields = '__all__'
+        widgets = {
+            'liquidationid': NumberInput(attrs={'type': 'hidden', 'value': Liquidation.objects.count() + 1}),
+            'date': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'truckid': TextInput(attrs={'class': 'form-control', 'maxlength': "45"}),
+            'amountreceived': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'liquidation': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'particulars': TextInput(attrs={'class': 'form-control', 'maxlength': "45", 'list': 'particulars'}),
+            'remarks': TextInput(attrs={'class': 'form-control', 'maxlength': "45"}),
+        }
+        labels = {
+            'date': "Date",
+            'truckid': "Truck ID",
+            'amountreceived': "Amount Received",
+        }
+
+
+class BillingStatementOrForm(ModelForm):
+    class Meta:
+        model = BillingStatementOr
+        fields = '__all__'
+        widgets = {
+            'billingstatementorid': NumberInput(attrs={'type': 'hidden', 'value': BillingStatementOr.objects.count() + 1}),
+            'month': DateInput(attrs={'type': 'month', 'class': 'form-control'}),
+            'invoiceno': NumberInput(attrs={'class': 'form-control', 'step': "1", "placeholder": "12345", "max": "999999999999999", "min": "0"}),
+            'customer': TextInput(attrs={'class': 'form-control', 'maxlength': "45", 'list': 'customers'}),
+            'particulars': TextInput(attrs={'class': 'form-control', 'maxlength': "45"}),
+            'invoicedate': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'invoicereceiveddate': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'receivedby': TextInput(attrs={'class': 'form-control', 'maxlength': "45"}),
+            'totalsales': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'taxablesales': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'vat': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'creditabletax': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'orno': NumberInput(attrs={'class': 'form-control', 'step': "1", "placeholder": "12345", "max": "999999999999999", "min": "0"}),
+            'paidamount': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'datepaid': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'variancediff': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'acctstitle': TextInput(attrs={'class': 'form-control', 'maxlength': "45"}),
+            'remarks': TextInput(attrs={'class': 'form-control', 'maxlength': "45"}),
+        }
+        labels = {
+            'invoiceno': "Invoice No.",
+            'invoicedate': "Invoice Date",
+            'invoicereceiveddate': "Invoice Received Date",
+            'receivedby': "Received By",
+            'totalsales': "Total Sales",
+            'taxablesales': "Taxable Sales",
+            'vat': "VAT",
+            'creditabletax': "Creditable Tax W/held",
+            'orno': "O.R. No.",
+            'paidamount': "Paid Amount",
+            'datepaid': "Date Paid",
+            'variancediff': "Variance Diff",
+            'acctstitle': "Accts Title",
+        }
+
+
+class BillingStatementArForm(ModelForm):
+    class Meta:
+        model = BillingStatementAr
+        fields = '__all__'
+        widgets = {
+            'billingstatementarid': NumberInput(attrs={'type': 'hidden', 'value': BillingStatementAr.objects.count() + 1}),
+            'month': DateInput(attrs={'type': 'month', 'class': 'form-control'}),
+            'soano': NumberInput(attrs={'class': 'form-control', 'step': "1", "placeholder": "12345", "max": "999999999999999", "min": "0"}),
+            'customer': TextInput(attrs={'class': 'form-control', 'maxlength': "45", 'list': 'customers'}),
+            'particulars': TextInput(attrs={'class': 'form-control', 'maxlength': "45"}),
+            'invoicedate': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'invoicereceiveddate': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'receivedby': TextInput(attrs={'class': 'form-control', 'maxlength': "45"}),
+            'totalsales': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'arno': NumberInput(attrs={'class': 'form-control', 'step': "1", "placeholder": "12345", "max": "999999999999999", "min": "0"}),
+            'paidamount': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'datepaid': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'variancediff': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'acctstitle': TextInput(attrs={'class': 'form-control', 'maxlength': "45"}),
+            'remarks': TextInput(attrs={'class': 'form-control', 'maxlength': "45"}),
+        }
+        labels = {
+            'soano': "SOA No.",
+            'invoicedate': "Invoice Date",
+            'invoicereceiveddate': "Invoice Received Date",
+            'receivedby': "Received By",
+            'totalsales': "Total Sales",
+            'arno': "Acknowledgment Receipt No.",
+            'paidamount': "Paid Amount",
+            'datepaid': "Date Paid",
+            'variancediff': "Variance Diff",
+            'acctstitle': "Accts Title",
+        }
+
+
+class CashMonitoringForm(ModelForm):
+    class Meta:
+        model = CashMonitoring
+        fields = '__all__'
+        widgets = {
+            'cashmonitoringid': NumberInput(attrs={'type': 'hidden', 'value': BillingStatementAr.objects.count() + 1}),
+            'client': TextInput(attrs={'class': 'form-control', 'maxlength': "45"}),
+            'date': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'checkno': TextInput(attrs={'class': 'form-control', 'maxlength': "45"}),
+            'checkvoucherno': TextInput(attrs={'class': 'form-control', 'maxlength': "45"}),
+            'deposit': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'withdrawal': NumberInput(attrs={'class': 'form-control', 'step': "1", "placeholder": "12345", "max": "999999999999999", "min": "0"}),
+            'remarks': TextInput(attrs={'class': 'form-control', 'maxlength': "45"}),
+        }
+        labels = {
+            'checkno': "Check No.",
+            'client': "Client / Supplier",
+            'checkvoucherno': "Check Voucher No.",
+        }
+
+
+class CashOnHandForm(ModelForm):
+    class Meta:
+        model = CashOnHand
+        fields = '__all__'
+        widgets = {
+            'cashonhandid': NumberInput(attrs={'type': 'hidden', 'value': BillingStatementAr.objects.count() + 1}),
+            'date': DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'truckid': TextInput(attrs={'class': 'form-control', 'maxlength': "45"}),
+            'received': NumberInput(attrs={'class': 'form-control', 'step': ".01", "placeholder": "0.00", "max": "999999999999999", "min": "0"}),
+            'truckbudget': NumberInput(attrs={'class': 'form-control', 'step': "1", "placeholder": "12345", "max": "999999999999999", "min": "0"}),
+            'remarks': TextInput(attrs={'class': 'form-control', 'maxlength': "45"}),
+        }
+        labels = {
+            'truckid': "Truck ID",
+            'truckbudget': "Truck Budget",
+        }
+
 def bound_form(request, id):
     item = get_object_or_404(Table1, id=id)
     form = DatabaseOperationForm(instance=item)

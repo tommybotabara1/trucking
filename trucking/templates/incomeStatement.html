@@ -30,7 +30,7 @@
     <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_buttons.html5.js' %}"></script>
     <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_buttons.print.js' %}"></script>
     <script type="text/javascript" charset="utf8" src="{% static 'js/http_cdn.datatables.net_buttons_1.5.2_js_buttons.colVis.js' %}"></script>
-
+    <script type="text/javascript" charset="utf8" src="{% static 'js/jspdf.min.js' %}"></script>
 
     <section id="main-content">
       <section class="wrapper site-min-height">
@@ -2349,26 +2349,6 @@
 
 
         function printDiv(divName) {
-            var dboIDs = [
-                {% for item in list %}
-                    {{ item.id }},
-                {% endfor %}
-            ];
-
-            $.ajax({
-              url: '{% url "update_billing_dates" %}',
-              data: {
-                "dboIDs[]": dboIDs,
-              },
-              dataType: 'json',
-              success: function(data){
-                  console.log(dboIDs);
-              },
-              error: function () {
-                alert("error");
-              },
-            });
-
             var printContents = document.getElementById(divName).innerHTML;
             var originalContents = document.body.innerHTML;
 
